@@ -5,12 +5,13 @@ import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 
 
-export default function Dashboard() {
+export default function Login() {
     const [anchorEl, setAnchorEl] = useState(null);
 
     let navigate = useNavigate(); 
     const testLogin = () => {
-        navigate('/dashboard');
+        alert(window.location.href);
+        navigate("/dashboard");
     }
 
     return (
@@ -23,24 +24,12 @@ export default function Dashboard() {
                     <div className="card">
                         <h1 className="text-center">G</h1>
                         <div className="card login-card mx-auto">
-                            <p className="text-center">Please Login with Google Account</p>
-
-                            <div className="form-group">
-                                <label>Email</label>
-                                <input type="text" name="" className="form-control"/>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Password</label>
-                                <input type="text" name="" className="form-control"/>
-                            </div>
-
-                            <div className="row">
+                            <div style = {{
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}className="row">
                                 <div className="col-6 text-center">
-                                    <a href="#">Sign up</a>
-                                </div>
-                                <div className="col-6 text-center">
-                                    <button onClick={testLogin} className="btn btn-success" id="login-btn">Login</button>
+                                    <button onClick={testLogin} className="btn btn-success" id="login-btn">Connect with Google Account</button>
                                 </div>
                             </div>
                         </div>

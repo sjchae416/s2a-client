@@ -4,6 +4,10 @@ import Modal from "react-modal";
 
 import test from './test.json';
 
+const initialValues = Object.fromEntries(
+  Object.keys(test[0]).map(key => [key, ''])
+);
+
 export default function SheetScreen() {
 
   //  const test =  [
@@ -31,20 +35,26 @@ export default function SheetScreen() {
   //     ]
 
   // state to store the row data for editing
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+  const [editModalIsOpen, setEditModalIsOpen] = useState(false);
   const [rowData, setRowData] = useState({});
   const [editData, setEditData] = useState({});
+  const [formValues, setFormValues] = useState(initialValues);
+  const [isEditing, setIsEditing] = useState(false);
+  
 
   const handleRowClick = (rowData) => {
     setRowData(rowData);
     setEditData(rowData);
-    setModalIsOpen(true);
+    setEditModalIsOpen(true);
   }
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setEditData((prevData) => ({ ...prevData, [name]: value }));
   }
+
+ 
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -55,12 +65,109 @@ export default function SheetScreen() {
       return item;
     });
     setRowData(newData);
-    setModalIsOpen(false);
+    setEditModalIsOpen(false);
   }
 
+  const handleOpenModal = () => {
+    setAddModalIsOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setAddModalIsOpen(false);
+  };
+
+  const handleSaveModal = () => {
+    const newRecord = { ...formValues };
+    test.push(newRecord);
+    setFormValues(initialValues);
+    setAddModalIsOpen(false);
+  };
+
+  const handleAddInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  let AddRecordModal = (
+    <Modal isOpen={addModalIsOpen} onRequestClose={handleCloseModal}>
+        <h2>Add Record</h2>
+        <form>
+          {Object.keys(initialValues).map(key => (
+            <div key={key}>
+              <label htmlFor={key}>{key}</label>
+              <input type="text" id={key} name={key} value={formValues[key]} onChange={handleAddInputChange} />
+            </div>
+          ))}
+        </form>
+        <button onClick={handleCloseModal}>Cancel</button>
+        <button onClick={handleSaveModal}>Save</button>
+      </Modal>
+  );
+
+  const handleEditClose = () =>{
+    setEditModalIsOpen(false);
+    setIsEditing(false);
+  }
+
+  // adds the info edited into json
+  const handleEditSubmit = () => {
+    setEditModalIsOpen(false);
+    setIsEditing(false);
+  }
+
+  let EditRecordModal = (
+    <Modal
+    isOpen={editModalIsOpen}
+    onRequestClose={() => setEditModalIsOpen(false)}
+    ariaHideApp={false}
+  >
+    <h2>{isEditing ? 'Edit Row Data' : 'Detail View'}</h2>
+    {isEditing ? (
+      <form onSubmit={handleSubmit}>
+        {Object.entries(rowData).map(([key, value]) => (
+          <div key={key}>
+            <label>
+              {key} 
+              <input
+                type="text"
+                name={key}
+                value={editData[key] || ''}
+                onChange={handleInputChange}
+              />
+            </label>
+          </div>
+        ))}
+         <button onClick={(handleEditClose)}>Cancel</button>
+        <button onClick={(handleEditSubmit)} type="submit">Save</button>
+      </form>
+    ) : (
+      <>
+        <button onClick={() => setIsEditing(true)}>Edit</button>
+        {Object.entries(rowData).map(([key, value]) => (
+          <div key={key}>
+            <label>
+              {key}:&nbsp;&nbsp;
+              <span>{value}</span>
+            </label>
+          </div>
+        ))}
+        <button onClick={(handleEditClose)}>Close</button>
+      </>
+    )}
+  </Modal>
+  );
       
   return (
     <Box>
+      <div>
+      <div>
+        <div style={{ padding: '50px', display: 'inline-block' }}>
+          App Name
+        </div>
+        <button className="btn btn-info" style={{ padding: '50px', display: 'inline-block' }} onClick={handleOpenModal}>Add Record</button>
+      </div>
+        {AddRecordModal}
+    </div>
       <br/><br/>
       <table>
         <thead>
@@ -80,27 +187,7 @@ export default function SheetScreen() {
           ))}
         </tbody>
       </table>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        ariaHideApp={false}
-      >
-        <h2>Edit Row Data</h2>
-        <form onSubmit={handleSubmit}>
-          {Object.entries(rowData).map(([key, value]) => (
-            <div key={key}>
-              <label>{key}: </label>
-              <input
-                type="text"
-                name={key}
-                value={editData[key] || ''}
-                onChange={handleInputChange}
-              />
-            </div>
-          ))}
-          <button type="submit">Submit</button>
-        </form>
-      </Modal>
+      {EditRecordModal}
     </Box>
     );
 }

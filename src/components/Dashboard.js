@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
 import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
+
+export const name = '';
 
 export default function Dashboard() {
 
@@ -23,10 +26,25 @@ export default function Dashboard() {
       create_app_modal.style.display = "none";
     };
 
-    create_app_btn.onclick = () => {
-      window.location = "manage-data-source.html";
-    };
   }, []);
+
+  let navigate = useNavigate(); 
+  const createApp = (event) =>{
+    event.preventDefault();
+    // name that the user enters is stored in name atm
+   // name = event.target;
+    // when the google sheets API is connected, update the database here
+
+    navigate("/manage-data-source");
+  }
+
+  const handleOpen = () =>{
+    // name that the user enters is stored in name atm
+   // name = event.target;
+    // when the google sheets API is connected, update the database here
+
+    navigate("/sheet");
+  }
 
   return (
     <Box>
@@ -34,7 +52,7 @@ export default function Dashboard() {
       <div className="container">
 
         <div className="card">
-          <span className="profile-letter ml-auto"><a href="profile.html">P</a></span>
+          <span className="profile-letter ml-auto">P</span>
         </div>
 
         <br />
@@ -65,7 +83,7 @@ export default function Dashboard() {
               <div className="row">
                 <div className="col-3">
                   <a href="#">
-                    <div className="card p-0 text-center">
+                    <div onClick = {handleOpen} className="card p-0 text-center">
                       <h2 className="">App1</h2>
                       <hr />
                       <div className="p-1">
@@ -166,7 +184,7 @@ export default function Dashboard() {
 
                     <div class="form-group">
                         <button class="btn btn-danger" id="dismiss_create_app_modal">Cancel</button>
-                        <button class="btn btn-success" id="create-app-btn">Create</button>
+                        <button onClick = {createApp} class="btn btn-success" id="create-app-btn">Create</button>
                     </div>
                 </div>
             </div>

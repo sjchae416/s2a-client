@@ -1,8 +1,21 @@
 import React, { useEffect } from 'react';
 
 import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
 
 export default function ManageDataSource() {
+
+    let navigate = useNavigate(); 
+  const handleDataView = () =>{
+
+    navigate("/manage-data-source");
+  }
+
+  const handleViewView = () =>{
+
+    navigate("/add-view");
+  }
+
   return (
     <Box>
         <br />
@@ -26,15 +39,15 @@ export default function ManageDataSource() {
         <div className="card p-0">
             <div className="row no-gutters mt-2">
             <div className="col-1 border-right text-center">
-                <a href="manage-data-source.html" className="active">
+                <button onClick = {handleDataView}>
                 Data
-                </a>
+                </button>
                 <hr />
-                <a href="#">Access Control</a>
+                <button>Access Control</button>
                 <hr />
-                <a href="add-view.html">View</a>
+                <button onClick = {handleViewView} >View</button>
                 <hr />
-                <a href="#">Display</a>
+                <button>Display</button>
                 <hr />
             </div>
             <div className="col-1 border-right text-center">
