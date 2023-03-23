@@ -1,9 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom'
+import { BrowserRouter, BrowserRouter as Router, Route, Routes, Switch} from 'react-router-dom'
 import './App.css';
 import Box from "@mui/material/Box";
-
-
+import {createBrowserHistory} from 'history';
 import {
   AppBanner, 
   SheetBanner,
@@ -14,15 +13,18 @@ import {
   SheetScreen
 } from "./components";
 
+
+export const customHistory = createBrowserHistory();
 const App = () => {
   return (
     <Box>
-      <Router>
-        <AppBanner/>
-        <SheetBanner/>
-        <SheetScreen/>
+      <Router forceRefresh={true}>
         <Routes>
-          <Route path="/dashboard" exact component={<Dashboard/>} />
+          <Route  path="/" element={<Login/>} />
+          <Route  path="/dashboard" element={<Dashboard/>} />
+          <Route   path="/add-view" element={<AddFile/>} />
+          <Route  path="/manage-data-source" element={<ManageDataSource/>} />
+          <Route  path="/sheet" element={<SheetScreen/>} />
         </Routes>
       </Router>
     </Box>

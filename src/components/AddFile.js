@@ -1,7 +1,25 @@
 import React, { useEffect } from 'react';
 import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
 
 export default function AddFile() {
+
+    let navigate = useNavigate(); 
+    const handleDataView = () =>{
+
+        navigate("/manage-data-source");
+      }
+    
+      const handleViewView = () =>{
+    
+        navigate("/add-view");
+      }
+
+      const handleCreate = () =>{
+    
+        navigate("/sheet");
+      }
+
     return (
         <Box>
             <br/><br/>
@@ -22,10 +40,16 @@ export default function AddFile() {
 
                     <div class="row no-gutters mt-2">
                         <div class="col-1 border-right text-center">
-                            <a href="manage-data-source.html">Data</a><hr/>
-                            <a href="#">Access Control</a><hr/>
-                            <a href="add-view.html" class="active">View</a><hr/>
-                            <a href="#">Display</a><hr/>
+                        <button onClick = {handleDataView}>
+                        Data
+                        </button>
+                        <hr />
+                        <button>Access Control</button>
+                        <hr />
+                        <button onClick = {handleViewView} >View</button>
+                        <hr />
+                        <button>Display</button>
+                        <hr />
                         </div>
                         <div class="col-1 border-right text-center">
                             View+ <hr/>
@@ -76,7 +100,7 @@ export default function AddFile() {
 
                                     <div class="text-right">
                                         <button class="btn btn-danger">Cancel</button>
-                                        <button class="btn btn-info">Create</button>
+                                        <button onClick = {handleCreate} class="btn btn-info">Create</button>
                                     </div>
 
                                     <br/><br/>

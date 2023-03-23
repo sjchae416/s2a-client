@@ -1013,3 +1013,78 @@ tr:hover {
   height: 100%;
   background-color: rgb(229, 229, 229)
 }
+
+/* MODAL STYLING (ADD AND EDIT)*/
+/* Modal overlay */
+.ReactModal__Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal content */
+.ReactModal__Content {
+  position: relative;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  padding: 20px;
+  background-color: #fff;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow: auto;
+}
+
+/* Modal header */
+.ReactModal__Content h2 {
+  font-size: 24px;
+  margin-top: 0;
+}
+
+/* Modal form */
+.ReactModal__Content form {
+  margin: 20px 0;
+}
+
+/* Modal form label */
+.ReactModal__Content form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* Modal form input */
+.ReactModal__Content form input {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+/* Modal buttons */
+.ReactModal__Content button {
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Modal buttons:hover */
+.ReactModal__Content button:hover {
+  background-color: #0062cc;
+}
+
+/* Modal span */
+.ReactModal__Content span {
+  font-size: 16px;
+  font-weight: bold;
+}
