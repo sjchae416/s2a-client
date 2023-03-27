@@ -8,7 +8,7 @@ export default function ManageDataSource() {
     let navigate = useNavigate(); 
   const handleDataView = () =>{
 
-    navigate("/manage-data-source");
+    navigate("/manage-table");
   }
 
   const handleViewView = () =>{

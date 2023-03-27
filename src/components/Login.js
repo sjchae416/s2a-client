@@ -10,7 +10,8 @@ export default function Login() {
 
     let navigate = useNavigate(); 
     const testLogin = () => {
-        alert(window.location.href);
+
+        //alert(window.location.href);
         navigate("/dashboard");
     }
 

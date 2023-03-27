@@ -1,11 +1,10 @@
 // import ComponentName from './path'
 import AppBanner from './AppBanner'
-import SheetBanner from './SheetBanner'
 import Dashboard from './Dashboard'
 import Login from './Login'
 import AddFile from './AddFile'
-import ManageDataSource from './ManageDataSource'
-import SheetScreen from './SheetScreen'
+import ManageTable from './ManageTable'
+import TableView from './TableView'
 
 /*
     This serves as a module so that we can import
@@ -13,10 +12,9 @@ import SheetScreen from './SheetScreen'
 */
 export { 
     AppBanner, 
-    SheetBanner, 
     Dashboard,
     Login, 
     AddFile,
-    ManageDataSource, 
-    SheetScreen
+    ManageTable, 
+    TableView
 }

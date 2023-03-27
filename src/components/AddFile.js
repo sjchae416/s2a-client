@@ -7,7 +7,7 @@ export default function AddFile() {
     let navigate = useNavigate(); 
     const handleDataView = () =>{
 
-        navigate("/manage-data-source");
+        navigate("/manage-table");
       }
     
       const handleViewView = () =>{
@@ -17,7 +17,7 @@ export default function AddFile() {
 
       const handleCreate = () =>{
     
-        navigate("/sheet");
+        navigate("/table-view");
       }
 
     return (

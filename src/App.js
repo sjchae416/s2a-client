@@ -5,12 +5,11 @@ import Box from "@mui/material/Box";
 import {createBrowserHistory} from 'history';
 import {
   AppBanner, 
-  SheetBanner,
   Dashboard,
   Login, 
   AddFile, 
-  ManageDataSource, 
-  SheetScreen
+  ManageTable, 
+  TableView
 } from "./components";
 
 
@@ -23,8 +22,8 @@ const App = () => {
           <Route  path="/" element={<Login/>} />
           <Route  path="/dashboard" element={<Dashboard/>} />
           <Route   path="/add-view" element={<AddFile/>} />
-          <Route  path="/manage-data-source" element={<ManageDataSource/>} />
-          <Route  path="/sheet" element={<SheetScreen/>} />
+          <Route  path="/manage-table" element={<ManageTable/>} />
+          <Route  path="/table-view" element={<TableView/>} />
         </Routes>
       </Router>
     </Box>

@@ -35,7 +35,7 @@ export default function Dashboard() {
    // name = event.target;
     // when the google sheets API is connected, update the database here
 
-    navigate("/manage-data-source");
+    navigate("/manage-table");
   }
 
   const handleOpen = () =>{
