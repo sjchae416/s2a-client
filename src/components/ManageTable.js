@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 
-export default function ManageDataSource() {
+export default function ManageTable() {
 
     let navigate = useNavigate(); 
   const handleDataView = () =>{

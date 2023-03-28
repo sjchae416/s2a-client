@@ -8,7 +8,7 @@ const initialValues = Object.fromEntries(
   Object.keys(test[0]).map(key => [key, ''])
 );
 
-export default function SheetScreen() {
+export default function TableView() {
 
   //  const test =  [
   //       {
