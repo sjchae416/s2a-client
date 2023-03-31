@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "react-modal";
 
-import test from './test.json';
+import test from "./test.json";
 
 const initialValues = Object.fromEntries(
-  Object.keys(test[0]).map(key => [key, ''])
+  Object.keys(test[0]).map((key) => [key, ""])
 );
 
 export default function TableView() {
-
   //  const test =  [
   //       {
   //         "name": "John Smith",
@@ -41,20 +40,17 @@ export default function TableView() {
   const [editData, setEditData] = useState({});
   const [formValues, setFormValues] = useState(initialValues);
   const [isEditing, setIsEditing] = useState(false);
-  
 
   const handleRowClick = (rowData) => {
     setRowData(rowData);
     setEditData(rowData);
     setEditModalIsOpen(true);
-  }
+  };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setEditData((prevData) => ({ ...prevData, [name]: value }));
-  }
-
- 
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -66,7 +62,7 @@ export default function TableView() {
     });
     setRowData(newData);
     setEditModalIsOpen(false);
-  }
+  };
 
   const handleOpenModal = () => {
     setAddModalIsOpen(true);
@@ -90,85 +86,100 @@ export default function TableView() {
 
   let AddRecordModal = (
     <Modal isOpen={addModalIsOpen} onRequestClose={handleCloseModal}>
-        <h2>Add Record</h2>
-        <form>
-          {Object.keys(initialValues).map(key => (
-            <div key={key}>
-              <label htmlFor={key}>{key}</label>
-              <input type="text" id={key} name={key} value={formValues[key]} onChange={handleAddInputChange} />
-            </div>
-          ))}
-        </form>
-        <button onClick={handleCloseModal}>Cancel</button>
-        <button onClick={handleSaveModal}>Save</button>
-      </Modal>
+      <h2>Add Record</h2>
+      <form>
+        {Object.keys(initialValues).map((key) => (
+          <div key={key}>
+            <label htmlFor={key}>{key}</label>
+            <input
+              type="text"
+              id={key}
+              name={key}
+              value={formValues[key]}
+              onChange={handleAddInputChange}
+            />
+          </div>
+        ))}
+      </form>
+      <button onClick={handleCloseModal}>Cancel</button>
+      <button onClick={handleSaveModal}>Save</button>
+    </Modal>
   );
 
-  const handleEditClose = () =>{
+  const handleEditClose = () => {
     setEditModalIsOpen(false);
     setIsEditing(false);
-  }
+  };
 
   // adds the info edited into json
   const handleEditSubmit = () => {
     setEditModalIsOpen(false);
     setIsEditing(false);
-  }
+  };
 
   let EditRecordModal = (
     <Modal
-    isOpen={editModalIsOpen}
-    onRequestClose={() => setEditModalIsOpen(false)}
-    ariaHideApp={false}
-  >
-    <h2>{isEditing ? 'Edit Row Data' : 'Detail View'}</h2>
-    {isEditing ? (
-      <form onSubmit={handleSubmit}>
-        {Object.entries(rowData).map(([key, value]) => (
-          <div key={key}>
-            <label>
-              {key} 
-              <input
-                type="text"
-                name={key}
-                value={editData[key] || ''}
-                onChange={handleInputChange}
-              />
-            </label>
-          </div>
-        ))}
-         <button onClick={(handleEditClose)}>Cancel</button>
-        <button onClick={(handleEditSubmit)} type="submit">Save</button>
-      </form>
-    ) : (
-      <>
-        <button onClick={() => setIsEditing(true)}>Edit</button>
-        {Object.entries(rowData).map(([key, value]) => (
-          <div key={key}>
-            <label>
-              {key}:&nbsp;&nbsp;
-              <span>{value}</span>
-            </label>
-          </div>
-        ))}
-        <button onClick={(handleEditClose)}>Close</button>
-      </>
-    )}
-  </Modal>
+      isOpen={editModalIsOpen}
+      onRequestClose={() => setEditModalIsOpen(false)}
+      ariaHideApp={false}
+    >
+      <h2>{isEditing ? "Edit Row Data" : "Detail View"}</h2>
+      {isEditing ? (
+        <form onSubmit={handleSubmit}>
+          {Object.entries(rowData).map(([key, value]) => (
+            <div key={key}>
+              <label>
+                {key}
+                <input
+                  type="text"
+                  name={key}
+                  value={editData[key] || ""}
+                  onChange={handleInputChange}
+                />
+              </label>
+            </div>
+          ))}
+          <button onClick={handleEditClose}>Cancel</button>
+          <button onClick={handleEditSubmit} type="submit">
+            Save
+          </button>
+        </form>
+      ) : (
+        <>
+          <button onClick={() => setIsEditing(true)}>Edit</button>
+          {Object.entries(rowData).map(([key, value]) => (
+            <div key={key}>
+              <label>
+                {key}:&nbsp;&nbsp;
+                <span>{value}</span>
+              </label>
+            </div>
+          ))}
+          <button onClick={handleEditClose}>Close</button>
+        </>
+      )}
+    </Modal>
   );
-      
+
   return (
     <Box>
       <div>
-      <div>
-        <div style={{ padding: '50px', display: 'inline-block' }}>
-          App Name
+        <div>
+          <div style={{ padding: "50px", display: "inline-block" }}>
+            App Name
+          </div>
+          <button
+            className="btn btn-info"
+            style={{ padding: "50px", display: "inline-block" }}
+            onClick={handleOpenModal}
+          >
+            Add Record
+          </button>
         </div>
-        <button className="btn btn-info" style={{ padding: '50px', display: 'inline-block' }} onClick={handleOpenModal}>Add Record</button>
-      </div>
         {AddRecordModal}
-    </div>
-      <br/><br/>
+      </div>
+      <br />
+      <br />
       <table>
         <thead>
           <tr>
@@ -189,5 +200,5 @@ export default function TableView() {
       </table>
       {EditRecordModal}
     </Box>
-    );
+  );
 }
