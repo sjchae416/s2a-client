@@ -1,6 +1,16 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-const PublishedApps = ({ handleOpen }) => {
+const PublishedApps = () => {
+  let navigate = useNavigate();
+  const handleOpen = () => {
+    // name that the user enters is stored in name atm
+    // name = event.target;
+    // when the google sheets API is connected, update the database here
+
+    navigate("/table-view");
+  };
+
   return (
     <div className="box_two">
       <div className="row">
@@ -36,7 +46,7 @@ const PublishedApps = ({ handleOpen }) => {
 
             <div className="col-3">
               <a href="#">
-                <div className="card p-0 text-center">
+                <div className="card p-0 text-center" >
                   <h2 className="">App2</h2>
                   <hr />
                   <div className="p-1">

@@ -1,14 +1,25 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { Link, useNavigate } from "react-router-dom";
-import test from "./test.json";
+import test from "./test2.json";
+import role from "./test-role-sheet.json";
 
 export default function AddFile() {
   const [view, setView] = useState(1);
   const [showTable, setShowTable] = useState(false);
   const [showManageTable, setShowManageTable] = useState(false);
   const [showTableContent, setShowTableContent] = useState(false);
+  const [sheetIndex, setSheetIndex] = useState("");
+  const [name, setName] = useState("");
+  const [url, setUrl] = useState("");
+
+  const [app, setAppName] = useState("");
+  const [appurl, setURLName] = useState("");
+  const [selectedColumns, setSelectedColumns] = useState([]);
   const keys = Object.keys(test[0]);
+  const roleKey = Object.keys(role[0]);
+
+  const columns = Object.keys(test[0]);
 
   let navigate = useNavigate();
 
@@ -62,6 +73,56 @@ export default function AddFile() {
     navigate("/dashboard");
   };
 
+  const handleLoad = () => {
+    if (name && url && sheetIndex) {
+      // Create the JSON object
+      const data = {
+        name: name,
+        url: url,
+        sheetidx: sheetIndex,
+      };
+
+      //requires backend to save the data for tables
+      
+
+    } else {
+      alert("Please fill out all fields before submitting");
+      return;
+    }
+    //let test = "./" + url.toString();
+    //let file = require(test);
+    
+    //keys = Object.keys(test[0]);
+    // alert(keys);
+    setShowTable(true);
+  };
+  
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedColumns([...selectedColumns, value]);
+    } else {
+      setSelectedColumns(selectedColumns.filter((column) => column !== value));
+    }
+  };
+
+  const appLoad = () => {
+    if (app && appurl) {
+      // Create the JSON object
+      //requires backend to save the data for tables
+
+    } else {
+      alert("Please fill out all fields before submitting");
+      return;
+    }
+    //let test = "./" + url.toString();
+    //let file = require(test);
+    
+    //keys = Object.keys(test[0]);
+    // alert(keys);
+    setShowTable(true);
+  };
+
   return (
     <Box>
       <br />
@@ -111,20 +172,30 @@ export default function AddFile() {
                     }}
                   >
                     <div class="form-group">
-                      <label>App Name</label>
-                      <input type="text" class="form-control" />
+                      <label>Creator's Name</label>
+                      <div>John Smith</div>
                     </div>
                     <div class="form-group">
-                      <label>Creator's Name</label>
-                      <input type="text" class="form-control" />
+                      <label>App Name</label>
+                      <input
+                        required
+                        type="text"
+                        class="form-control"
+                        onChange={(e) => setAppName(e.target.value)}
+                      />
                     </div>
                     <div class="form-group">
                       <label>URL</label>
-                      <input type="text" class="form-control" />
+                      <input
+                        required
+                        type="text"
+                        class="form-control"
+                        onChange={(e) => setURLName(e.target.value)}
+                      />
                     </div>
                     <div class="text-right">
                       <button
-                        onClick={() => setShowTable(true)}
+                        onClick={appLoad}
                         class="btn btn-info"
                       >
                         Load
@@ -137,13 +208,13 @@ export default function AddFile() {
                       <table>
                         <thead>
                           <tr>
-                            {Object.keys(test[0]).map((header) => (
+                            {Object.keys(role[0]).map((header) => (
                               <th key={header}>{header}</th>
                             ))}
                           </tr>
                         </thead>
                         <tbody>
-                          {test.map((rowData) => (
+                          {role.map((rowData) => (
                             <tr key={rowData.id}>
                               {Object.values(rowData).map((value, index) => (
                                 <td key={index}>{value}</td>
@@ -175,12 +246,21 @@ export default function AddFile() {
                     <div class="form-group">
                       <label>Table</label>
                       <select class="form-control">
-                        <option value="">select</option>
+                        <option value="">test</option>
                       </select>
                     </div>
-                    <div class="form-group">
-                      <label>Columns</label>
-                      <input type="text" class="form-control" />
+                    <div>
+                      <div className="form-group">
+                        <label>Columns</label>
+                        <select multiple onChange={handleCheckboxChange}>
+                          {columns.map((column) => (
+                            <option key={column} value={column}>
+                              {column}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <p>Selected Columns: {selectedColumns.join(', ')}</p>
                     </div>
                     <div class="form-group">
                       <label className="can_btn">View Type</label>
@@ -188,15 +268,17 @@ export default function AddFile() {
                       <button class="btn btn-info">Detail</button>
                     </div>
                     <div class="form-group">
-                      <label>Alloted Action</label>
+                      <label>Allowed Action</label>
                       <select class="form-control">
-                        <option value="">select</option>
+                        <option value="">edit record</option>
+                        <option value="">add record</option>
                       </select>
                     </div>
                     <div class="form-group">
                       <label>Role</label>
                       <select class="form-control">
-                        <option value="">select</option>
+                        <option value="">developer</option>
+                        <option value="">end user</option>
                       </select>
                     </div>
 
@@ -220,32 +302,41 @@ export default function AddFile() {
                     <div class="form-group">
                       <label>Name</label>
                       <input
+                        required
                         type="text"
-                        defaultvalue="Student table"
                         class="form-control"
+                        onChange={(e) => setName(e.target.value)}
                       />
                     </div>
                     <div class="form-group">
                       <label>URL</label>
-                      <input type="text" class="form-control" />
+                      <input
+                        required
+                        type="text"
+                        class="form-control"
+                        onChange={(e) => setUrl(e.target.value)}
+                      />
                     </div>
                     <div class="form-group">
                       <label>Sheet Index</label>
-                      <input type="number" defaultvalue="1" class="form-control" />
+                      <input
+                        required
+                        class="form-control"
+                        type="number" 
+                        defaultvalue="1"
+                        onChange={(e) => setSheetIndex(e.target.value)}
+                      />
                     </div>
 
                     <div class="text-right">
-                      <button
-                        onClick={() => setShowManageTable(true)}
-                        class="btn btn-info"
-                      >
+                    <button onClick={handleLoad} class="btn btn-info">
                         Load
                       </button>
                     </div>
 
                     <br />
                     <br />
-                    {showManageTable && ( 
+                    {showTable && ( 
                     <table className="table table-bordered">
                     <thead>
                       <tr>
