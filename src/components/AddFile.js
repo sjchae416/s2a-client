@@ -6,7 +6,9 @@ import test from "./test.json";
 export default function AddFile() {
   const [view, setView] = useState(1);
   const [showTable, setShowTable] = useState(false);
+  const [showManageTable, setShowManageTable] = useState(false);
   const [showTableContent, setShowTableContent] = useState(false);
+  const keys = Object.keys(test[0]);
 
   let navigate = useNavigate();
 
@@ -219,7 +221,7 @@ export default function AddFile() {
                       <label>Name</label>
                       <input
                         type="text"
-                        value="Student table"
+                        defaultvalue="Student table"
                         class="form-control"
                       />
                     </div>
@@ -229,12 +231,12 @@ export default function AddFile() {
                     </div>
                     <div class="form-group">
                       <label>Sheet Index</label>
-                      <input type="text" value="Table1" class="form-control" />
+                      <input type="number" defaultvalue="1" class="form-control" />
                     </div>
 
                     <div class="text-right">
                       <button
-                        onClick={() => setShowTableContent(true)}
+                        onClick={() => setShowManageTable(true)}
                         class="btn btn-info"
                       >
                         Load
@@ -243,28 +245,38 @@ export default function AddFile() {
 
                     <br />
                     <br />
-                    {showTableContent ? (
-                      <table>
-                        <thead>
-                          <tr>
-                            {Object.keys(test[0]).map((header) => (
-                              <th key={header}>{header}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {test.map((rowData) => (
-                            <tr key={rowData.id}>
-                              {Object.values(rowData).map((value, index) => (
-                                <td key={index}>{value}</td>
-                              ))}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    ) : (
-                      ""
-                    )}
+                    {showManageTable && ( 
+                    <table className="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Key</th>
+                        <th>Function</th>
+                        <th>Label</th>
+                        <th>Reference</th>
+                        <th>Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {keys.map((key) => (
+                        <tr key={key}>
+                          <td>{key}</td>
+                          <td><input type="checkbox" /></td>
+                          <td />
+                          <td>
+                            <input type="radio" />
+                          </td>
+                          <td />
+                          <td>
+                            <select>
+                              <option />
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  )}
 
                     <br />
                     <br />
@@ -284,7 +296,7 @@ export default function AddFile() {
             <div class="modal-content">
               <div class="card">
                 <div class="form-group save_ur_chnage">
-                  <h5>Save Chnages</h5>
+                  <h5>Save Changes</h5>
                   <h5>
                     Would you like to save your changes before proceeding?
                   </h5>
@@ -314,7 +326,7 @@ export default function AddFile() {
                 <div class="form-group save_ur_chnage">
                   <h5>
                     Would you like to publish your app? <br /> If not, it will
-                    be saved under in development and will not be avialble to
+                    be saved under in development and will not be availble to
                     users.
                   </h5>
                   <button class="btn btn-danger" id="dismiss_create_app_modal">

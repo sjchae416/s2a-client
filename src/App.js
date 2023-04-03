@@ -16,8 +16,8 @@ import {
   AddFile,
   ManageTable,
   TableView,
+  CreateTable
 } from "./components";
-import CreateTable from "./components/CreateTable";
 
 export const customHistory = createBrowserHistory();
 const App = () => {

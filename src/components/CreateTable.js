@@ -1,9 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { Link, useNavigate } from "react-router-dom";
+import test from "./test.json";
 
 export default function CreateTable() {
   let navigate = useNavigate();
+  const [showTable, setShowTable] = useState(false);
+  const keys = Object.keys(test[0]);
+
   useEffect(() => {
     const create_app_modal_btn = document.querySelector("#create-app");
     const create_app_modal = document.querySelector("#create-app-modal");
@@ -28,8 +32,29 @@ export default function CreateTable() {
   }, []);
 
   const handleLoad = () => {
-    navigate("/manage-table");
+    setShowTable(true);
   };
+
+  // let ManageTableDetail = (
+  //   {showTable && ( 
+  //       <table>
+  //         <thead>
+  //           <tr>
+  //             <th>Header 1</th>
+  //             <th>Header 2</th>
+  //             <th>Header 3</th>
+  //           </tr>
+  //         </thead>
+  //         <tbody>
+  //           <tr>
+  //             <td>Data 1</td>
+  //             <td>Data 2</td>
+  //             <td>Data 3</td>
+  //           </tr>
+  //         </tbody>
+  //       </table>
+  //     )}
+  // );
 
   return (
     <Box>
@@ -78,7 +103,6 @@ export default function CreateTable() {
                     <label>Name</label>
                     <input
                       type="text"
-                      value="Student table"
                       class="form-control"
                     />
                   </div>
@@ -88,7 +112,7 @@ export default function CreateTable() {
                   </div>
                   <div class="form-group">
                     <label>Sheet Index</label>
-                    <input type="text" value="Table1" class="form-control" />
+                    <input type="text" class="form-control" />
                   </div>
 
                   <div class="text-right">
@@ -96,6 +120,38 @@ export default function CreateTable() {
                       Load
                     </button>
                   </div>
+                  {showTable && ( 
+                    <table className="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Key</th>
+                        <th>Function</th>
+                        <th>Label</th>
+                        <th>Reference</th>
+                        <th>Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {keys.map((key) => (
+                        <tr key={key}>
+                          <td>{key}</td>
+                          <td><input type="checkbox" /></td>
+                          <td />
+                          <td>
+                            <input type="radio" />
+                          </td>
+                          <td />
+                          <td>
+                            <select>
+                              <option />
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  )}
 
                   <br />
                   <br />
@@ -108,7 +164,7 @@ export default function CreateTable() {
                   <div class="modal-content">
                     <div class="card">
                       <div class="form-group save_ur_chnage">
-                        <h5>Save Chnages</h5>
+                        <h5>Save Changes</h5>
                         <h5>
                           Would you like to save your changes before proceeding?
                         </h5>

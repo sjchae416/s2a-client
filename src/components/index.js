@@ -5,6 +5,7 @@ import Login from './Login'
 import AddFile from './AddFile'
 import ManageTable from './ManageTable'
 import TableView from './TableView'
+import CreateTable from './CreateTable'
 
 /*
     This serves as a module so that we can import
@@ -16,5 +17,6 @@ export {
     Login, 
     AddFile,
     ManageTable, 
-    TableView
+    TableView, 
+    CreateTable
 }

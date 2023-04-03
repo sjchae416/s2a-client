@@ -28,7 +28,7 @@ const PublishedApps = ({ handleOpen }) => {
                   <h2 className="">App1</h2>
                   <hr />
                   <div className="p-1">
-                    <small>Last opened mm/dd/vy</small>
+                    <small>Last modified mm/dd/vy</small>
                   </div>
                 </div>
               </a>
@@ -40,7 +40,7 @@ const PublishedApps = ({ handleOpen }) => {
                   <h2 className="">App2</h2>
                   <hr />
                   <div className="p-1">
-                    <small>Last opened mm/dd/vy</small>
+                    <small>Last modified mm/dd/vy</small>
                   </div>
                 </div>
               </a>
@@ -52,7 +52,7 @@ const PublishedApps = ({ handleOpen }) => {
                   <h2 className="">App3</h2>
                   <hr />
                   <div className="p-1">
-                    <small>Last opened mm/dd/vy</small>
+                    <small>Last modified mm/dd/vy</small>
                   </div>
                 </div>
               </a>

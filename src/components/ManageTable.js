@@ -4,6 +4,8 @@ import Box from "@mui/material/Box";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function ManageTable() {
+
+
   useEffect(() => {
     const create_app_modal_btn = document.querySelector("#create-app");
     const create_app_modal = document.querySelector("#create-app-modal");
@@ -212,7 +214,7 @@ export default function ManageTable() {
                       <div class="modal-content">
                         <div class="card">
                           <div class="form-group save_ur_chnage">
-                            <h5>Save Chnages</h5>
+                            <h5>Save Changes</h5>
                             <h5>
                               Would you like to save your changes before
                               proceeding?
@@ -241,7 +243,7 @@ export default function ManageTable() {
                       <div class="modal-content">
                         <div class="card">
                           <div class="form-group save_ur_chnage">
-                            <h5>Save Chnages</h5>
+                            <h5>Save Changes</h5>
                             <h5>
                               Would you like to save your changes before
                               proceeding?
