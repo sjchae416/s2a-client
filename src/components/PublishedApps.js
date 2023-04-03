@@ -34,8 +34,8 @@ const PublishedApps = () => {
           <div className="row">
             <div className="col-3">
               <a href="#">
-                <div onClick={handleOpen} className="card p-0 text-center">
-                  <h2 className="">App1</h2>
+                <div className="card p-0 text-center">
+                  <h2  onClick={handleOpen} className="">App1</h2>
                   <hr />
                   <div className="p-1">
                     <small>Last modified mm/dd/vy</small>

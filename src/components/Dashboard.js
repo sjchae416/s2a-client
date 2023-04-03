@@ -26,7 +26,7 @@ export default function Dashboard() {
     // name = event.target;
     // when the google sheets API is connected, update the database here
 
-    navigate("/sheet");
+    navigate("/table-view");
   };
 
   return (
