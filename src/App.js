@@ -13,7 +13,7 @@ import {
   AppBanner,
   Dashboard,
   Login,
-  AddFile,
+  CreateApp,
   ManageTable,
   TableView,
   CreateTable
@@ -29,7 +29,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/create-table" element={<CreateTable />} />
 
-          <Route path="/add-view" element={<AddFile />} />
+          <Route path="/add-view" element={<CreateApp />} />
           <Route path="/manage-table" element={<ManageTable />} />
           <Route path="/table-view" element={<TableView />} />
         </Routes>

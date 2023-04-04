@@ -2,7 +2,7 @@
 import AppBanner from './AppBanner'
 import Dashboard from './Dashboard'
 import Login from './Login'
-import AddFile from './AddFile'
+import CreateApp from './CreateApp'
 import ManageTable from './ManageTable'
 import TableView from './TableView'
 import CreateTable from './CreateTable'
@@ -15,7 +15,7 @@ export {
     AppBanner, 
     Dashboard,
     Login, 
-    AddFile,
+    CreateApp,
     ManageTable, 
     TableView, 
     CreateTable
