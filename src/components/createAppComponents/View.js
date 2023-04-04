@@ -8,13 +8,14 @@ const View = () => {
     const [showTable, setShowTable] = useState(false);
     const columns = Object.keys(test[0]);
 
-    const handleCheckboxChange = (e) => {
+    const handleCheckboxChange = (e, column) => {
         const { value, checked } = e.target;
         if (checked) {
           setSelectedColumns([...selectedColumns, value]);
         } else {
           setSelectedColumns(selectedColumns.filter((column) => column !== value));
         }
+        console.log(selectedColumns);
     };
 
     return (
@@ -38,16 +39,21 @@ const View = () => {
             </div>
             <div>
                 <div className="form-group">
-                <label>Columns</label>
-                <select multiple onChange={handleCheckboxChange}>
+                    <label>Columns</label>
                     {columns.map((column) => (
-                    <option key={column} value={column}>
-                        {column}
-                    </option>
+                        <div key={column}>
+                        <input
+                            type="checkbox"
+                            id={`checkbox-${column}`}
+                            name={column}
+                            onChange={(e) => handleCheckboxChange(e, column)}
+                        />
+                        <label htmlFor={`checkbox-${column}`}>{column}</label>
+                        </div>
                     ))}
-                </select>
                 </div>
                 <p>Selected Columns: {selectedColumns.join(', ')}</p>
+                
             </div>
             <div class="form-group">
                 <label className="can_btn">View Type</label>

@@ -9,6 +9,7 @@ const Table = () => {
     const [url, setUrl] = useState("");
     const [showTable, setShowTable] = useState(false);
     const keys = Object.keys(test[0]);
+    const [columns, setColumns] = useState([]);
 
     const tableData = {
         name: name,
@@ -114,7 +115,11 @@ const Table = () => {
                             <input type="radio" name={`radio-col2`} value={key} />
                         </label>
                     </td>
-                    <td />
+                    <td>
+                        <select name={`select-${key}`}>
+                            <option></option>
+                        </select>
+                    </td>
                     <td>
                         <select name={`select-${key}`}>
                             <option value="int">Integer</option>
