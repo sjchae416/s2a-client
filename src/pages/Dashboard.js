@@ -1,15 +1,54 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { Link, useNavigate } from "react-router-dom";
-import RunnableApps from "../components/RunnableApps";
-import InDevelopmentApps from "../components/InDevelopmentApps";
-import PublishedApps from "../components/PublishedApps";
-import AllApps from "../components/AllApps";
 
 export const name = "";
 
+const apps = [
+  {
+    name: "App 1",
+    status: "published",
+    runnable: true,
+    inDevelopment: false,
+  },
+  {
+    name: "App 2",
+    status: "inDevelopment",
+    runnable: false,
+    inDevelopment: true,
+  },
+  {
+    name: "App 3",
+    status: "published",
+    runnable: true,
+    inDevelopment: false,
+  },
+  {
+    name: "App 4",
+    status: "inDevelopment",
+    runnable: false,
+    inDevelopment: true,
+  },
+  {
+    name: "App 5",
+    status: "runnable",
+    runnable: true,
+    inDevelopment: false,
+  },
+  {
+    name: "App 6",
+    status: "inDevelopment",
+    runnable: false,
+    inDevelopment: true,
+  },
+];
+
 export default function Dashboard() {
   const [section, setSection] = useState(1);
+
+  const publishedApps = apps.filter((app) => app.status === "published");
+  const inDevelopmentApps = apps.filter((app) => app.inDevelopment);
+  const runnableApps = apps.filter((app) => app.runnable);
 
   let navigate = useNavigate();
   const createApp = (event) => {
@@ -29,8 +68,22 @@ export default function Dashboard() {
     navigate("/table-view");
   };
 
+  // let app = (
+  //   <div className="col-4 mb-4">
+  //     <a href="#">
+  //       <div className="card p-0 text-center">
+  //         <h2 className="card-title">{app.name}</h2>
+  //         <hr />
+  //         <div className="p-1">
+  //           <small>Last modified mm/dd/yy</small>
+  //         </div>
+  //       </div>
+  //     </a>
+  //   </div>
+  // );
+
   return (
-    <Box>
+    <div>
       <br />
       <br />
       <div className="container">
@@ -87,47 +140,89 @@ export default function Dashboard() {
               </div>
             </div>
             {section === 1 ? (
-              <AllApps handleOpen={handleOpen} />
+              <ul>
+                <span>All Apps</span>
+                <div className = "row">
+                  {apps.map((app) => (
+                      <div className="col-3">
+                        <a href="#">
+                          <div className="card p-0 text-center">
+                            <h2 className="card-title">{app.name}</h2>
+                            <hr />
+                            <div className="p-1">
+                              <small>Last modified mm/dd/yy</small>
+                            </div>
+                          </div>
+                        </a>
+                        <br/>
+                      </div>
+                    ))}
+                  </div>
+              </ul>
             ) : section === 2 ? (
-              <PublishedApps handleOpen={handleOpen} />
+              <ul>
+                <span>Published Apps</span>
+                <div className = "row">
+                  {publishedApps.map((app) => (
+                      <div className="col-3">
+                        <a href="#">
+                          <div className="card p-0 text-center">
+                            <h2 className="card-title">{app.name}</h2>
+                            <hr />
+                            <div className="p-1">
+                              <small>Last modified mm/dd/yy</small>
+                            </div>
+                          </div>
+                        </a>
+                        <br/>
+                      </div>
+                    ))}
+                  </div>
+              </ul>
             ) : section === 3 ? (
-              <InDevelopmentApps handleOpen={handleOpen} />
+              <ul>
+                <span>In Development Apps</span>
+                <div className = "row">
+                  {inDevelopmentApps.map((app) => (
+                      <div className="col-3">
+                        <a href="#">
+                          <div className="card p-0 text-center">
+                            <h2 className="card-title">{app.name}</h2>
+                            <hr />
+                            <div className="p-1">
+                              <small>Last modified mm/dd/yy</small>
+                            </div>
+                          </div>
+                        </a>
+                        <br/>
+                      </div>
+                    ))}
+                  </div>
+              </ul>
             ) : (
-              <RunnableApps handleOpen={handleOpen} />
+              <ul>
+                <span>Runnable Apps</span>
+                <div className = "row">
+                  {runnableApps.map((app) => (
+                      <div className="col-3">
+                        <a href="#">
+                          <div className="card p-0 text-center">
+                            <h2 className="card-title">{app.name}</h2>
+                            <hr />
+                            <div className="p-1">
+                              <small>Last modified mm/dd/yy</small>
+                            </div>
+                          </div>
+                        </a>
+                        <br/>
+                      </div>
+                    ))}
+                  </div>
+              </ul>
             )}
           </div>
         </div>
-
-        <div class="modal" id="create-app-modal">
-          <div class="modal-dialog-centered">
-            <div class="modal-content">
-              <div class="card">
-                <div class="form-group">
-                  <label>App name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="enter a name for your app"
-                  />
-                </div>
-
-                <div class="form-group">
-                  <button class="btn btn-danger" id="dismiss_create_app_modal">
-                    Cancel
-                  </button>
-                  <button
-                    onClick={createApp}
-                    class="btn btn-success"
-                    id="create-app-btn"
-                  >
-                    Create
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-    </Box>
+    </div>
   );
 }
