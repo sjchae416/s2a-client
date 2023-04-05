@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { Link, useNavigate } from "react-router-dom";
-import test from "./test2.json";
-import role from "./test-role-sheet.json";
+import test from "../testData/test2.json";
+import role from "../testData/test-role-sheet.json";
 
 import {App} from "./createAppComponents/App.js"
-import {Table} from "./Table.js"
+import Table from "./Table.js"
 import {View} from "./createAppComponents/View.js"
 
 export default function CreateApp() {

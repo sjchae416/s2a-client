@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import role from "./test-role-sheet.json";
-import test from "./test2.json";
+import test from "../testData/test2.json";
+import role from "../testData/test-role-sheet.json";
 
-const Table = () => {
+export default function Table(){
     const [sheetIndex, setSheetIndex] = useState("");
     const [name, setName] = useState("");
     const [url, setUrl] = useState("");
@@ -139,4 +139,3 @@ const Table = () => {
         </div>
 );
 } 
-export { Table }

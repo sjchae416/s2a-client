@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import role from "../test-role-sheet.json";
+import role from "../../testData/test-role-sheet.json";
 
 const App = () => {
     const [appName, setAppName] = useState("");
