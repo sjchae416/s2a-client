@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { Link, useNavigate } from "react-router-dom";
-import RunnableApps from "./RunnableApps";
-import InDevelopmentApps from "./InDevelopmentApps";
-import PublishedApps from "./PublishedApps";
-import AllApps from "./AllApps";
+import RunnableApps from "../components/RunnableApps";
+import InDevelopmentApps from "../components/InDevelopmentApps";
+import PublishedApps from "../components/PublishedApps";
+import AllApps from "../components/AllApps";
 
 export const name = "";
 

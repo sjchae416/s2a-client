@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import role from "../test-role-sheet.json";
-import test from "../test2.json";
+import role from "./test-role-sheet.json";
+import test from "./test2.json";
 
 const Table = () => {
     const [sheetIndex, setSheetIndex] = useState("");
@@ -122,10 +122,10 @@ const Table = () => {
                     </td>
                     <td>
                         <select name={`select-${key}`}>
-                            <option value="int">Integer</option>
+                            <option value="int">Number</option>
                             <option value="bool">Boolean</option>
-                            <option value="string">String</option>
-                            
+                            <option value="string">Text</option>
+                            <option value="string">URL</option>
                         </select>
                     </td>
                 </tr>

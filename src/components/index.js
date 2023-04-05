@@ -1,11 +1,11 @@
 // import ComponentName from './path'
 import AppBanner from './AppBanner'
-import Dashboard from './Dashboard'
-import Login from './Login'
+import Dashboard from '../pages/Dashboard'
+import Login from '../pages/Login'
 import CreateApp from './CreateApp'
 import ManageTable from './ManageTable'
 import TableView from './TableView'
-import CreateTable from './CreateTable'
+import Table from './Table'
 
 /*
     This serves as a module so that we can import
@@ -18,5 +18,5 @@ export {
     CreateApp,
     ManageTable, 
     TableView, 
-    CreateTable
+    Table
 }

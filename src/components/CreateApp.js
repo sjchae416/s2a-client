@@ -5,7 +5,7 @@ import test from "./test2.json";
 import role from "./test-role-sheet.json";
 
 import {App} from "./createAppComponents/App.js"
-import {Table} from "./createAppComponents/Table.js"
+import {Table} from "./Table.js"
 import {View} from "./createAppComponents/View.js"
 
 export default function CreateApp() {
