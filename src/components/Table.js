@@ -76,7 +76,7 @@ export default function Table(){
                 <input
                 required
                 class="form-control"
-                type="number" 
+                // type="number"
                 defaultvalue="1"
                 onChange={(e) => setSheetIndex(e.target.value)}
                 />
