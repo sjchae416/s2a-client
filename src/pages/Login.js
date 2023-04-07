@@ -1,25 +1,19 @@
-import React, { useEffect } from 'react';
-import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
+import React from 'react';
 import Box from '@mui/material/Box';
 
 export default function Login() {
-	const [anchorEl, setAnchorEl] = useState(null);
+	const logIn = async () => {
+		window.open(
+			`http://localhost:3333/auth/google`,
+			// `http://localhost:${process.env.SERVER_PORT}/auth/google/callback`,
+			'_self'
+		);
 
-	let navigate = useNavigate();
-	const logIn = () => {
-		// fetch('/port')
-		//   .then(response => response.json())
-		//   .then(data => {
-		//     const PORT = data.port
-		//     console.log(data.port);
-		fetch(`http://localhost:3333/auth/google`)
-			.then((response) => response.json())
-			.then((data) => console.log(data))
-			.catch((error) => console.error(error));
-		// navigate("/dashboard");
-		// })
+		// FIXME try retrieve server port number from the server or have config file in the client folder
+		// fetch('http://localhost:3000/server/port')
+		// 	.then((response) => response.json())
+		// 	.then((data) => console.log(data.port))
+		// 	.catch((error) => console.error(error));
 	};
 
 	return (
@@ -28,10 +22,10 @@ export default function Login() {
 			<br />
 			<div className="container">
 				<div className="card">
-					<h1 className="text-center">S 2 A</h1>
+					<h1 className="text-center">S2A</h1>
 
 					<div className="card">
-						<h1 className="text-center">G</h1>
+						<h1 className="text-center">Log In</h1>
 						<div className="card login-card mx-auto">
 							<div
 								style={{
@@ -46,7 +40,7 @@ export default function Login() {
 										className="btn btn-success"
 										id="login-btn"
 									>
-										Connect with Google Account
+										Continue with Google Account
 									</button>
 								</div>
 							</div>
@@ -54,7 +48,6 @@ export default function Login() {
 					</div>
 				</div>
 			</div>
-			<script src="js/login.js"></script>
 		</Box>
 	);
 }

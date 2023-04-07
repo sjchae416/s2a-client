@@ -58,7 +58,8 @@ export default function ManageTable() {
   };
 
   const handleSaveChanges = () => {
-    navigate("/dashboard");
+    navigate("/");
+    // navigate("/dashboard");
   };
 
   return (
@@ -226,7 +227,8 @@ export default function ManageTable() {
                               Discard
                             </button>
                             <button
-                              onClick={() => navigate("/dashboard")}
+                              onClick={() => navigate("/")}
+                              // onClick={() => navigate("/dashboard")}
                               class="btn btn-success"
                               id="save-change-btn"
                             >

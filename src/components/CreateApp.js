@@ -60,7 +60,8 @@ export default function CreateApp() {
   }, []);
 
   const handleSaveChanges = () => {
-    navigate("/dashboard");
+    navigate("/");
+    // navigate("/dashboard");
   };
 
 
@@ -133,7 +134,8 @@ export default function CreateApp() {
                     Discard
                   </button>
                   <button
-                    onClick={() => navigate("/dashboard")}
+                    onClick={() => navigate("/")}
+                    // onClick={() => navigate("/dashboard")}
                     class="btn btn-success"
                     id="save-change-btn"
                   >
