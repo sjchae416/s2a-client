@@ -25,7 +25,7 @@ export default function Table(){
   }, [name, url, sheetIndex]);
 
     const handleLoad = () => {
-        if (name && url && sheetIndex) {
+        if (tableData.name && tableData.url && tableData.sheetIndex) {
             // Create the JSON object
             console.log(tableData);
 
