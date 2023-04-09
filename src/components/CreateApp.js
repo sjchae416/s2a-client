@@ -4,12 +4,15 @@ import { Link, useNavigate } from "react-router-dom";
 import test from "../testData/test2.json";
 import role from "../testData/test-role-sheet.json";
 
-import {App} from "./createAppComponents/App.js"
-import Table from "./Table.js"
-import {View} from "./createAppComponents/View.js"
+import { App } from "./createAppComponents/App.js";
+import Table from "./Table.js";
+import { View } from "./createAppComponents/View.js";
+import TableList from "./TableList";
 
 export default function CreateApp() {
   const [view, setView] = useState(1);
+  const [tablelist, setTableList] = useState([]);
+  const [viewlist, setViewList] = useState([]);
 
   let navigate = useNavigate();
 
@@ -20,6 +23,7 @@ export default function CreateApp() {
       "#dismiss_create_app_modal"
     );
     const create_app_btn = document.querySelector("#create-app-btn");
+    const create_app_btns = document.querySelector("#create-app-btns");
 
     create_app_modal_btn.onclick = () => {
       create_app_modal.style.display = "block";
@@ -32,6 +36,12 @@ export default function CreateApp() {
     };
 
     dismiss_create_app_modal.onclick = (event) => {
+      create_app_modal.style.display = "none";
+    };
+    create_app_btn.onclick = (event) => {
+      create_app_modal.style.display = "none";
+    };
+    create_app_btns.onclick = (event) => {
       create_app_modal.style.display = "none";
     };
   }, []);
@@ -57,13 +67,15 @@ export default function CreateApp() {
     dismiss_create_app_modal.onclick = (event) => {
       create_app_modal.style.display = "none";
     };
+    create_app_btn.onclick = (event) => {
+      create_app_modal.style.display = "none";
+    };
   }, []);
 
   const handleSaveChanges = () => {
-    navigate("/");
+    // navigate("/");
     // navigate("/dashboard");
   };
-
 
   return (
     <Box>
@@ -95,19 +107,33 @@ export default function CreateApp() {
               <hr />
               <button onClick={() => setView(4)}>View</button>
               <hr />
-              <button id="create-app">Deploy</button>
+              <button id="create-app">Publish</button>
               <hr />
             </div>
-            <div class="col-1 border-right text-center"></div>
+            <div class="col-1 border-right text-center">
+              {view === 3 ? (
+                <>
+                  <button>Add Table</button>
+                  <TableList tablelist={tablelist} />
+                </>
+              ) : view === 4 ? (
+                <>
+                  <button>Add View</button>
+                  <TableList tablelist={viewlist} />
+                </>
+              ) : (
+                ""
+              )}
+            </div>
             <div class="col-auto">
               <div class="container">
                 <br />
                 {view === 1 ? (
-                  <App/>
+                  <App />
                 ) : view === 4 ? (
-                  <View/>
+                  <View viewlist={viewlist} setViewList={setViewList} />
                 ) : view === 3 ? (
-                  <Table/>
+                  <Table tablelist={tablelist} setTableList={setTableList} />
                 ) : (
                   ""
                 )}
@@ -137,9 +163,12 @@ export default function CreateApp() {
                     onClick={() => navigate("/")}
                     // onClick={() => navigate("/dashboard")}
                     class="btn btn-success"
-                    id="save-change-btn"
+                    id="save-change-btns"
                   >
                     Save
+                  </button>
+                  <button class="btn btn-danger " id="save-change-btn">
+                    Cancel
                   </button>
                 </div>
               </div>
@@ -160,12 +189,11 @@ export default function CreateApp() {
                   <button class="btn btn-danger" id="dismiss_create_app_modal">
                     No
                   </button>
-                  <button
-                    onClick={handleSaveChanges}
-                    class="btn btn-success"
-                    id="create-app-btn"
-                  >
+                  <button class="btn btn-success" id="create-app-btn">
                     Yes
+                  </button>
+                  <button class="btn btn-danger" id="create-app-btns">
+                    Cancel
                   </button>
                 </div>
               </div>
