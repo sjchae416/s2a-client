@@ -9,11 +9,11 @@ const View = () => {
     const columns = Object.keys(test[0]);
 
     const handleCheckboxChange = (e, column) => {
-        const { value, checked } = e.target;
+        const { name, checked } = e.target;
         if (checked) {
-          setSelectedColumns([...selectedColumns, value]);
+          setSelectedColumns([...selectedColumns, name]);
         } else {
-          setSelectedColumns(selectedColumns.filter((column) => column !== value));
+          setSelectedColumns(selectedColumns.filter((column) => column !== name));
         }
         console.log(selectedColumns);
     };
