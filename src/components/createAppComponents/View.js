@@ -9,15 +9,15 @@ const View = ({ viewlist, setViewList }) => {
   const columns = Object.keys(test[0]);
   const [viewName, setViewName] = useState("");
 
-  const handleCheckboxChange = (e, column) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      setSelectedColumns([...selectedColumns, value]);
-    } else {
-      setSelectedColumns(selectedColumns.filter((column) => column !== value));
-    }
-    console.log(selectedColumns);
-  };
+    const handleCheckboxChange = (e, column) => {
+        const { name, checked } = e.target;
+        if (checked) {
+          setSelectedColumns([...selectedColumns, name]);
+        } else {
+          setSelectedColumns(selectedColumns.filter((column) => column !== name));
+        }
+        console.log(selectedColumns);
+    };
 
   const handleAddView = () => {
     if (viewName) setViewList([...viewlist, viewName]);
