@@ -8,7 +8,7 @@ import Table from './Table.js';
 import { View } from './createAppComponents/View.js';
 import TableList from './TableList';
 
-export default function CreateApp() {
+export default function CreateApp({user}) {
 	const [view, setView] = useState(1);
 	const [tablelist, setTableList] = useState([]);
 	const [viewlist, setViewList] = useState([]);
@@ -151,7 +151,7 @@ export default function CreateApp() {
 							<div className="container">
 								<br />
 								{view === 1 ? (
-									<App />
+									<App developer={user} />
 								) : view === 4 ? (
 									<View viewlist={viewlist} setViewList={setViewList} />
 								) : view === 3 ? (
@@ -208,7 +208,10 @@ export default function CreateApp() {
 										be saved under in development and will not be availble to
 										users.
 									</h5>
-									<button className="btn btn-danger" id="dismiss_create_app_modal">
+									<button
+										className="btn btn-danger"
+										id="dismiss_create_app_modal"
+									>
 										No
 									</button>
 									<button className="btn btn-success" id="create-app-btn">

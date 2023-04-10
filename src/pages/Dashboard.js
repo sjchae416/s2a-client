@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import DashboardApp from '../components/DashboardApp';
 
-import apps from "../testData/test-apps.json";
+import apps from '../testData/test-apps.json';
 
 export const name = '';
 
@@ -53,8 +53,8 @@ export const name = '';
 // 	},
 // ];
 
-export default function Dashboard(loggedInUser) {
-	const googleUser = loggedInUser.user;
+export default function Dashboard({ user }) {
+	const loggedInUser = user;
 	const [section, setSection] = useState(1);
 	const [showMenu, setShowMenu] = useState(false);
 
@@ -104,7 +104,7 @@ export default function Dashboard(loggedInUser) {
 
 	const toggleMenu = () => {
 		setShowMenu(!showMenu);
-	  };
+	};
 
 	return (
 		<div>
@@ -117,21 +117,21 @@ export default function Dashboard(loggedInUser) {
 						<h3>S2A</h3>
 					</Link>
 					{/* <div style={{ display: 'flex', justifyContent: 'center' }}>
-						Hello, {googleUser.name}. You are now logged in with {googleUser.email}.
+						Hello, {loggedInUser.name}. You are now logged in with {loggedInUser.email}.
 					</div>
 					<button className="btn-log-out" onClick={logOut}>
 						Log Out
 					</button> */}
 					<span className="profile-letter ml-auto" onClick={toggleMenu}>
-						{googleUser.name && googleUser.name.charAt(0).toUpperCase()}
+						{loggedInUser.name && loggedInUser.name.charAt(0).toUpperCase()}
 					</span>
 					{showMenu && (
-							<div className="dropdown-menu">
+						<div className="dropdown-menu">
 							<button className="btn-logout-dropdown" onClick={logOut}>
 								Logout
 							</button>
-							</div>
-						)}
+						</div>
+					)}
 				</div>
 
 				<br />
@@ -153,25 +153,25 @@ export default function Dashboard(loggedInUser) {
 									<ul className="app_list">
 										<li
 											className={section === 1 ? 'active' : ''}
-											onClick={() => setSection("all")}
+											onClick={() => setSection('all')}
 										>
 											All Apps
 										</li>
 										<li
 											className={section === 2 ? 'active' : ''}
-											onClick={() => setSection("publish")}
+											onClick={() => setSection('publish')}
 										>
 											Published Apps
 										</li>
 										<li
 											className={section === 3 ? 'active' : ''}
-											onClick={() => setSection("indevelopment")}
+											onClick={() => setSection('indevelopment')}
 										>
 											In Development Apps
 										</li>
 										<li
 											className={section === 4 ? 'active' : ''}
-											onClick={() => setSection("runnable")}
+											onClick={() => setSection('runnable')}
 										>
 											Runnable Apps
 										</li>
@@ -180,30 +180,30 @@ export default function Dashboard(loggedInUser) {
 							</div>
 						</div>
 						{/* FIXME fix rendering method and actually render components NOT dummy data */}
-						{section === "all" ? (
+						{section === 'all' ? (
 							<ul>
 								<span>All Apps</span>
 								<div className="row">
 									{apps.map((app) => (
-										<DashboardApp name = {app.name} date = {app.date}/>
+										<DashboardApp name={app.name} date={app.date} />
 									))}
 								</div>
 							</ul>
-						) : section === "publish" ? (
+						) : section === 'publish' ? (
 							<ul>
 								<span>Published Apps</span>
 								<div className="row">
 									{publishedApps.map((app) => (
-										<DashboardApp name = {app.name} date = {app.date}/>
+										<DashboardApp name={app.name} date={app.date} />
 									))}
 								</div>
 							</ul>
-						) : section === "indevelopment" ? (
+						) : section === 'indevelopment' ? (
 							<ul>
 								<span>In Development Apps</span>
 								<div className="row">
 									{inDevelopmentApps.map((app) => (
-										<DashboardApp name = {app.name} date = {app.date}/>
+										<DashboardApp name={app.name} date={app.date} />
 									))}
 								</div>
 							</ul>
@@ -212,7 +212,7 @@ export default function Dashboard(loggedInUser) {
 								<span>Runnable Apps</span>
 								<div className="row">
 									{runnableApps.map((app) => (
-										<DashboardApp name = {app.name} date = {app.date}/>
+										<DashboardApp name={app.name} date={app.date} />
 									))}
 								</div>
 							</ul>
