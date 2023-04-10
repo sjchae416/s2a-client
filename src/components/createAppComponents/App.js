@@ -23,11 +23,22 @@ const App = ({ developer }) => {
 	};
 
 	// FN create and fill in App document & and load Table data
-	const loadTable = () => {
+	const loadTable = async () => {
 		if (appName && roleMembershipURL) {
-			console.log(appData);
-			// Create the JSON object
-			//requires backend to save the data for tables
+			console.table(appData);
+			// NOTE read table data here with api
+
+			// NOTE test
+			const app = await fetch(`http://localhost:3333/apps/`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(appData),
+			})
+				.then((response) => response.json())
+				.then((data) => console.log('SUCCESSFULL', data))
+				.catch((error) => console.error(error));
 		} else {
 			alert('Please fill out all fields before submitting');
 			return;
@@ -43,7 +54,7 @@ const App = ({ developer }) => {
 	useEffect(() => {
 		appData.appName = appName;
 		appData.roleMembershipURL = roleMembershipURL;
-		console.log(appData);
+		// console.log(appData);
 	}, [appName, roleMembershipURL]);
 
 	useEffect(() => {
