@@ -2,46 +2,56 @@ import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { Link, useNavigate } from 'react-router-dom';
 
+import DashboardApp from '../components/DashboardApp';
+
+import apps from "../testData/test-apps.json";
+
 export const name = '';
 
-const apps = [
-	{
-		name: 'App 1',
-		status: 'published',
-		runnable: true,
-		inDevelopment: false,
-	},
-	{
-		name: 'App 2',
-		status: 'inDevelopment',
-		runnable: false,
-		inDevelopment: true,
-	},
-	{
-		name: 'App 3',
-		status: 'published',
-		runnable: true,
-		inDevelopment: false,
-	},
-	{
-		name: 'App 4',
-		status: 'inDevelopment',
-		runnable: false,
-		inDevelopment: true,
-	},
-	{
-		name: 'App 5',
-		status: 'runnable',
-		runnable: true,
-		inDevelopment: false,
-	},
-	{
-		name: 'App 6',
-		status: 'inDevelopment',
-		runnable: false,
-		inDevelopment: true,
-	},
-];
+// const apps = [
+// 	{
+// 		name: 'App 1',
+// 		date: '11/24/24',
+// 		status: 'published',
+// 		runnable: true,
+// 		inDevelopment: false,
+// 	},
+// 	{
+// 		name: 'App 2',
+// 		date: '01/23/22',
+// 		status: 'inDevelopment',
+// 		runnable: false,
+// 		inDevelopment: true,
+// 	},
+// 	{
+// 		name: 'App 3',
+// 		date: '01/23/22',
+// 		status: 'published',
+// 		runnable: true,
+// 		inDevelopment: false,
+// 	},
+// 	{
+// 		name: 'App 4',
+// 		date: '01/23/22',
+// 		status: 'inDevelopment',
+// 		runnable: false,
+// 		inDevelopment: true,
+// 	},
+// 	{
+// 		name: 'App 5',
+// 		date: '01/23/22',
+// 		status: 'runnable',
+// 		runnable: true,
+// 		inDevelopment: false,
+// 	},
+// 	{
+// 		name: 'App 6',
+// 		date: '01/23/22',
+// 		status: 'inDevelopment',
+// 		runnable: false,
+// 		inDevelopment: true,
+// 	},
+// ];
 
 export default function Dashboard(loggedInUser) {
 	const googleUser = loggedInUser.user;
@@ -127,29 +137,28 @@ export default function Dashboard(loggedInUser) {
 											Create Table
 										</button>
 									</Link>
-									{/* FIXME convert (section) numbers to appropriate terms for each component with different labels */}
 									<ul className="app_list">
 										<li
 											className={section === 1 ? 'active' : ''}
-											onClick={() => setSection(1)}
+											onClick={() => setSection("all")}
 										>
 											All Apps
 										</li>
 										<li
 											className={section === 2 ? 'active' : ''}
-											onClick={() => setSection(2)}
+											onClick={() => setSection("publish")}
 										>
 											Published Apps
 										</li>
 										<li
 											className={section === 3 ? 'active' : ''}
-											onClick={() => setSection(3)}
+											onClick={() => setSection("indevelopment")}
 										>
 											In Development Apps
 										</li>
 										<li
 											className={section === 4 ? 'active' : ''}
-											onClick={() => setSection(4)}
+											onClick={() => setSection("runnable")}
 										>
 											Runnable Apps
 										</li>
@@ -158,63 +167,30 @@ export default function Dashboard(loggedInUser) {
 							</div>
 						</div>
 						{/* FIXME fix rendering method and actually render components NOT dummy data */}
-						{section === 1 ? (
+						{section === "all" ? (
 							<ul>
 								<span>All Apps</span>
 								<div className="row">
 									{apps.map((app) => (
-										<div className="col-3">
-											<a href="#">
-												<div className="card p-0 text-center">
-													<h2 className="card-title">{app.name}</h2>
-													<hr />
-													<div className="p-1">
-														<small>Last modified mm/dd/yy</small>
-													</div>
-												</div>
-											</a>
-											<br />
-										</div>
+										<DashboardApp name = {app.name} date = {app.date}/>
 									))}
 								</div>
 							</ul>
-						) : section === 2 ? (
+						) : section === "publish" ? (
 							<ul>
 								<span>Published Apps</span>
 								<div className="row">
 									{publishedApps.map((app) => (
-										<div className="col-3">
-											<a href="#">
-												<div className="card p-0 text-center">
-													<h2 className="card-title">{app.name}</h2>
-													<hr />
-													<div className="p-1">
-														<small>Last modified mm/dd/yy</small>
-													</div>
-												</div>
-											</a>
-											<br />
-										</div>
+										<DashboardApp name = {app.name} date = {app.date}/>
 									))}
 								</div>
 							</ul>
-						) : section === 3 ? (
+						) : section === "indevelopment" ? (
 							<ul>
 								<span>In Development Apps</span>
 								<div className="row">
 									{inDevelopmentApps.map((app) => (
-										<div className="col-3">
-											<a href="#">
-												<div className="card p-0 text-center">
-													<h2 className="card-title">{app.name}</h2>
-													<hr />
-													<div className="p-1">
-														<small>Last modified mm/dd/yy</small>
-													</div>
-												</div>
-											</a>
-											<br />
-										</div>
+										<DashboardApp name = {app.name} date = {app.date}/>
 									))}
 								</div>
 							</ul>
@@ -223,18 +199,7 @@ export default function Dashboard(loggedInUser) {
 								<span>Runnable Apps</span>
 								<div className="row">
 									{runnableApps.map((app) => (
-										<div className="col-3">
-											<a href="#">
-												<div className="card p-0 text-center">
-													<h2 className="card-title">{app.name}</h2>
-													<hr />
-													<div className="p-1">
-														<small>Last modified mm/dd/yy</small>
-													</div>
-												</div>
-											</a>
-											<br />
-										</div>
+										<DashboardApp name = {app.name} date = {app.date}/>
 									))}
 								</div>
 							</ul>
