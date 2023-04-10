@@ -10,6 +10,7 @@ export default function Table({ tablelist, setTableList }) {
   const [showTable, setShowTable] = useState(false);
   const keys = Object.keys(test[0]);
   const [columns, setColumns] = useState([]);
+  const [tableDataArray, setTableDataArray] = useState([]);
 
   const tableData = {
     name: name,
@@ -23,12 +24,28 @@ export default function Table({ tablelist, setTableList }) {
     tableData.sheetIndex = sheetIndex;
   }, [name, url, sheetIndex]);
 
-  const handleLoad = () => {
+  const handleLoad = async () => {
     if (tableData.name && tableData.url && tableData.sheetIndex) {
       // Create the JSON object
-      console.log(tableData);
+      // console.log(tableData);
 
-      //requires backend to save the data for tables
+      try {
+        const response = await fetch("http://localhost:3333/tables/loadtable", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(tableData),
+        });
+        const responseBody = await response.text(); // Read the response body as text
+        // console.log(responseBody ? responseBody : "no response");
+        const parsedData = JSON.parse(responseBody);
+        console.log(parsedData);
+        setTableDataArray(parsedData);
+      } catch (error) {
+        console.error(error);
+      }
     } else {
       alert("Please fill out all fields before submitting");
       return;
@@ -93,7 +110,7 @@ export default function Table({ tablelist, setTableList }) {
       <br />
       {showTable && (
         <>
-          <table className="table table-bordered">
+          {/* <table className="table table-bordered">
             <thead>
               <tr>
                 <th>Name</th>
@@ -133,13 +150,13 @@ export default function Table({ tablelist, setTableList }) {
                 </tr>
               ))}
             </tbody>
-          </table>
-          <div className="text-right">
+          </table> */}
+          {/* <div className="text-right">
             <button className="btn btn-danger can_btn">Cancel</button>
             <button onClick={handleAddTable} className="btn btn-info">
               Add
             </button>
-          </div>
+          </div> */}
         </>
       )}
 
