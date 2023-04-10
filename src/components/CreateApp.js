@@ -103,12 +103,12 @@ export default function CreateApp() {
             <button class="btn btn-info"> {">"} </button>&nbsp;
             <span class=" ml-auto" />
             <button class="btn btn-info" onClick={handleSaveClick}>Save</button>
-            <Modal isOpen={isModalOpen}>
+            {/* <Modal isOpen={isModalOpen}>
               <h2>Confirm Save</h2>
               <p>Are you sure you want to save?</p>
               <button onClick={handleConfirmClick}>Confirm</button>
               <button onClick={handleCancelClick}>Cancel</button>
-            </Modal>
+            </Modal> */}
             <a class="profile-letter" href="profile.html">
               P
             </a>
