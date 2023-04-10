@@ -56,6 +56,7 @@ export const name = '';
 export default function Dashboard(loggedInUser) {
 	const googleUser = loggedInUser.user;
 	const [section, setSection] = useState(1);
+	const [showMenu, setShowMenu] = useState(false);
 
 	const publishedApps = apps.filter((app) => app.status === 'published');
 	const inDevelopmentApps = apps.filter((app) => app.inDevelopment);
@@ -101,6 +102,10 @@ export default function Dashboard(loggedInUser) {
 		);
 	};
 
+	const toggleMenu = () => {
+		setShowMenu(!showMenu);
+	  };
+
 	return (
 		<div>
 			<br />
@@ -111,14 +116,22 @@ export default function Dashboard(loggedInUser) {
 						{/* <Link to="/dashboard"> */}
 						<h3>S2A</h3>
 					</Link>
-					<div>
-						Hello, {googleUser.name}. You are now logged in with{' '}
-						{googleUser.email}
+					{/* <div style={{ display: 'flex', justifyContent: 'center' }}>
+						Hello, {googleUser.name}. You are now logged in with {googleUser.email}.
 					</div>
 					<button className="btn-log-out" onClick={logOut}>
 						Log Out
-					</button>
-					<span className="profile-letter ml-auto">P</span>
+					</button> */}
+					<span className="profile-letter ml-auto" onClick={toggleMenu}>
+						{googleUser.name && googleUser.name.charAt(0).toUpperCase()}
+					</span>
+					{showMenu && (
+							<div className="dropdown-menu">
+							<button className="btn-logout-dropdown" onClick={logOut}>
+								Logout
+							</button>
+							</div>
+						)}
 				</div>
 
 				<br />

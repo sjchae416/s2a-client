@@ -12,6 +12,7 @@ const DashboardApp = ({name, date}) => {
                   </div>
                 </div>
               </a>
+              <br/>
         </div>
     );
   };

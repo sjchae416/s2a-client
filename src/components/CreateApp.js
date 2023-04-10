@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { Link, useNavigate } from "react-router-dom";
-import { Modal, Button } from 'react-bootstrap';
-import test from "../testData/test2.json";
-import role from "../testData/test-role-sheet.json";
+import {Modal, Button} from "react-modal";
 
 import { App } from "./createAppComponents/App.js";
 import Table from "./Table.js";
@@ -14,7 +12,7 @@ export default function CreateApp() {
   const [view, setView] = useState(1);
   const [tablelist, setTableList] = useState([]);
   const [viewlist, setViewList] = useState([]);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   let navigate = useNavigate();
 
@@ -80,16 +78,16 @@ export default function CreateApp() {
   };
 
   const handleSaveClick = () => {
-    setShowConfirmModal(true);
+    setIsModalOpen(true);
   };
 
-  const handleConfirm = () => {
-    // Your save logic here
-    setShowConfirmModal(false);
+  const handleConfirmClick = () => {
+    // TODO: handle the confirmation
+    setIsModalOpen(false);
   };
 
-  const handleCancel = () => {
-    setShowConfirmModal(false);
+  const handleCancelClick = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -104,21 +102,13 @@ export default function CreateApp() {
             <span class=" ml-auto" />
             <button class="btn btn-info"> {">"} </button>&nbsp;
             <span class=" ml-auto" />
-            <button className="btn btn-info" onClick={handleSaveClick}>Save</button>&nbsp;
-              <Modal show={showConfirmModal} onHide={handleCancel}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Confirm Save</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Are you sure you want to save?</Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleCancel}>
-                    Cancel
-                  </Button>
-                  <Button variant="primary" onClick={handleConfirm}>
-                    Save
-                  </Button>
-                </Modal.Footer>
-              </Modal>
+            <button class="btn btn-info" onClick={handleSaveClick}>Save</button>
+            <Modal isOpen={isModalOpen}>
+              <h2>Confirm Save</h2>
+              <p>Are you sure you want to save?</p>
+              <button onClick={handleConfirmClick}>Confirm</button>
+              <button onClick={handleCancelClick}>Cancel</button>
+            </Modal>
             <a class="profile-letter" href="profile.html">
               P
             </a>
