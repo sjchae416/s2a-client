@@ -94,16 +94,16 @@ export default function CreateApp() {
 		<Box>
 			<br />
 			<br />
-			<div class="container">
+			<div className="container">
 				{/* FIXME use the NavigationBar component and remove redundancy */}
-				<div class="card text-right card_one">
+				<div className="card text-right card_one">
 					<h3 id="save-change">S2A</h3>
-					<span class=" ml-auto">
-						<button class="btn btn-info"> {'<'} </button>&nbsp;
-						<span class=" ml-auto" />
-						<button class="btn btn-info"> {'>'} </button>&nbsp;
-						<span class=" ml-auto" />
-						<button class="btn btn-info" onClick={handleSaveClick}>
+					<span className=" ml-auto">
+						<button className="btn btn-info"> {'<'} </button>&nbsp;
+						<span className=" ml-auto" />
+						<button className="btn btn-info"> {'>'} </button>&nbsp;
+						<span className=" ml-auto" />
+						<button className="btn btn-info" onClick={handleSaveClick}>
 							Save
 						</button>
 						{/* <Modal isOpen={isModalOpen}>
@@ -112,7 +112,7 @@ export default function CreateApp() {
               <button onClick={handleConfirmClick}>Confirm</button>
               <button onClick={handleCancelClick}>Cancel</button>
             </Modal> */}
-						<a class="profile-letter" href="profile.html">
+						<a className="profile-letter" href="profile.html">
 							P
 						</a>
 					</span>
@@ -120,9 +120,9 @@ export default function CreateApp() {
 
 				<br />
 
-				<div class="card p-0">
-					<div class="row no-gutters mt-2">
-						<div class="col-1 border-right text-center">
+				<div className="card p-0">
+					<div className="row no-gutters mt-2">
+						<div className="col-1 border-right text-center">
 							<button onClick={() => setView(1)}>App</button>
 							<hr />
 							<button onClick={() => setView(3)}>Table</button>
@@ -132,7 +132,7 @@ export default function CreateApp() {
 							<button id="create-app">Publish</button>
 							<hr />
 						</div>
-						<div class="col-1 border-right text-center">
+						<div className="col-1 border-right text-center">
 							{view === 3 ? (
 								<>
 									<button>Add Table</button>
@@ -147,8 +147,8 @@ export default function CreateApp() {
 								''
 							)}
 						</div>
-						<div class="col-auto">
-							<div class="container">
+						<div className="col-auto">
+							<div className="container">
 								<br />
 								{view === 1 ? (
 									<App />
@@ -166,17 +166,17 @@ export default function CreateApp() {
 						</div>
 					</div>
 				</div>
-				<div class="modal" id="save-change-modal">
-					<div class="modal-dialog-centered">
-						<div class="modal-content">
-							<div class="card">
-								<div class="form-group save_ur_chnage">
+				<div className="modal" id="save-change-modal">
+					<div className="modal-dialog-centered">
+						<div className="modal-content">
+							<div className="card">
+								<div className="form-group save_ur_chnage">
 									<h5>Save Changes</h5>
 									<h5>
 										Would you like to save your changes before proceeding?
 									</h5>
 									<button
-										class="btn btn-danger "
+										className="btn btn-danger "
 										id="dismiss_create_app_modals"
 									>
 										Discard
@@ -184,12 +184,12 @@ export default function CreateApp() {
 									<button
 										onClick={() => navigate('/')}
 										// onClick={() => navigate("/dashboard")}
-										class="btn btn-success"
+										className="btn btn-success"
 										id="save-change-btns"
 									>
 										Save
 									</button>
-									<button class="btn btn-danger " id="save-change-btn">
+									<button className="btn btn-danger " id="save-change-btn">
 										Cancel
 									</button>
 								</div>
@@ -198,23 +198,23 @@ export default function CreateApp() {
 					</div>
 				</div>
 
-				<div class="modal" id="create-app-modal">
-					<div class="modal-dialog-centered">
-						<div class="modal-content">
-							<div class="card">
-								<div class="form-group save_ur_chnage">
+				<div className="modal" id="create-app-modal">
+					<div className="modal-dialog-centered">
+						<div className="modal-content">
+							<div className="card">
+								<div className="form-group save_ur_chnage">
 									<h5>
 										Would you like to publish your app? <br /> If not, it will
 										be saved under in development and will not be availble to
 										users.
 									</h5>
-									<button class="btn btn-danger" id="dismiss_create_app_modal">
+									<button className="btn btn-danger" id="dismiss_create_app_modal">
 										No
 									</button>
-									<button class="btn btn-success" id="create-app-btn">
+									<button className="btn btn-success" id="create-app-btn">
 										Yes
 									</button>
-									<button class="btn btn-danger" id="create-app-btns">
+									<button className="btn btn-danger" id="create-app-btns">
 										Cancel
 									</button>
 								</div>

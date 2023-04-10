@@ -38,37 +38,37 @@ const App = () => {
 
 	return (
 		<div
-			class="card"
+			className="card"
 			style={{
 				margin: '10px auto',
 				width: '600px',
 				maxWidth: '100%',
 			}}
 		>
-			<div class="form-group">
+			<div className="form-group">
 				<label>Creator's Name</label>
 				<div>John Smith</div>
 			</div>
-			<div class="form-group">
+			<div className="form-group">
 				<label>App Name</label>
 				<input
 					required
 					type="text"
-					class="form-control"
+					className="form-control"
 					onChange={(e) => setAppName(e.target.value)}
 				/>
 			</div>
-			<div class="form-group">
+			<div className="form-group">
 				<label>URL</label>
 				<input
 					required
 					type="text"
-					class="form-control"
+					className="form-control"
 					onChange={(e) => setURLName(e.target.value)}
 				/>
 			</div>
-			<div class="text-right">
-				<button onClick={loadTable} class="btn btn-info">
+			<div className="text-right">
+				<button onClick={loadTable} className="btn btn-info">
 					Load
 				</button>
 			</div>
