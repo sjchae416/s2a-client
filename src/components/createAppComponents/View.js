@@ -8,6 +8,13 @@ const View = ({ viewlist, setViewList }) => {
   const [showTable, setShowTable] = useState(false);
   const columns = Object.keys(test[0]);
   const [viewName, setViewName] = useState("");
+  const [viewType, setViewType] = useState("")
+
+  const viewData = {
+    viewName: viewName,
+    selectedColumns:selectedColumns,
+    viewType: viewType
+  };
 
     const handleCheckboxChange = (e, column) => {
         const { name, checked } = e.target;
@@ -21,6 +28,7 @@ const View = ({ viewlist, setViewList }) => {
 
   const handleAddView = () => {
     if (viewName) setViewList([...viewlist, viewName]);
+    console.log(viewData);
   };
 
   return (
@@ -66,21 +74,21 @@ const View = ({ viewlist, setViewList }) => {
       </div>
       <div class="form-group">
         <label className="can_btn">View Type</label>
-        <button class="btn btn-info can_btn">Table</button>
-        <button class="btn btn-info">Detail</button>
+        <button class="btn btn-info can_btn" onClick={(e) => setViewType(e, "Table")}>Table</button>
+        <button class="btn btn-info" onClick={(e) => setViewType(e, "Detail")}>Detail</button>
       </div>
       <div class="form-group">
         <label>Allowed Action</label>
         <select class="form-control">
-          <option value="">edit record</option>
-          <option value="">add record</option>
+          <option value="">Edit Record</option>
+          <option value="">Add Record</option>
         </select>
       </div>
       <div class="form-group">
         <label>Role</label>
         <select class="form-control">
-          <option value="">developer</option>
-          <option value="">end user</option>
+          <option value="">Developer</option>
+          <option value="">End User</option>
         </select>
       </div>
 
