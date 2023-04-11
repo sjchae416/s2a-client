@@ -73,10 +73,6 @@ const App = ({ developer }) => {
 			}}
 		>
 			<div className="form-group">
-				<label>Creator's Name</label>
-				<div>John Smith</div>
-			</div>
-			<div className="form-group">
 				<label>Creator's Email</label>
 				<div>{creatorEmail}</div>
 			</div>

@@ -179,7 +179,6 @@ export default function Dashboard({ user }) {
 								</div>
 							</div>
 						</div>
-						{/* FIXME fix rendering method and actually render components NOT dummy data */}
 						{section === 'all' ? (
 							<ul>
 								<span>All Apps</span>

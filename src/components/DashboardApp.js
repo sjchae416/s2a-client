@@ -2,7 +2,7 @@ import React from "react";
 
 const DashboardApp = ({name, date}) => {
     return (
-        <div className="col-3">
+        <div className="col-3" style={{flex: 1}}>
               <a href="#">
                 <div className="card p-0 text-center">
                   <h2 className="">{name}</h2>

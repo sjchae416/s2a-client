@@ -8,6 +8,8 @@ import Table from './Table.js';
 import { View } from './createAppComponents/View.js';
 import TableList from './TableList';
 
+import NavigationBar from './NavigationBar'
+
 export default function CreateApp({user}) {
 	const [view, setView] = useState(1);
 	const [tablelist, setTableList] = useState([]);
@@ -95,29 +97,7 @@ export default function CreateApp({user}) {
 			<br />
 			<br />
 			<div className="container">
-				{/* FIXME use the NavigationBar component and remove redundancy */}
-				<div className="card text-right card_one">
-					<h3 id="save-change">S2A</h3>
-					<span className=" ml-auto">
-						<button className="btn btn-info"> {'<'} </button>&nbsp;
-						<span className=" ml-auto" />
-						<button className="btn btn-info"> {'>'} </button>&nbsp;
-						<span className=" ml-auto" />
-						<button className="btn btn-info" onClick={handleSaveClick}>
-							Save
-						</button>
-						{/* <Modal isOpen={isModalOpen}>
-              <h2>Confirm Save</h2>
-              <p>Are you sure you want to save?</p>
-              <button onClick={handleConfirmClick}>Confirm</button>
-              <button onClick={handleCancelClick}>Cancel</button>
-            </Modal> */}
-						<a className="profile-letter" href="profile.html">
-							P
-						</a>
-					</span>
-				</div>
-
+				<NavigationBar/>
 				<br />
 
 				<div className="card p-0">

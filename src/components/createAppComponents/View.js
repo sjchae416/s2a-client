@@ -9,11 +9,23 @@ const View = ({ viewlist, setViewList }) => {
 	const columns = Object.keys(test[0]);
 	const [viewName, setViewName] = useState('');
 	const [viewType, setViewType] = useState('');
+	const [allowedAction, setAllowAction] = useState('');
+	const [role, setRole] = useState('');
 
 	const viewData = {
 		viewName: viewName,
 		selectedColumns: selectedColumns,
 		viewType: viewType,
+		allowedAction: allowedAction,
+		role: role
+	};
+
+	const handleAllowedActionChange = (e) => {
+		setAllowAction(e.target.value);
+	  };
+
+	const handleRoleChange = (e) => {
+		setRole(e.target.value);
 	};
 
 	const handleCheckboxChange = (e, column) => {
@@ -30,6 +42,15 @@ const View = ({ viewlist, setViewList }) => {
 		if (viewName) setViewList([...viewlist, viewName]);
 		console.log(viewData);
 	};
+
+	const handleCancel = () => {
+		setSelectedColumns([]);
+		setShowTable(false);
+		setViewName('');
+		setViewType('');
+		setAllowAction('');
+		setRole('');
+	  };
 
 	return (
 		<div
@@ -84,26 +105,25 @@ const View = ({ viewlist, setViewList }) => {
 					Detail
 				</button>
 			</div>
-			{/* FIXME implement logic for allowed action list and store selected allowed action */}
 			<div class="form-group">
 				<label>Allowed Action</label>
-				<select class="form-control">
-					<option value="">Edit Record</option>
-					<option value="">Add Record</option>
+				<select className="form-control" value={allowedAction} onChange={handleAllowedActionChange}>
+					<option value="Edit">Edit Record</option>
+					<option value="Add">Add Record</option>
 				</select>
 			</div>
-			{/* FIXME display roles from the variable and store a selected role */}
 			<div class="form-group">
 				<label>Role</label>
-				<select class="form-control">
-					<option value="">Developer</option>
-					<option value="">End User</option>
+				<select className="form-control" value={role} onChange={handleRoleChange}>
+					<option value="Developer">Developer</option>
+					<option value="End User">End User</option>
 				</select>
 			</div>
 
 			<div class="text-right">
-				{/* REVIEW what does cancel btn do delete? clear? implement cancle btn logic and have a clear btn to clear current component't input fields */}
-				<button class="btn btn-danger can_btn">Cancel</button>
+				<button class="btn btn-danger can_btn" onClick={handleCancel}>
+					Cancel
+				</button>
 				<button onClick={handleAddView} class="btn btn-info">
 					Create
 				</button>

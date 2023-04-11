@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import TableList from "./TableList";
 import Table from "./Table";
 
+import NavigationBar from "./NavigationBar"
+
 export default function CreateTable() {
   const [tablelist, setTableList] = useState([]);
 
@@ -15,21 +17,7 @@ export default function CreateTable() {
       <br />
       <br />
       <div class="container">
-        <div class="card text-right card_one">
-          <h3 id="create-app">S2A</h3>
-
-          <span class=" ml-auto">
-            <button class="btn btn-info"> {"<"} </button>&nbsp;
-            <span class=" ml-auto" />
-            <button class="btn btn-info"> {">"} </button>&nbsp;
-            <span class=" ml-auto" />
-            <button class="btn btn-info">Save</button>&nbsp;
-            <a class="profile-letter" href="profile.html">
-              P
-            </a>
-          </span>
-        </div>
-
+        <NavigationBar/>
         <br />
 
         <div class="card p-0">
