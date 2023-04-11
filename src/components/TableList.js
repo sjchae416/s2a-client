@@ -1,13 +1,18 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { actionSelectTable } from "../redux/action";
 
-const TableList = ({ tablelist }) => {
+const TableList = () => {
+  const { tableList } = useSelector((state) => state.app);
+  const dispatch = useDispatch();
+
   return (
     <div>
-      {tablelist.map((item) => (
-        <>
+      {tableList.map((item, ind) => (
+        <div key={ind} onClick={() => dispatch(actionSelectTable(item))}>
           <hr />
-          {item}
-        </>
+          {item.name}
+        </div>
       ))}
     </div>
   );

@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import TableList from "./TableList";
 import Table from "./Table";
 
-import NavigationBar from "./NavigationBar"
+import NavigationBar from "./NavigationBar";
 
 export default function CreateTable() {
   const [tablelist, setTableList] = useState([]);
@@ -17,7 +17,7 @@ export default function CreateTable() {
       <br />
       <br />
       <div class="container">
-        <NavigationBar/>
+        <NavigationBar />
         <br />
 
         <div class="card p-0">
@@ -64,7 +64,7 @@ export default function CreateTable() {
                 </div>
               </div>
 
-
+              
             </div>
           </div>
         </div>
