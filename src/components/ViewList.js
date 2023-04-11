@@ -1,17 +1,17 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { actionSelectTable } from "../redux/action";
+import { actionSelectView } from "../redux/action";
 
 const TableList = () => {
-  const { tableList } = useSelector((state) => state.app);
+  const { viewList } = useSelector((state) => state.app);
   const dispatch = useDispatch();
 
   return (
     <div>
-      {tableList.map((item, ind) => (
-        <div key={ind} onClick={() => dispatch(actionSelectTable(item))}>
+      {viewList.map((item, ind) => (
+        <div key={ind} onClick={() => dispatch(actionSelectView(item))}>
           <hr />
-          {item.name}
+          {item.viewName}
         </div>
       ))}
     </div>
