@@ -11,7 +11,7 @@ import TableList from './TableList';
 import NavigationBar from './NavigationBar'
 
 export default function CreateApp({user}) {
-	const [view, setView] = useState(1);
+	const [view, setView] = useState("App");
 	const [tablelist, setTableList] = useState([]);
 	const [viewlist, setViewList] = useState([]);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -97,28 +97,28 @@ export default function CreateApp({user}) {
 			<br />
 			<br />
 			<div className="container">
-				<NavigationBar/>
+				<NavigationBar user={user}/>
 				<br />
 
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
 						<div className="col-1 border-right text-center">
-							<button onClick={() => setView(1)}>App</button>
+							<button onClick={() => setView("App")}>App</button>
 							<hr />
-							<button onClick={() => setView(3)}>Table</button>
+							<button onClick={() => setView("Table")}>Table</button>
 							<hr />
-							<button onClick={() => setView(4)}>View</button>
+							<button onClick={() => setView("View")}>View</button>
 							<hr />
 							<button id="create-app">Publish</button>
 							<hr />
 						</div>
 						<div className="col-1 border-right text-center">
-							{view === 3 ? (
+							{view === "Table" ? (
 								<>
 									<button>Add Table</button>
 									<TableList tablelist={tablelist} />
 								</>
-							) : view === 4 ? (
+							) : view === "View" ? (
 								<>
 									<button>Add View</button>
 									<TableList tablelist={viewlist} />
@@ -130,11 +130,11 @@ export default function CreateApp({user}) {
 						<div className="col-auto">
 							<div className="container">
 								<br />
-								{view === 1 ? (
+								{view === "App" ? (
 									<App developer={user} />
-								) : view === 4 ? (
+								) : view === "View" ? (
 									<View viewlist={viewlist} setViewList={setViewList} />
-								) : view === 3 ? (
+								) : view === "Table" ? (
 									<Table tablelist={tablelist} setTableList={setTableList} />
 								) : (
 									''

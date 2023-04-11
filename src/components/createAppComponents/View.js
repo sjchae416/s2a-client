@@ -54,14 +54,14 @@ const View = ({ viewlist, setViewList }) => {
 
 	return (
 		<div
-			class="card"
+			className="card"
 			style={{
 				margin: '10px auto',
 				width: '480px',
 				maxWidth: '100%',
 			}}
 		>
-			<div class="form-group">
+			<div className="form-group">
 				<label>View Name</label>
 				<input
 					value={viewName}
@@ -70,7 +70,7 @@ const View = ({ viewlist, setViewList }) => {
 					class="form-control"
 				/>
 			</div>
-			<div class="form-group">
+			<div className="form-group">
 				<label>Table</label>
 				<select class="form-control">
 					<option value="">test</option>
@@ -93,7 +93,7 @@ const View = ({ viewlist, setViewList }) => {
 				</div>
 				<p>Selected Columns: {selectedColumns.join(', ')}</p>
 			</div>
-			<div class="form-group">
+			<div className="form-group">
 				<label className="can_btn">View Type</label>
 				<button
 					class="btn btn-info can_btn"
@@ -105,14 +105,15 @@ const View = ({ viewlist, setViewList }) => {
 					Detail
 				</button>
 			</div>
-			<div class="form-group">
+			{/*Change options based on table/detail */}
+			<div className="form-group">
 				<label>Allowed Action</label>
 				<select className="form-control" value={allowedAction} onChange={handleAllowedActionChange}>
 					<option value="Edit">Edit Record</option>
 					<option value="Add">Add Record</option>
 				</select>
 			</div>
-			<div class="form-group">
+			<div className="form-group">
 				<label>Role</label>
 				<select className="form-control" value={role} onChange={handleRoleChange}>
 					<option value="Developer">Developer</option>
@@ -121,10 +122,10 @@ const View = ({ viewlist, setViewList }) => {
 			</div>
 
 			<div class="text-right">
-				<button class="btn btn-danger can_btn" onClick={handleCancel}>
+				<button className="btn btn-danger can_btn" onClick={handleCancel}>
 					Cancel
 				</button>
-				<button onClick={handleAddView} class="btn btn-info">
+				<button onClick={handleAddView} className="btn btn-info">
 					Create
 				</button>
 			</div>
