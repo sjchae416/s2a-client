@@ -6,10 +6,6 @@ const TableList = () => {
   const { viewList } = useSelector((state) => state.app);
   const dispatch = useDispatch();
 
-<<<<<<< HEAD
-  // for list of items in view tab under Create App
-=======
->>>>>>> dev4.11
   return (
     <div>
       {viewList.map((item, ind) => (
