@@ -105,6 +105,7 @@ const View = ({ viewlist, setViewList }) => {
 					Detail
 				</button>
 			</div>
+			{/*Change options based on table/detail */}
 			<div class="form-group">
 				<label>Allowed Action</label>
 				<select className="form-control" value={allowedAction} onChange={handleAllowedActionChange}>

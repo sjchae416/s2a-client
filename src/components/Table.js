@@ -94,7 +94,6 @@ export default function Table({ tablelist, setTableList }) {
         <input
           required
           class="form-control"
-          type="number"
           defaultvalue="1"
           onChange={(e) => setSheetIndex(e.target.value)}
         />

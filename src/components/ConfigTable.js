@@ -4,8 +4,9 @@ import {Modal, Button} from "react-modal";
 import test from "../testData/test2.json";
 
 export default function ConfigTable(){
-
+    //pass in table data from table instead of JSON
     const keys = Object.keys(test[0]);
+
     return(
         <table className="table table-bordered">
         <thead>
@@ -32,6 +33,7 @@ export default function ConfigTable(){
                 </label>
               </td>
               <td>
+                {/*Save values*/}
                 <select name={`select-${key}`}>
                   <option></option>
                 </select>

@@ -97,12 +97,13 @@ export default function CreateApp({user}) {
 			<br />
 			<br />
 			<div className="container">
-				<NavigationBar/>
+				<NavigationBar user={user}/>
 				<br />
 
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
 						<div className="col-1 border-right text-center">
+							{/* change to keywords*/}
 							<button onClick={() => setView(1)}>App</button>
 							<hr />
 							<button onClick={() => setView(3)}>Table</button>
