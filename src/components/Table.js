@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import role from "../testData/test-role-sheet.json";
 
 import ConfigTable from "./ConfigTable";
 
@@ -9,20 +7,29 @@ export default function Table({ tablelist, setTableList }) {
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
   const [showTable, setShowTable] = useState(false);
-  const [columns, setColumns] = useState([]);
+  const [columns, setColumns] = useState([]); // list of column names in the data
   const [tableDataArray, setTableDataArray] = useState([]);
+
+
+  const keys = Object.values(columns);
+  const dummyRef = ["test1", "test2"];
+  const [config, setConfig] = useState([]);
 
   const tableData = {
     name: name,
     url: url,
     sheetIndex: sheetIndex,
+    columns: columns,
+    config:config
   };
 
   useEffect(() => {
     tableData.name = name;
     tableData.url = url;
     tableData.sheetIndex = sheetIndex;
-  }, [name, url, sheetIndex]);
+    tableData.columns = columns;
+    tableData.config = config;
+  }, [name, url, sheetIndex, columns, config]);
 
   const handleLoad = async () => {
     if (tableData.name && tableData.url && tableData.sheetIndex) {
@@ -43,6 +50,8 @@ export default function Table({ tablelist, setTableList }) {
         const parsedData = JSON.parse(responseBody);
         console.log(parsedData);
         setTableDataArray(parsedData);
+        setColumns(tableDataArray[0]);
+        console.log(columns);
       } catch (error) {
         console.error(error);
       }
@@ -58,25 +67,59 @@ export default function Table({ tablelist, setTableList }) {
     setShowTable(true);
   };
 
+  const handleInputChange = (event, key, field) => {
+    const { value } = event.target;
+    setConfig((prevConfig) => {
+      const updatedConfig = [...prevConfig];
+      const configIndex = updatedConfig.findIndex((item) => item.key === key);
+      if (configIndex !== -1) {
+        // If config already exists, update the field value
+        updatedConfig[configIndex][field] = value;
+      } else {
+        // If config does not exist, create a new config object
+        const newConfig = {
+          name: "",
+          key: "",
+          label: "",
+          reference: "",
+          type: ""
+        };
+        newConfig.name = key;
+        if (field === "label" || field === "key") {
+            newConfig[field] = value === "true";
+        } else {
+        newConfig[field] = value;
+        }
+        updatedConfig.push(newConfig);
+      }
+      return updatedConfig;
+    });
+  };
+
+  const handleCreateClick = () => {
+    // Use the config array to perform desired action with the configuration
+    console.log(config);
+  };
+
   const handleAddTable = () => {
     if (name) setTableList([...tablelist, name]);
   };
 
   return (
     <div
-      class="card"
+      className="card"
       style={{
         margin: "10px auto",
         width: "600px",
         maxWidth: "100%",
       }}
     >
-      <div class="form-group">
+      <div className="form-group">
         <label>Name</label>
         <input
           required
           type="text"
-          class="form-control"
+          className="form-control"
           onChange={(e) => setName(e.target.value)}
         />
       </div>
@@ -85,23 +128,22 @@ export default function Table({ tablelist, setTableList }) {
         <input
           required
           type="text"
-          class="form-control"
+          className="form-control"
           onChange={(e) => setUrl(e.target.value)}
         />
       </div>
-      <div class="form-group">
+      <div className="form-group">
         <label>Sheet Index</label>
         <input
           required
           class="form-control"
-          type="number"
           defaultvalue="1"
           onChange={(e) => setSheetIndex(e.target.value)}
         />
       </div>
 
-      <div class="text-right">
-        <button onClick={handleLoad} class="btn btn-info">
+      <div className="text-right">
+        <button onClick={handleLoad} className="btn btn-info">
           Load
         </button>
       </div>
@@ -109,7 +151,75 @@ export default function Table({ tablelist, setTableList }) {
       <br />
       <br />
       {showTable && (
-        <ConfigTable/>
+        <div>
+          <table className="table table-bordered">
+            <thead>
+                <tr>
+                <th>Name</th>
+                <th>Key</th>
+                <th>Label</th>
+                <th>Reference</th>
+                <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {keys.map((key) => (
+                <tr key={key}>
+                    <td>{key}</td>
+                    <td>
+                    <label>
+                        <input
+                        type="radio"
+                        name={`radio-col1`}
+                        value={key}
+                        onChange={(event) => handleInputChange(event, key, "key")}
+                        />
+                    </label>
+                    </td>
+                    <td>
+                    <label>
+                        <input
+                        type="radio"
+                        name={`radio-col2`}
+                        value={key}
+                        onChange={(event) => handleInputChange(event, key, "label")}
+                        />
+                    </label>
+                    </td>
+                    <td>
+                    <select
+                        name={`select-${key}`}
+                        onChange={(event) => handleInputChange(event, key, "reference")}
+                    >
+                        <option></option>
+                        {dummyRef.map((ref) => (
+                        <option key={ref} value={ref}>
+                            {ref}
+                        </option>
+                        ))}
+                    </select>
+                    </td>
+                    <td>
+                    <select
+                        name={`select-${key}`}
+                        onChange={(event) => handleInputChange(event, key, "type")}
+                    >
+                        <option></option>
+                        <option value="int">Number</option>
+                        <option value="bool">Boolean</option>
+                        <option value="string">Text</option>
+                        <option value="url">URL</option>
+                    </select>
+                    </td>
+                </tr>
+                ))}
+            </tbody>
+            </table>
+            <div className="text-right">
+                <button onClick={handleCreateClick} className="btn btn-danger can_btn">Cancel</button>
+            <button onClick={handleCreateClick} className="btn btn-info">Create</button>
+            </div>
+        </div>
       )}
 
       <br />
