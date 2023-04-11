@@ -31,7 +31,40 @@ export default function CreateTable() {
             </div>
             <div class="col-auto">
               <Table tablelist={tablelist} setTableList={setTableList} />
-              
+
+              {/*Save modal here*/}
+              <div class="modal" id="create-app-modal">
+                <div class="modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="card">
+                      <div class="form-group save_ur_chnage">
+                        <h5>Save Chnages</h5>
+                        <h5>
+                          Would you like to save your changes before proceeding?
+                        </h5>
+                        <button
+                          class="btn btn-danger "
+                          id="dismiss_create_app_modal"
+                        >
+                          Discard
+                        </button>
+                        <button
+                          onClick={() => navigate("/")}
+                          class="btn btn-success"
+                          id="create-app-btns"
+                        >
+                          Save
+                        </button>
+                        <button class="btn btn-danger" id="create-app-btn">
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
             </div>
           </div>
         </div>
