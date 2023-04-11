@@ -73,8 +73,11 @@ export default function Table() {
     setShowTable(true);
   };
 
+<<<<<<< HEAD
   
 
+=======
+>>>>>>> dev4.11
   return (
     <div
       class="card"

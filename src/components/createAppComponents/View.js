@@ -97,8 +97,11 @@ const View = ({
     setRole("Developer");
   };
 
+<<<<<<< HEAD
 
   // handling editing
+=======
+>>>>>>> dev4.11
   const updateViewList = (e) => {
     e.preventDefault();
     dispatch(actionUpdateView(selectedView.id, viewData));
@@ -221,7 +224,10 @@ const View = ({
 
       {!isViewSelected ? (
         <div class="text-right">
+<<<<<<< HEAD
 					{/*this is for creating a view*/}
+=======
+>>>>>>> dev4.11
           <button
             type="reset"
             class="btn btn-danger can_btn"
@@ -235,7 +241,10 @@ const View = ({
         </div>
       ) : (
         <div class="text-right">
+<<<<<<< HEAD
 					{/*this is for editing a view*/}
+=======
+>>>>>>> dev4.11
           <button class="btn btn-danger can_btn" onClick={updateViewList}>
             Save
           </button>
