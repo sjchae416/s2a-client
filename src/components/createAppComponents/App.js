@@ -7,6 +7,10 @@ const App = ({ developer }) => {
 	const [creatorEmail, setCreatorEmail] = useState('');
 	const [roleMembershipURL, setRoleMembershipURL] = useState('');
 	const [showTable, setShowTable] = useState(false);
+
+	const role = [{
+		
+	}];
 	// create role var with json here to pass into roleKey
 	const roleKey = Object.keys(role[0]);
 	const appData = {
