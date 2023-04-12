@@ -17,7 +17,7 @@ export default function Table() {
   const [url, setUrl] = useState("");
   const [showTable, setShowTable] = useState(false);
   const [columns, setColumns] = useState([]);
-  const [tableDataArray, setTableDataArray] = useState([]);
+  const [tableRows, setTableRows] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function Table() {
         // console.log(responseBody ? responseBody : "no response");
         const parsedData = JSON.parse(responseBody);
         console.log(parsedData);
-        setTableDataArray(parsedData);
+        setTableRows(parsedData);
       } catch (error) {
         console.error(error);
       }
