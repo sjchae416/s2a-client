@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import TableList from "./TableList";
 import Table from "./Table";
 
+import NavigationBar from "./NavigationBar";
+
 export default function CreateTable() {
   const [tablelist, setTableList] = useState([]);
 
@@ -72,7 +74,7 @@ export default function CreateTable() {
                   <div class="modal-content">
                     <div class="card">
                       <div class="form-group save_ur_chnage">
-                        <h5>Save Chnages</h5>
+                        <h5>Save Changes</h5>
                         <h5>
                           Would you like to save your changes before proceeding?
                         </h5>

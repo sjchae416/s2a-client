@@ -3,7 +3,6 @@ import AppBanner from './AppBanner'
 import Dashboard from '../pages/Dashboard'
 import Login from '../pages/Login'
 import CreateApp from './CreateApp'
-import ManageTable from './ManageTable'
 import TableView from './TableView'
 import Table from './Table'
 
@@ -16,7 +15,6 @@ export {
     Dashboard,
     Login, 
     CreateApp,
-    ManageTable, 
     TableView, 
     Table
 }

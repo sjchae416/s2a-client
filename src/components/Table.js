@@ -1,49 +1,34 @@
 import React, { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import role from "../testData/test-role-sheet.json";
 
-import ConfigTable from "./ConfigTable";
-import {
-  actionAddTable,
-  actionDeleteTable,
-  actionUpdateTable,
-} from "../redux/action";
-import { useDispatch, useSelector } from "react-redux";
-
-export default function Table() {
-  const { selectedTable, isTableSelected } = useSelector((state) => state.app);
+export default function Table({ tablelist, setTableList }) {
   const [sheetIndex, setSheetIndex] = useState("");
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
   const [showTable, setShowTable] = useState(false);
-  const [columns, setColumns] = useState([]);
-  const [tableRows, setTableRows] = useState([]);
-  const dispatch = useDispatch();
+  const [tableDataArray, setTableDataArray] = useState([]);
+  const dummyRef = ["test1", "test2"];
+   const [config, setConfig] = useState([]);
 
-  useEffect(() => {
-    setName(selectedTable.name);
-    setUrl(selectedTable.url);
-    setSheetIndex(selectedTable.sheetIndex);
-  }, [selectedTable]);
+   const keys = tableDataArray[0];
 
   const tableData = {
-    id: new Date().getTime(),
     name: name,
     url: url,
     sheetIndex: sheetIndex,
+    config: config
   };
 
   useEffect(() => {
     tableData.name = name;
     tableData.url = url;
     tableData.sheetIndex = sheetIndex;
-  }, [name, url, sheetIndex]);
+    tableData.config = config;
+  }, [name, url, sheetIndex, config]);
 
   const handleLoad = async () => {
     if (tableData.name && tableData.url && tableData.sheetIndex) {
       // Create the JSON object
       // console.log(tableData);
-
       try {
         const response = await fetch("http://localhost:3333/tables/loadtable", {
           method: "POST",
@@ -57,7 +42,7 @@ export default function Table() {
         // console.log(responseBody ? responseBody : "no response");
         const parsedData = JSON.parse(responseBody);
         console.log(parsedData);
-        setTableRows(parsedData);
+        setTableDataArray(parsedData);
       } catch (error) {
         console.error(error);
       }
@@ -67,12 +52,48 @@ export default function Table() {
     }
     //let test = "./" + url.toString();
     //let file = require(test);
-
     //keys = Object.keys(test[0]);
     // alert(keys);
     setShowTable(true);
   };
 
+  const handleCreateClick = () => {
+    // Use the config array to perform desired action with the configuration
+    console.log(config);
+  };
+
+  const handleInputChange = (event, key, field) => {
+    const { value } = event.target;
+    setConfig((prevConfig) => {
+      const updatedConfig = [...prevConfig];
+      const configIndex = updatedConfig.findIndex((item) => item.name === key); // Find index of config object with the same name as key
+      if (configIndex !== -1) {
+        // If config already exists, update the field value
+        updatedConfig[configIndex][field] = value;
+      } else {
+        // If config does not exist, create a new config object
+        const newConfig = {
+          name: "",
+          key: "",
+          label: "",
+          reference: "",
+          type: ""
+        };
+        newConfig.name = key;
+        if (field === "label" || field === "key") {
+          newConfig[field] = value === "true";
+        } else {
+          newConfig[field] = value;
+        }
+        updatedConfig.push(newConfig);
+      }
+      return updatedConfig;
+    });
+  };
+
+  const handleAddTable = () => {
+    if (name) setTableList([...tablelist, name]);
+  };
   return (
     <div
       class="card"
@@ -88,7 +109,6 @@ export default function Table() {
           required
           type="text"
           class="form-control"
-          value={name}
           onChange={(e) => setName(e.target.value)}
         />
       </div>
@@ -98,86 +118,96 @@ export default function Table() {
           required
           type="text"
           class="form-control"
-          value={url}
           onChange={(e) => setUrl(e.target.value)}
         />
       </div>
       <div class="form-group">
         <label>Sheet Index</label>
-        <input
-          required
-          class="form-control"
-          type="text"
-          defaultvalue="1"
-          value={sheetIndex}
-          onChange={(e) => setSheetIndex(e.target.value)}
-        />
+         <input
+           required
+           class="form-control"
+           defaultvalue="1"
+           onChange={(e) => setSheetIndex(e.target.value)}
+         />
       </div>
-
       <div class="text-right">
         <button onClick={handleLoad} class="btn btn-info">
           Load
         </button>
       </div>
-
       <br />
       <br />
       {showTable && (
-        <>
-          <ConfigTable />
-          {!isTableSelected ? (
-            <div className="text-right">
-              <button
-                onClick={() => {
-                  setName("");
-                  setUrl("");
-                  setSheetIndex("");
-                }}
-                className="btn btn-danger can_btn"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  dispatch(actionAddTable(tableData));
-                  setName("");
-                  setUrl("");
-                  setSheetIndex("");
-                }}
-                className="btn btn-info"
-              >
-                Add
-              </button>
-            </div>
-          ) : (
-            <div className="text-right">
-              <button
-                onClick={() => {
-                  dispatch(actionUpdateTable(selectedTable.id, tableData));
-                  setName("");
-                  setUrl("");
-                  setSheetIndex("");
-                }}
-                className="btn btn-danger can_btn"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => {
-                  dispatch(actionDeleteTable(selectedTable.id));
-                  setName("");
-                  setUrl("");
-                  setSheetIndex("");
-                }}
-                className="btn btn-info"
-              >
-                Delete
-              </button>
-            </div>
-          )}
-        </>
+        <div>
+        <table className="table table-bordered">
+          <thead>
+              <tr>
+              <th>Name</th>
+              <th>Key</th>
+              <th>Label</th>
+              <th>Reference</th>
+              <th>Type</th>
+              </tr>
+          </thead>
+          <tbody>
+              {keys.map((key) => (
+              <tr key={key}>
+                  <td>{key}</td>
+                  <td>
+                  <label>
+                      <input
+                      type="radio"
+                      name={`radio-col1`}
+                      value={key}
+                      onChange={(event) => handleInputChange(event, key, "key")}
+                      />
+                  </label>
+                  </td>
+                  <td>
+                  <label>
+                      <input
+                      type="radio"
+                      name={`radio-col2`}
+                      value={key}
+                      onChange={(event) => handleInputChange(event, key, "label")}
+                      />
+                  </label>
+                  </td>
+                  <td>
+                  <select
+                      name={`select-${key}`}
+                      onChange={(event) => handleInputChange(event, key, "reference")}
+                  >
+                      <option></option>
+                      {dummyRef.map((ref) => (
+                      <option key={ref} value={ref}>
+                          {ref}
+                      </option>
+                      ))}
+                  </select>
+                  </td>
+                  <td>
+                  <select
+                      name={`select-${key}`}
+                      onChange={(event) => handleInputChange(event, key, "type")}
+                  >
+                      <option></option>
+                      <option value="int">Number</option>
+                      <option value="bool">Boolean</option>
+                      <option value="string">Text</option>
+                      <option value="url">URL</option>
+                  </select>
+                  </td>
+              </tr>
+              ))}
+          </tbody>
+          </table>
+          <div className="text-right">
+              <button onClick={handleCreateClick} className="btn btn-danger can_btn">Cancel</button>
+          <button onClick={handleCreateClick} className="btn btn-info">Create</button>
+          </div>
+      </div>
       )}
-
       <br />
       <br />
     </div>

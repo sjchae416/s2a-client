@@ -77,7 +77,6 @@ const App = () => {
 				<Route path="/create-table" element={<CreateTable />} />
 
 				<Route path="/add-view" element={<CreateApp user={user} />} />
-				<Route path="/manage-table" element={<ManageTable />} />
 				<Route path="/table-view" element={<TableView />} />
 			</Routes>
 			{/* </Router> */}

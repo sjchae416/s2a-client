@@ -8,51 +8,6 @@ import apps from "../testData/test-apps.json";
 
 export const name = "";
 
-// const apps = [
-// 	{
-// 		name: 'App 1',
-// 		date: '11/24/24',
-// 		status: 'published',
-// 		runnable: true,
-// 		inDevelopment: false,
-// 	},
-// 	{
-// 		name: 'App 2',
-// 		date: '01/23/22',
-// 		status: 'inDevelopment',
-// 		runnable: false,
-// 		inDevelopment: true,
-// 	},
-// 	{
-// 		name: 'App 3',
-// 		date: '01/23/22',
-// 		status: 'published',
-// 		runnable: true,
-// 		inDevelopment: false,
-// 	},
-// 	{
-// 		name: 'App 4',
-// 		date: '01/23/22',
-// 		status: 'inDevelopment',
-// 		runnable: false,
-// 		inDevelopment: true,
-// 	},
-// 	{
-// 		name: 'App 5',
-// 		date: '01/23/22',
-// 		status: 'runnable',
-// 		runnable: true,
-// 		inDevelopment: false,
-// 	},
-// 	{
-// 		name: 'App 6',
-// 		date: '01/23/22',
-// 		status: 'inDevelopment',
-// 		runnable: false,
-// 		inDevelopment: true,
-// 	},
-// ];
-
 export default function Dashboard({ user }) {
   const loggedInUser = user;
   const [section, setSection] = useState("all");

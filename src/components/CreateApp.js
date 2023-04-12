@@ -118,7 +118,7 @@ export default function CreateApp({ user }) {
       <br />
       <br />
       <div className="container">
-        <NavigationBar />
+      <NavigationBar user={user}/>
         <br />
 
         <div className="card p-0">
