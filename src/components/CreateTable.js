@@ -4,20 +4,56 @@ import { Link, useNavigate } from "react-router-dom";
 import TableList from "./TableList";
 import Table from "./Table";
 
-import NavigationBar from "./NavigationBar";
-
 export default function CreateTable() {
   const [tablelist, setTableList] = useState([]);
 
   let navigate = useNavigate();
+  useEffect(() => {
+    const create_app_modal_btn = document.querySelector("#create-app");
+    const create_app_modal = document.querySelector("#create-app-modal");
+    const dismiss_create_app_modal = document.querySelector(
+      "#dismiss_create_app_modal"
+    );
+    const create_app_btn = document.querySelector("#create-app-btn");
 
+    create_app_modal_btn.onclick = () => {
+      create_app_modal.style.display = "block";
+    };
+
+    window.onclick = (event) => {
+      if (event.target === create_app_modal) {
+        create_app_modal.style.display = "none";
+      }
+    };
+
+    dismiss_create_app_modal.onclick = (event) => {
+      create_app_modal.style.display = "none";
+    };
+    create_app_btn.onclick = (event) => {
+      create_app_modal.style.display = "none";
+    };
+  }, []);
 
   return (
     <Box>
       <br />
       <br />
       <div class="container">
-        <NavigationBar />
+        <div class="card text-right card_one">
+          <h3 id="create-app">S2A</h3>
+
+          <span class=" ml-auto">
+            <button class="btn btn-info"> {"<"} </button>&nbsp;
+            <span class=" ml-auto" />
+            <button class="btn btn-info"> {">"} </button>&nbsp;
+            <span class=" ml-auto" />
+            <button class="btn btn-info">Save</button>&nbsp;
+            <a class="profile-letter" href="profile.html">
+              P
+            </a>
+          </span>
+        </div>
+
         <br />
 
         <div class="card p-0">
@@ -31,8 +67,6 @@ export default function CreateTable() {
             </div>
             <div class="col-auto">
               <Table tablelist={tablelist} setTableList={setTableList} />
-
-              {/*Save modal here*/}
               <div class="modal" id="create-app-modal">
                 <div class="modal-dialog-centered">
                   <div class="modal-content">
@@ -63,8 +97,6 @@ export default function CreateTable() {
                   </div>
                 </div>
               </div>
-
-              
             </div>
           </div>
         </div>
