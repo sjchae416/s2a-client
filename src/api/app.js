@@ -1,5 +1,3 @@
-const defaultHeaders = {
-	headers: {
-		'Content-Type': 'application/json',
-	},
+const defaultHeader = {
+	'Content-Type': 'application/json',
 };
