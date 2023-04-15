@@ -12,6 +12,10 @@ const App = ({ developer }) => {
 		name: appName,
 		creator: creatorEmail,
 		roleMembershipSheet: roleMembershipURL,
+		// tables: tables,
+		// view: views,
+		// lastModifiedDate: new Date().toISOString(),
+		// lastOpenedDate: new Date().toISOString(),
 	};
 
 	const handleSaveAppName = (name) => {
