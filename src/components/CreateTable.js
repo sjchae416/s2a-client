@@ -6,7 +6,7 @@ import Table from "./Table";
 
 import NavigationBar from "./NavigationBar";
 
-export default function CreateTable() {
+export default function CreateTable({user}) {
   const [tablelist, setTableList] = useState([]);
 
   let navigate = useNavigate();
