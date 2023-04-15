@@ -61,7 +61,7 @@ const View = ({
     } else {
       setSelectedColumns(selectedColumns.filter((column) => column !== name));
     }
-    console.log(selectedColumns);
+    //console.log(selectedColumns);
   };
 
   const handleOnSubmit = (e) => {

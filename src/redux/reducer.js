@@ -33,6 +33,7 @@ const appReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         clearInput: action.payload,
+        isViewSelected: false,
       };
 
     case types.ADD_VIEW:
