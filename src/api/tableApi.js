@@ -10,9 +10,7 @@ export const loadTable = async (tableData) => {
 			headers: defaultHeader,
 			body: JSON.stringify(tableData),
 		});
-		const responseBody = await response.text(); 
-		const parsedData = JSON.parse(responseBody);
-		return parsedData;
+		return response.json();
 	} catch (error) {
 		console.error(error);
 	}

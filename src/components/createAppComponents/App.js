@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import role from '../../testData/test-role-sheet.json';
+import { loadTable } from '../../api/tableApi';
 
 const App = ({ developer }) => {
 	const [appName, setAppName] = useState('');
@@ -27,32 +28,26 @@ const App = ({ developer }) => {
 	};
 
 	// FN create and fill in App document & and load Table data
-	const loadTable = async () => {
+	const loadRoleTable = async () => {
 		if (appName && roleMembershipURL) {
-			console.table(appData);
-			// NOTE read table data here with api
-
-			// NOTE test
-			const app = await fetch(`http://localhost:3333/apps/`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(appData),
-			})
-				.then((response) => response.json())
-				.then((data) => console.log('SUCCESSFULL', data))
-				.catch((error) => console.error(error));
-		} else {
-			alert('Please fill out all fields before submitting');
-			return;
-		}
-		//let test = "./" + url.toString();
-		//let file = require(test);
-
-		//keys = Object.keys(test[0]);
-		// alert(keys);
-		setShowTable(true);
+			const tableData = {
+				url: roleMembershipURL,
+				//NOTE - In order for sheetIndex to always choose the first sheet index, the metadata must be used. May add it later.
+				sheetIndex: 'Sheet1',
+			}
+			const dataArray = await loadTable(tableData);
+      if (dataArray) {
+        console.log(dataArray);
+				//TODO - save dataArray to a local state variable
+      } else {
+        alert("Error loading table. Please check your URL or make sure your role membership sheet sheetIndex is 'Sheet1'");
+        return;
+      }
+    } else {
+      alert("Please fill out all fields before submitting");
+      return;
+    }
+    setShowTable(true);
 	};
 
 	useEffect(() => {
@@ -100,7 +95,7 @@ const App = ({ developer }) => {
 				/>
 			</div>
 			<div className="text-right">
-				<button onClick={loadTable} className="btn btn-info">
+				<button onClick={loadRoleTable} className="btn btn-info">
 					Load
 				</button>
 			</div>

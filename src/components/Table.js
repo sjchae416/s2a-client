@@ -28,7 +28,7 @@ export default function Table({ tablelist, setTableList }) {
 
   const handleLoad = async () => {
     if (tableData.name && tableData.url && tableData.sheetIndex) {
-      let dataArray = await loadTable(tableData);
+      const dataArray = await loadTable(tableData);
       if (dataArray) {
         console.log(dataArray);
         setTableDataArray(dataArray);
