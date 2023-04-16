@@ -2,7 +2,7 @@
 import AppBanner from './AppBanner'
 import Dashboard from '../pages/Dashboard'
 import Login from '../pages/Login'
-import CreateApp from './CreateApp'
+// removed - import CreateApp from './CreateApp'
 import TableView from './TableView'
 import Table from './Table'
 
@@ -14,7 +14,7 @@ export {
     AppBanner, 
     Dashboard,
     Login, 
-    CreateApp,
+    // Removed CreateApp,
     TableView, 
     Table
 }

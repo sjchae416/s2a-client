@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
-import role from "../../testData/test-role-sheet.json";
-import test from "../../testData/test2.json";
+import role from "../testData/test-role-sheet.json";
+import test from "../testData/test2.json";
 import { useDispatch, useSelector } from "react-redux";
 import {
   actionAddView,
   actionClearInput,
   actionDeleteView,
   actionUpdateView,
-} from "../../redux/action";
+} from "../redux/action";
 
-const View = ({
+const ViewConfig = ({
   role,
   setRole,
   allowedAction,
@@ -22,7 +22,7 @@ const View = ({
 }) => {
   const [showTable, setShowTable] = useState(false);
   const columns = Object.keys(test[0]);
-  const { isViewSelected, selectedView, clearInput } = useSelector(
+  const { isViewSelected, selectedView, clearInput, viewrole } = useSelector(
     (state) => state.app
   );
   const dispatch = useDispatch();
@@ -46,10 +46,6 @@ const View = ({
     role: role,
   };
 
-  const handleAllowedActionChange = (e) => {
-    setAllowAction(e.target.value);
-  };
-
   const handleRoleChange = (e) => {
     setRole(e.target.value);
   };
@@ -61,11 +57,25 @@ const View = ({
     } else {
       setSelectedColumns(selectedColumns.filter((column) => column !== name));
     }
-    //console.log(selectedColumns);
+    // console.log(selectedColumns);
+  };
+
+  const handleAllowedActionCheckboxChange = (e, column) => {
+    const { name, checked } = e.target;
+    if (checked) {
+      setAllowAction([...allowedAction, name]);
+    } else {
+      setAllowAction(allowedAction.filter((column) => column !== name));
+    }
+    // console.log(allowedAction);
   };
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
+    console.log(role);
+    if (!role) {
+      return window.alert("Add role membership sheet first!");
+    }
     if (viewName) dispatch(actionAddView(viewData));
 
     formElement.current.reset();
@@ -73,8 +83,8 @@ const View = ({
     setShowTable(false);
     setViewName("");
     setViewType("Table");
-    setAllowAction("");
-    setRole("Developer");
+    setAllowAction([]);
+    setRole("");
   };
 
   useEffect(() => {
@@ -82,8 +92,8 @@ const View = ({
     setShowTable(false);
     setViewName("");
     setViewType("Table");
-    setAllowAction("");
-    setRole("Developer");
+    setAllowAction([]);
+    setRole("");
 
     dispatch(actionClearInput(false));
   }, [clearInput]);
@@ -93,8 +103,8 @@ const View = ({
     setShowTable(false);
     setViewName("");
     setViewType("Table");
-    setAllowAction("");
-    setRole("Developer");
+    setAllowAction([]);
+    setRole("");
   };
 
   const updateViewList = (e) => {
@@ -105,8 +115,8 @@ const View = ({
     setShowTable(false);
     setViewName("");
     setViewType("Table");
-    setAllowAction("");
-    setRole("Developer");
+    setAllowAction([]);
+    setRole("");
   };
 
   const deleteViewList = () => {
@@ -116,8 +126,8 @@ const View = ({
     setShowTable(false);
     setViewName("");
     setViewType("Table");
-    setAllowAction("");
-    setRole("Developer");
+    setAllowAction([]);
+    setRole("");
   };
 
   return (
@@ -187,23 +197,36 @@ const View = ({
       </div>
       <div class="form-group">
         <label>Allowed Action</label>
-        <select
-          className="form-control"
-          value={allowedAction}
-          onChange={handleAllowedActionChange}
-        >
-          {viewType === "Table" ? (
-            <>
-              <option value="Add">Add Record</option>
-              <option value="Delete">Delete Record</option>
-            </>
-          ) : (
-            <>
-              <option value="Edit">Edit Record</option>
-              <option value="Delete">Delete Record</option>
-            </>
-          )}
-        </select>
+
+        {viewType === "Table"
+          ? ["Add Record", "Delete Record"].map((record) => (
+              <div key={record}>
+                <input
+                  checked={allowedAction.find((item) => item === record)}
+                  type="checkbox"
+                  id={`checkbox-${record}`}
+                  name={record}
+                  onChange={(e) =>
+                    handleAllowedActionCheckboxChange(e, record.split(" ")[0])
+                  }
+                />
+                <label htmlFor={`checkbox-${record}`}>{record}</label>
+              </div>
+            ))
+          : ["Edit Record", "Delete Record"].map((record) => (
+              <div key={record}>
+                <input
+                  checked={allowedAction.find((item) => item === record)}
+                  type="checkbox"
+                  id={`checkbox-${record}`}
+                  name={record}
+                  onChange={(e) =>
+                    handleAllowedActionCheckboxChange(e, record.split(" ")[0])
+                  }
+                />
+                <label htmlFor={`checkbox-${record}`}>{record}</label>
+              </div>
+            ))}
       </div>
       <div class="form-group">
         <label>Role</label>
@@ -212,8 +235,11 @@ const View = ({
           value={role}
           onChange={handleRoleChange}
         >
-          <option value="Developer">Developer</option>
-          <option value="End User">End User</option>
+          {viewrole[0]?.map((role, ind) => (
+            <option key={ind} value={role}>
+              {role}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -246,4 +272,4 @@ const View = ({
     </form>
   );
 };
-export { View };
+export { ViewConfig };

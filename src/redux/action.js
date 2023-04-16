@@ -62,3 +62,11 @@ export const actionClearInput = (val) => {
     payload: val,
   };
 };
+
+// Setting role action
+export const actionSetRole = (data) => {
+  return {
+    type: types.SET_ROLE,
+    payload: data,
+  };
+};

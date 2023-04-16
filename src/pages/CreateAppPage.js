@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import { Link, useNavigate } from "react-router-dom";
-import { App } from "./createAppComponents/App.js";
-import { View } from "./createAppComponents/View.js";
-import ViewList from "./ViewList";
-import NavigationBar from "./NavigationBar";
-import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { actionClearInput } from "../redux/action.js";
+import NavigationBar from "../components/NavigationBar";
+import { App } from "../components/AppConfig.js";
+import Sidebar from "../components/Sidebar.js";
+import List from "../components/List.js";
+import { ViewConfig } from "../components/ViewConfig.js";
 
-export default function CreateApp({ user }) {
+export default function CreateAppPage({ user }) {
   const [view, setView] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewName, setViewName] = useState("");
   const [selectedColumns, setSelectedColumns] = useState([]);
   const [viewType, setViewType] = useState("Table");
-  const [allowedAction, setAllowAction] = useState("Add");
-  const [role, setRole] = useState("Developer");
-  const { isViewSelected } = useSelector((state) => state.app);
-  const dispatch = useDispatch();
+  const [allowedAction, setAllowAction] = useState([]);
+  const [role, setRole] = useState("");
 
+  const dispatch = useDispatch();
   let navigate = useNavigate();
 
   const myfun = () => {
@@ -118,42 +118,19 @@ export default function CreateApp({ user }) {
       <br />
       <br />
       <div className="container">
-      <NavigationBar user={user}/>
+        <NavigationBar user={user} />
         <br />
 
         <div className="card p-0">
           <div className="row no-gutters mt-2">
-            <div className="col-1 border-right text-center">
-              <button
-                onClick={() => {
-                  if (!isViewSelected && viewName) {
-                    if (
-                      window.confirm(
-                        "You have unsaved changes, Are you sure you want to leave!"
-                      ) == true
-                    ) {
-                      setView(1);
-                    }
-                  } else {
-                    setView(1);
-                  }
-                }}
-              >
-                App
-              </button>
-              <hr />
-              <button onClick={() => setView(4)}>View</button>
-              <hr />
-              <button onClick={myfun}>Publish</button>
-              <hr />
-            </div>
+            <Sidebar setView={setView} viewName={viewName} myfun={myfun} />
             <div className="col-1 border-right text-center">
               {view === 4 ? (
                 <>
                   <button onClick={() => dispatch(actionClearInput(true))}>
                     Add View
                   </button>
-                  <ViewList />
+                  <List type="view" />
                 </>
               ) : (
                 ""
@@ -165,7 +142,7 @@ export default function CreateApp({ user }) {
                 {view === 1 ? (
                   <App developer={user} />
                 ) : view === 4 ? (
-                  <View
+                  <ViewConfig
                     role={role}
                     setRole={setRole}
                     allowedAction={allowedAction}

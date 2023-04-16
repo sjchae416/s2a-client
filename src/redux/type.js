@@ -7,3 +7,5 @@ export const ADD_TABLE = "ADD_TABLE";
 export const UPDATE_TABLE = "UPDATE_TABLE";
 export const DELETE_TABLE = "DELETE_TABLE";
 export const CLEAR_INPUT = "CLEAR_INPUT";
+// added for the view page
+export const SET_ROLE = "SET_ROLE";

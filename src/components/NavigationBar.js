@@ -43,7 +43,9 @@ export default function NavigationBar({user}){
          <span className=" ml-auto" />
          <button className="btn btn-info"> {">"} </button>&nbsp;
          <span className=" ml-auto" />
-         <button className="btn btn-info" onClick={handleSaveClick}>Save</button>
+         <button className="btn btn-info" onClick={handleSaveClick}>
+            Save
+         </button>
          <Modal isOpen={isModalOpen}>
            <h2>Confirm Save</h2>
            <p>Are you sure you want to save?</p>
