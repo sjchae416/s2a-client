@@ -18,6 +18,8 @@ const INITIAL_STATE = {
     sheetIndex: "",
   },
   clearInput: false,
+  // added the role membership sheet to the intial_state
+  viewrole: [],
 };
 
 const appReducer = (state = INITIAL_STATE, action) => {
@@ -34,6 +36,13 @@ const appReducer = (state = INITIAL_STATE, action) => {
         ...state,
         clearInput: action.payload,
         isViewSelected: false,
+      };
+
+    // Setting role based on the role membership sheet
+    case types.SET_ROLE:
+      return {
+        ...state,
+        viewrole: action.payload,
       };
 
     case types.ADD_VIEW:
