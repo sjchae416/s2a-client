@@ -72,14 +72,13 @@ export default function Table({ tablelist, setTableList }) {
       if (type === "radio") {
         // If radio button is clicked, update field value based on checked status
         updatedConfig[configIndex][field] = checked;
-
-        // if (checked && (field === "label" || field === "key")) {
-        //   updatedConfig.forEach((item) => {
-        //     if (item.name !== key && item[field] === true) {
-        //       item[field] = false;
-        //     }
-        //   });
-        // }
+        if (field === "label" || field === "key") {
+          updatedConfig.forEach((item) => {
+            if (item.name !== key) {
+              item[field] = false;
+            }
+          });
+        }
       } else {
         // If not a radio button, update field value directly
         updatedConfig[configIndex][field] = value;
@@ -88,8 +87,8 @@ export default function Table({ tablelist, setTableList }) {
       // If config does not exist, create a new config object
       const newConfig = {
         name: "",
-        key: "",
-        label: "",
+        key: false,
+        label: false,
         reference: "",
         type: "",
       };
