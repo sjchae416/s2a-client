@@ -56,42 +56,43 @@ export default function Table({ tablelist, setTableList }) {
     const { value, type, checked } = event.target;
     setConfig((prevConfig) => {
       const updatedConfig = [...prevConfig];
-      const configIndex = updatedConfig.findIndex((item) => item.name === key); // Find index of config object with the same name as key
-      if (configIndex !== -1) {
-        // If config already exists, update the field value
-        if (type === "radio") {
-          // If radio button is clicked, update field value based on checked status
-          updatedConfig[configIndex][field] = checked;
-          // if (checked && (field === "label" || field === "key")) {
-          //   updatedConfig.forEach((item) => {
-          //     if (item.name !== key && item[field] === true) {
-          //       item[field] = false;
-          //     }
-          //   });
-          // }
-        } else {
-          // If not a radio button, update field value directly
-          updatedConfig[configIndex][field] = value;
+    const configIndex = updatedConfig.findIndex((item) => item.name === key); // Find index of config object with the same name as key
+    if (configIndex !== -1) {
+      // If config already exists, update the field value
+      if (type === "radio") {
+        // If radio button is clicked, update field value based on checked status
+        updatedConfig[configIndex][field] = checked;
+
+        if (field === "label" || field === "key") {
+          updatedConfig.forEach((item) => {
+            if (item.name !== key) {
+              item[field] = false;
+            }
+          });
         }
       } else {
-        // If config does not exist, create a new config object
-        const newConfig = {
-          name: "",
-          key: "",
-          label: "",
-          reference: "",
-          type: "",
-        };
-        newConfig.name = key;
-        if (field === "label" || field === "key") {
-          newConfig[field] = type === "radio" ? checked : value === "true";
-        } else {
-          newConfig[field] = value;
-        }
-        updatedConfig.push(newConfig);
+        // If not a radio button, update field value directly
+        updatedConfig[configIndex][field] = value;
       }
-      return updatedConfig;
-    });
+    } else {
+      // If config does not exist, create a new config object
+      const newConfig = {
+        name: "",
+        key: false,
+        label: false,
+        reference: "",
+        type: "",
+      };
+      newConfig.name = key;
+      if (field === "label" || field === "key") {
+        newConfig[field] = type === "radio" ? checked : value === "true";
+      } else {
+        newConfig[field] = value;
+      }
+      updatedConfig.push(newConfig);
+    }
+    return updatedConfig;
+  });
   };
   const handleAddTable = () => {
     if (name) setTableList([...tablelist, name]);
