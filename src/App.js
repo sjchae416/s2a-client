@@ -12,12 +12,13 @@ import { createBrowserHistory } from 'history';
 import {
 	Login,
 	Dashboard,
-	CreateApp,
 	Table,
 	ManageTable,
 	TableView,
 } from './components';
-import CreateTable from './components/CreateTable';
+import CreateTable from "./components/CreateTable";
+// replaced the CreateApp component with the page
+import CreateAppPage from "./pages/CreateAppPage";
 
 export const customHistory = createBrowserHistory();
 
@@ -76,7 +77,7 @@ const App = () => {
 				{/* <Route path="/dashboard" element={<Dashboard />} /> */}
 				<Route path="/create-table" element={<CreateTable user = {user}/>} />
 
-				<Route path="/add-view" element={<CreateApp user={user} />} />
+				<Route path="/add-view" element={<CreateAppPage user={user} />} />
 				<Route path="/table-view" element={<TableView />} />
 			</Routes>
 			{/* </Router> */}

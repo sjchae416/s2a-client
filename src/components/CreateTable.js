@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { Link, useNavigate } from "react-router-dom";
-import TableList from "./TableList";
+// removed this - import TableList from "./TableList";
 import Table from "./Table";
+// importing common list component
+import List from "./List";
+
 
 import NavigationBar from "./NavigationBar";
 
@@ -65,7 +68,7 @@ export default function CreateTable({user}) {
             </div>
             <div class="col-1 border-right text-center">
               <button>Add Table</button>
-              <TableList tablelist={tablelist} />
+              <List type="table" />
             </div>
             <div class="col-auto">
               <Table tablelist={tablelist} setTableList={setTableList} />
