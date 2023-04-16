@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { loadTable } from "../api/tableApi";
 
 export default function Table({ tablelist, setTableList }) {
   const [sheetIndex, setSheetIndex] = useState("");
@@ -9,7 +10,7 @@ export default function Table({ tablelist, setTableList }) {
   const dummyRef = ["test1", "test2"];
    const [config, setConfig] = useState([]);
 
-   const keys = tableDataArray[0];
+  const keys = tableDataArray.length > 0 ? tableDataArray[0] : [];
 
   const tableData = {
     name: name,
@@ -27,35 +28,24 @@ export default function Table({ tablelist, setTableList }) {
 
   const handleLoad = async () => {
     if (tableData.name && tableData.url && tableData.sheetIndex) {
-      // Create the JSON object
-      // console.log(tableData);
-      try {
-        const response = await fetch("http://localhost:3333/tables/loadtable", {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(tableData),
-        });
-        const responseBody = await response.text(); // Read the response body as text
-        // console.log(responseBody ? responseBody : "no response");
-        const parsedData = JSON.parse(responseBody);
-        console.log(parsedData);
-        setTableDataArray(parsedData);
-      } catch (error) {
-        console.error(error);
+      const dataArray = await loadTable(tableData);
+      if (dataArray && !dataArray.error) {
+        console.log(dataArray);
+        setTableDataArray(dataArray);
+      } else {
+        const errorMessage =
+          dataArray && dataArray.message
+            ? dataArray.message
+            : "Error loading table. Please check your URL and sheet index.";
+        alert(errorMessage);
+        return;
       }
     } else {
-      alert("Please fill out all fields before submitting");
-      return;
-    }
-    //let test = "./" + url.toString();
-    //let file = require(test);
-    //keys = Object.keys(test[0]);
-    // alert(keys);
-    setShowTable(true);
-  };
+     alert("Please fill out all fields before submitting");
+     return;
+   }
+   setShowTable(true);
+ };
 
   const handleCreateClick = () => {
     // Use the config array to perform desired action with the configuration
