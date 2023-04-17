@@ -64,11 +64,23 @@ const App = () => {
 				/>
 				<Route
 					path="/manage-app"
-					element={<ManageAppPage googleUser={googleUser} />}
+					element={
+						<ManageAppPage
+							googleUser={googleUser}
+							user={user}
+							setUser={setUser}
+						/>
+					}
 				/>
 				<Route
 					path="/add-table"
-					element={<AddTable googleUser={googleUser} />}
+					element={
+						<AddTable
+							googleUser={googleUser}
+							user={user}
+							setUser={setUser}
+						/>
+					}
 				/>
 				<Route path="/table-view" element={<TableView />} />
 			</Routes>
