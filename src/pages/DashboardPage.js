@@ -7,7 +7,7 @@ import { createUser, getUserByEmail } from '../api/userApi';
 
 export const name = '';
 
-export default function DashboardPage({ googleUser, setUser }) {
+export default function DashboardPage({ googleUser, setUser, setApps }) {
 	const loggedInUser = googleUser;
 	const [section, setSection] = useState('all');
 	const [showMenu, setShowMenu] = useState(false);
@@ -32,13 +32,12 @@ export default function DashboardPage({ googleUser, setUser }) {
 	// FN else save the user to DB
 	const loadUser = async (email) => {
 		try {
-			const User = await getUserByEmail(email);
-			if (User) {
-				console.log('EXISTS', User);
-				setUser(User);
+			const user = await getUserByEmail(email);
+			if (user) {
+				setUser(user);
+				setApps(user.apps);
 			} else {
 				const newUser = await createUser(email);
-				console.log('NEW', newUser);
 				setUser(newUser);
 			}
 		} catch (error) {}
