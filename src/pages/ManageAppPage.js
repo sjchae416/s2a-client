@@ -9,7 +9,7 @@ import Sidebar from '../components/Sidebar.js';
 import List from '../components/List.js';
 import { ViewConfig } from '../components/ViewConfig.js';
 
-export default function ManageAppPage({ googleUser }) {
+export default function ManageAppPage({ googleUser, user, setUser }) {
 	const [view, setView] = useState(1);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [viewName, setViewName] = useState('');
