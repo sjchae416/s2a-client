@@ -165,9 +165,6 @@ export default function TableView() {
     <Box>
       <div>
         <div>
-          <div style={{ padding: "50px", display: "inline-block" }}>
-            App Name
-          </div>
           <button
             className="btn btn-info"
             style={{ padding: "50px", display: "inline-block" }}

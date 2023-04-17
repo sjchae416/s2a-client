@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { createBrowserHistory } from 'history';
 import { LoginPage, DashboardPage, ManageAppPage } from './pages';
 import { AddTable, TableView } from './components';
+import RunnableAppPage from './pages/RunnableAppPage';
 
 export const customHistory = createBrowserHistory();
 
@@ -92,6 +93,7 @@ const App = () => {
 					}
 				/>
 				<Route path="/table-view" element={<TableView />} />
+				<Route path="/runnable-apps/:name" element={<RunnableAppPage user={user}/>} />
 			</Routes>
 			{/* </Router> */}
 		</div>
