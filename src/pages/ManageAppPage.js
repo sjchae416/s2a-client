@@ -4,12 +4,20 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { actionClearInput } from '../redux/action.js';
 import NavigationBar from '../components/NavigationBar.js';
-import { App } from '../components/AppConfig.js';
+import { AppConfig } from '../components/AppConfig.js';
 import Sidebar from '../components/Sidebar.js';
 import List from '../components/List.js';
 import { ViewConfig } from '../components/ViewConfig.js';
 
-export default function ManageAppPage({ googleUser, user, setUser }) {
+export default function ManageAppPage({
+	googleUser,
+	user,
+	setUser,
+	apps,
+	setApps,
+	app,
+	setApp,
+}) {
 	const [view, setView] = useState(1);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [viewName, setViewName] = useState('');
@@ -118,7 +126,14 @@ export default function ManageAppPage({ googleUser, user, setUser }) {
 			<br />
 			<br />
 			<div className="container">
-				<NavigationBar googleUser={googleUser} />
+				<NavigationBar
+					googleUser={googleUser}
+					user={user}
+					setUser={setUser}
+					apps={apps}
+					setApps={setApps}
+					app={app}
+				/>
 				<br />
 
 				<div className="card p-0">
@@ -140,7 +155,7 @@ export default function ManageAppPage({ googleUser, user, setUser }) {
 							<div className="container">
 								<br />
 								{view === 1 ? (
-									<App developer={googleUser} />
+									<AppConfig user={user} app={app} setApp={setApp} />
 								) : view === 4 ? (
 									<ViewConfig
 										role={role}

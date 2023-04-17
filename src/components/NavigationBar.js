@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { Link, useNavigate } from 'react-router-dom';
+import { createApp } from '../api/appApi';
+import { updateUser } from '../api/userApi';
 
-export default function NavigationBar({ googleUser }) {
+export default function NavigationBar({
+	googleUser,
+	user,
+	setUser,
+	apps,
+	setApps,
+	app,
+}) {
 	const loggedInUser = googleUser;
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showMenu, setShowMenu] = useState(false);
@@ -12,8 +21,31 @@ export default function NavigationBar({ googleUser }) {
 
 	let navigate = useNavigate();
 
+	const saveApp = async (app) => {
+		try {
+			const newApp = await createApp(app);
+			console.log('NEWAPID', newApp._id);
+			if (newApp) {
+				setApps([...apps, newApp._id]);
+			}
+		} catch (error) {
+			console.error('Error while creating the App', error);
+		}
+	};
+
+	const updateUserInfo = async (id, update) => {
+		try {
+			const updatedUser = await updateUser({ id, update });
+			setUser(updatedUser);
+		} catch (error) {}
+	};
+
 	const handleConfirmClick = () => {
-		// TODO: handle the confirmation
+		saveApp(app);
+
+		const update = { apps: apps };
+		updateUserInfo(user._id, update);
+
 		navigate('/');
 		setIsModalOpen(false);
 	};
