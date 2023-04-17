@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createTable, loadTable } from '../api/tableApi';
 
-export default function Table({ tablelist, setTableList }) {
+export default function Table({ tablelist, setTableList, fetchTables }) {
 	const [sheetIndex, setSheetIndex] = useState('');
 	const [name, setName] = useState('');
 	const [url, setUrl] = useState('');
@@ -25,6 +25,10 @@ export default function Table({ tablelist, setTableList }) {
 		tableData.sheetIndex = sheetIndex;
 		tableData.config = config;
 	}, [name, url, sheetIndex, config]);
+
+	useEffect(() => {
+		console.log(tablelist);
+	}, [tablelist]);
 
 	const handleLoad = async () => {
 		if (tableData.name && tableData.url && tableData.sheetIndex) {
@@ -64,8 +68,11 @@ export default function Table({ tablelist, setTableList }) {
 			alert(errorMessage);
 			return;
 		}
+		fetchTables();
 
 	};
+
+
 
 	const handleInputChange = (event, key, field) => {
 		const { value, type, checked } = event.target;

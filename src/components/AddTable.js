@@ -5,10 +5,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import Table from './Table';
 // importing common list component
 import List from './List';
+import { readAllTables } from '../api/tableApi';
 
 import NavigationBar from './NavigationBar';
 
 export default function AddTable({ googleUser }) {
+
 	const [tablelist, setTableList] = useState([]);
 
 	let navigate = useNavigate();
@@ -37,6 +39,13 @@ export default function AddTable({ googleUser }) {
 			create_app_modal.style.display = 'none';
 		};
 	}, []);
+
+	
+	async function fetchTables() {
+		const tables = await readAllTables();
+		setTableList(tables);
+	}
+		
 
 	return (
 		<Box>
@@ -70,7 +79,7 @@ export default function AddTable({ googleUser }) {
 							<List type="table" />
 						</div>
 						<div className="col-auto">
-							<Table tablelist={tablelist} setTableList={setTableList} />
+							<Table tablelist={tablelist} setTableList={setTableList} fetchTables={fetchTables}/>
 							<div className="modal" id="create-app-modal">
 								<div className="modal-dialog-centered">
 									<div className="modal-content">
