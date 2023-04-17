@@ -9,16 +9,17 @@ export default function Table({ tablelist, setTableList, fetchTables }) {
 	const [tableDataArray, setTableDataArray] = useState([]);
 	const dummyRef = ['test1', 'test2', 'false'];
 	const [config, setConfig] = useState([]);
+	const [keys, setKeys] = useState([]);
+
 	
 	const isTypeColumnValid = () => {
 		for(let i = 0; i < config.length; i++) {
-			if(config[i].type === '') {
+			if(!config[i].type || config[i].type === '' || config.length === 0) {
 				return false;
 			}
 		}
 		return true;
 	};
-	const keys = tableDataArray.length > 0 ? tableDataArray[0] : [];
 
 	const tableData = {
 		name: name,
@@ -28,22 +29,55 @@ export default function Table({ tablelist, setTableList, fetchTables }) {
 	};
 
 	useEffect(() => {
+		if (tableDataArray.length > 0) {
+			setKeys(tableDataArray[0]);
+		}
+	}, [tableDataArray]);
+
+	useEffect(() => {
 		tableData.name = name;
 		tableData.url = url;
 		tableData.sheetIndex = sheetIndex;
+	}, [name, url, sheetIndex]);
+
+	useEffect(() => {
 		tableData.config = config;
-	}, [name, url, sheetIndex, config]);
+	}, [config]);
+
+
+	// Comment this out for table to load on first click, but it will not check for config consistency on first click.
+	useEffect(() => {
+		if (config.length > 0) {
+			setShowTable(true);
+		}
+	}, [config]);
+
 
 	useEffect(() => {
 		console.log(tablelist);
 	}, [tablelist]);
 
+	//FIXME - currently, handleLoad must be called twice in order for the table to load. 
 	const handleLoad = async () => {
 		if (tableData.name && tableData.url && tableData.sheetIndex) {
 			const dataArray = await loadTable(tableData);
 			if (dataArray && !dataArray.error) {
 				console.log(dataArray);
 				setTableDataArray(dataArray);
+				setConfig(
+					keys.map((key) => ({
+						name: key,
+						key: false,
+						label: false,
+						reference: 'false',
+						type: '',
+					}))
+				);
+				// Uncomment this for table to load on first click, but it will not check for config consistency on first click. 
+				// setShowTable(true);
+
+
+
 			} else {
 				const errorMessage =
 					dataArray && dataArray.message
@@ -56,14 +90,14 @@ export default function Table({ tablelist, setTableList, fetchTables }) {
 			alert('Please fill out all fields before submitting');
 			return;
 		}
-		setShowTable(true);
+	
 	};
 
 	const handleCreateClick = async () => {
 		// Use the config array to perform desired action with the configuration
 		// console.log(config);
 		// console.log(tableData);
-
+		console.log(config);
 		if (!isTypeColumnValid()) {
 			alert('Please select a type for all rows');
 			return;
