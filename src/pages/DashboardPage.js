@@ -7,9 +7,8 @@ import { createUser, getUserByEmail } from '../api/userApi';
 
 export const name = '';
 
-export default function DashboardPage({ googleUser }) {
+export default function DashboardPage({ googleUser, setUser }) {
 	const loggedInUser = googleUser;
-	const [user, setUser] = useState(null);
 	const [section, setSection] = useState('all');
 	const [showMenu, setShowMenu] = useState(false);
 	const [token, setToken] = useState('');
@@ -34,7 +33,7 @@ export default function DashboardPage({ googleUser }) {
 			const User = await getUserByEmail(email);
 			if (User) {
 				console.log('EXISTS', User);
-				setUser(user);
+				setUser(User);
 			} else {
 				const newUser = await createUser(email);
 				console.log('NEW', newUser);

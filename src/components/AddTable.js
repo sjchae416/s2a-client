@@ -9,8 +9,7 @@ import { readAllTables } from '../api/tableApi';
 
 import NavigationBar from './NavigationBar';
 
-export default function AddTable({ googleUser }) {
-
+export default function AddTable({ googleUser, user, setUser }) {
 	const [tablelist, setTableList] = useState([]);
 
 	let navigate = useNavigate();
