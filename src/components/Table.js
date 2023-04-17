@@ -7,7 +7,7 @@ export default function Table({ tablelist, setTableList }) {
 	const [url, setUrl] = useState('');
 	const [showTable, setShowTable] = useState(false);
 	const [tableDataArray, setTableDataArray] = useState([]);
-	const dummyRef = ['test1', 'test2'];
+	const dummyRef = ['test1', 'test2', 'false'];
 	const [config, setConfig] = useState([]);
 
 	const keys = tableDataArray.length > 0 ? tableDataArray[0] : [];
@@ -200,6 +200,7 @@ export default function Table({ tablelist, setTableList }) {
 											onChange={(event) =>
 												handleInputChange(event, key, 'reference')
 											}
+											defaultValue="false"
 										>
 											<option></option>
 											{dummyRef.map((ref) => (
