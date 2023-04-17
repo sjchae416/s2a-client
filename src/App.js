@@ -11,6 +11,8 @@ export const customHistory = createBrowserHistory();
 const App = () => {
 	const [googleUser, setGoogleUser] = useState(null);
 	const [user, setUser] = useState(null);
+	const [apps, setApps] = useState([]);
+	const [app, setApp] = useState(null);
 
 	const getUser = async () => {
 		try {
@@ -36,6 +38,13 @@ const App = () => {
 	useEffect(() => {
 		getUser();
 	}, []);
+
+	useEffect(() => {
+		console.log('apps', apps);
+	}, [apps]);
+	useEffect(() => {
+		console.log('user', user);
+	}, [user]);
 
 	// NOTE DELETE THIS BEFORE PRODUCTION
 	useEffect(() => {
@@ -69,17 +78,17 @@ const App = () => {
 							googleUser={googleUser}
 							user={user}
 							setUser={setUser}
+							apps={apps}
+							setApps={setApps}
+							app={app}
+							setApp={setApp}
 						/>
 					}
 				/>
 				<Route
 					path="/add-table"
 					element={
-						<AddTable
-							googleUser={googleUser}
-							user={user}
-							setUser={setUser}
-						/>
+						<AddTable googleUser={googleUser} user={user} setUser={setUser} />
 					}
 				/>
 				<Route path="/table-view" element={<TableView />} />

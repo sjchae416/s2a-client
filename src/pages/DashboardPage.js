@@ -12,6 +12,8 @@ export default function DashboardPage({ googleUser, setUser }) {
 	const [section, setSection] = useState('all');
 	const [showMenu, setShowMenu] = useState(false);
 	const [token, setToken] = useState('');
+	const [tables, setTables] = useState(null);
+	const [views, setViews] = useState(null);
 
 	const publishedApps = apps.filter((app) => app.status === 'published');
 	const inDevelopmentApps = apps.filter((app) => app.inDevelopment);
@@ -44,7 +46,7 @@ export default function DashboardPage({ googleUser, setUser }) {
 
 	useEffect(() => {
 		fetchToken();
-		loadUser(googleUser.email);
+		loadUser(loggedInUser.email);
 	}, [loggedInUser]);
 
 	// NOTE DELETE THIS BEFORE PRODUCTION
