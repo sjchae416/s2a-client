@@ -19,6 +19,7 @@ import {
 import CreateTable from "./components/CreateTable";
 // replaced the CreateApp component with the page
 import CreateAppPage from "./pages/CreateAppPage";
+import RunnableAppPage from './pages/RunnableAppPage';
 
 export const customHistory = createBrowserHistory();
 
@@ -79,6 +80,7 @@ const App = () => {
 
 				<Route path="/add-view" element={<CreateAppPage user={user} />} />
 				<Route path="/table-view" element={<TableView />} />
+				<Route path="/runnable-apps/:name" element={<RunnableAppPage user={user}/>} />
 			</Routes>
 			{/* </Router> */}
 		</Box>
