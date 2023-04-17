@@ -40,18 +40,18 @@ const App = () => {
 		getUser();
 	}, []);
 
+	// NOTE DELETE THIS BEFORE PRODUCTION
 	useEffect(() => {
 		console.log('apps', apps);
 	}, [apps]);
 	useEffect(() => {
 		console.log('user', user);
 	}, [user]);
-
-	// NOTE DELETE THIS BEFORE PRODUCTION
 	useEffect(() => {
 		// console.table(googleUser);
-		console.log(googleUser);
+		console.log('googleUser', googleUser);
 	}, [googleUser]);
+	// NOTE DELETE THIS BEFORE PRODUCTION
 
 	return (
 		<div>
@@ -62,7 +62,11 @@ const App = () => {
 					path="/"
 					element={
 						googleUser ? (
-							<DashboardPage googleUser={googleUser} setUser={setUser} />
+							<DashboardPage
+								googleUser={googleUser}
+								setUser={setUser}
+								setApps={setApps}
+							/>
 						) : (
 							<Navigate to="/login" />
 						)

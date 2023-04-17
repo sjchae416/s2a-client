@@ -13,6 +13,7 @@ export default function NavigationBar({
 	app,
 }) {
 	const loggedInUser = googleUser;
+	const [appsToSave, setAppsToSave] = useState();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showMenu, setShowMenu] = useState(false);
 	const handleSaveClick = () => {
@@ -24,7 +25,6 @@ export default function NavigationBar({
 	const saveApp = async (app) => {
 		try {
 			const newApp = await createApp(app);
-			console.log('NEWAPID', newApp._id);
 			if (newApp) {
 				setApps([...apps, newApp._id]);
 			}
@@ -35,7 +35,7 @@ export default function NavigationBar({
 
 	const updateUserInfo = async (id, update) => {
 		try {
-			const updatedUser = await updateUser({ id, update });
+			const updatedUser = await updateUser(id, update);
 			setUser(updatedUser);
 		} catch (error) {}
 	};
@@ -43,7 +43,7 @@ export default function NavigationBar({
 	const handleConfirmClick = () => {
 		saveApp(app);
 
-		const update = { apps: apps };
+		const update = { apps: appsToSave };
 		updateUserInfo(user._id, update);
 
 		navigate('/');
@@ -65,6 +65,10 @@ export default function NavigationBar({
 	const toggleMenu = () => {
 		setShowMenu(!showMenu);
 	};
+
+	useEffect(() => {
+		setAppsToSave(apps);
+	}, []);
 
 	return (
 		<div className="card text-right card_one">
