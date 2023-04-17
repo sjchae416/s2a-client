@@ -3,24 +3,23 @@ import { loadTable } from "../api/tableApi";
 import { useDispatch } from "react-redux";
 import { actionSetRole } from "../redux/action";
 
-const AppConfig = ({ developer }) => {
-  const [appName, setAppName] = useState("");
-  const [creatorEmail, setCreatorEmail] = useState("");
-  const [roleMembershipURL, setRoleMembershipURL] = useState("");
-  const [showTable, setShowTable] = useState(false);
-  const [roleData, setRoleData] = useState([]);
-  const roleKey = roleData.length > 0 ? roleData[0] : [];
-
-  const dispatch = useDispatch();
-  const appData = {
-    name: appName,
-    creator: creatorEmail,
-    roleMembershipSheet: roleMembershipURL,
-    // tables: tables,
-    // view: views,
-    // lastModifiedDate: new Date().toISOString(),
-    // lastOpenedDate: new Date().toISOString(),
-  };
+const AppConfig = ({ user, app, setApp }) => {
+  const [name, setName] = useState('');
+ 	const [creator, setCreator] = useState('');
+ 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
+ 	const [showTable, setShowTable] = useState(false);
+   const [roleData, setRoleData] = useState([]);
+ 	const roleKey = roleData.length > 0 ? roleData[0] : [];
+ 	const dispatch = useDispatch();
+ 	const appData = {
+ 		name: name,
+ 		creator: creator,
+ 		roleMembershipSheet: roleMembershipSheet,
+ 		// tables: tables,
+ 		// view: views,
+ 		// lastModifiedDate: new Date().toISOString(),
+ 		// lastOpenedDate: new Date().toISOString(),
+ 	};
 
 	const handleSaveAppName = (name) => {
 		setName(name);
@@ -30,11 +29,15 @@ const AppConfig = ({ developer }) => {
 		setRoleMembershipSheet(url);
 	};
 
+  const handleAddApp = () => {
+    setApp(appData);
+  };
+
   // FN create and fill in App document & and load Table data
   const loadRoleTable = async () => {
-    if (appName && roleMembershipURL) {
+    if (name && roleMembershipSheet) {
       const tableData = {
-        url: roleMembershipURL,
+        url: roleMembershipSheet,
         //NOTE - In order for sheetIndex to always choose the first sheet index, the metadata must be used. May add it later.
         sheetIndex: "Sheet1",
       };
