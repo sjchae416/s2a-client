@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import DashboardApp from '../components/DashboardApp';
 import apps from '../testData/test-apps.json';
 import { fetchTokenAPI } from '../api/authApi';
+import { createUser, getUserByEmail } from '../api/userApi';
 
 export const name = '';
 
-export default function DashboardPage({ user }) {
-	const loggedInUser = user;
+export default function DashboardPage({ googleUser }) {
+	const loggedInUser = googleUser;
+	const [user, setUser] = useState(null);
 	const [section, setSection] = useState('all');
 	const [showMenu, setShowMenu] = useState(false);
 	const [token, setToken] = useState('');
@@ -25,14 +27,31 @@ export default function DashboardPage({ user }) {
 		}
 	};
 
+	// FN if the user exists in DB, read the User document
+	// FN else save the user to DB
+	const loadUser = async (email) => {
+		try {
+			const User = await getUserByEmail(email);
+			if (User) {
+				console.log('EXISTS', User);
+				setUser(user);
+			} else {
+				const newUser = await createUser(email);
+				console.log('NEW', newUser);
+				setUser(newUser);
+			}
+		} catch (error) {}
+	};
+
 	useEffect(() => {
-    fetchToken();
+		fetchToken();
+		loadUser(googleUser.email);
 	}, [loggedInUser]);
 
 	// NOTE DELETE THIS BEFORE PRODUCTION
-	useEffect(() => {
-		console.log(token);
-	}, [token]);
+	// useEffect(() => {
+	// 	console.log(token);
+	// }, [token]);
 
 	const logOut = () => {
 		window.open(

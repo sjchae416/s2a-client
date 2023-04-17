@@ -9,6 +9,7 @@ import { AddTable, TableView } from './components';
 export const customHistory = createBrowserHistory();
 
 const App = () => {
+	const [googleUser, setGoogleUser] = useState(null);
 	const [user, setUser] = useState(null);
 
 	const getUser = async () => {
@@ -25,8 +26,8 @@ const App = () => {
 
 			const data = await response.json();
 
-			setUser(data.user._json);
-			// setUser(data.user);
+			setGoogleUser(data.user._json);
+			// setGoogleUser(data.user);
 		} catch (error) {
 			console.error('Fetch Error:', error);
 		}
@@ -38,8 +39,9 @@ const App = () => {
 
 	// NOTE DELETE THIS BEFORE PRODUCTION
 	useEffect(() => {
-		console.table(user);
-	}, [user]);
+		// console.table(googleUser);
+		console.log(googleUser);
+	}, [googleUser]);
 
 	return (
 		<div>
@@ -49,15 +51,25 @@ const App = () => {
 					exact
 					path="/"
 					element={
-						user ? <DashboardPage user={user} /> : <Navigate to="/login" />
+						googleUser ? (
+							<DashboardPage googleUser={googleUser} setUser={setUser} />
+						) : (
+							<Navigate to="/login" />
+						)
 					}
 				/>
 				<Route
 					path="/login"
-					element={user ? <Navigate to="/" /> : <LoginPage />}
+					element={googleUser ? <Navigate to="/" /> : <LoginPage />}
 				/>
-				<Route path="/manage-app" element={<ManageAppPage user={user} />} />
-				<Route path="/add-table" element={<AddTable user={user} />} />
+				<Route
+					path="/manage-app"
+					element={<ManageAppPage googleUser={googleUser} />}
+				/>
+				<Route
+					path="/add-table"
+					element={<AddTable googleUser={googleUser} />}
+				/>
 				<Route path="/table-view" element={<TableView />} />
 			</Routes>
 			{/* </Router> */}

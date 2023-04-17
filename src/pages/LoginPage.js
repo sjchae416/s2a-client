@@ -1,19 +1,13 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 
-export default function Login() {
+export default function LoginPage() {
 	const logIn = async () => {
 		window.open(
 			`http://localhost:3333/auth/google`,
 			// `http://localhost:${process.env.SERVER_PORT}/auth/google/callback`,
 			'_self'
 		);
-
-		// FIXME try retrieve server port number from the server or have config file in the client folder
-		// fetch('http://localhost:3000/server/port')
-		// 	.then((response) => response.json())
-		// 	.then((data) => console.log(data.port))
-		// 	.catch((error) => console.error(error));
 	};
 
 	return (

@@ -9,7 +9,7 @@ import Sidebar from '../components/Sidebar.js';
 import List from '../components/List.js';
 import { ViewConfig } from '../components/ViewConfig.js';
 
-export default function ManageAppPage({ user }) {
+export default function ManageAppPage({ googleUser }) {
 	const [view, setView] = useState(1);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [viewName, setViewName] = useState('');
@@ -118,7 +118,7 @@ export default function ManageAppPage({ user }) {
 			<br />
 			<br />
 			<div className="container">
-				<NavigationBar user={user} />
+				<NavigationBar googleUser={googleUser} />
 				<br />
 
 				<div className="card p-0">
@@ -140,7 +140,7 @@ export default function ManageAppPage({ user }) {
 							<div className="container">
 								<br />
 								{view === 1 ? (
-									<App developer={user} />
+									<App developer={googleUser} />
 								) : view === 4 ? (
 									<ViewConfig
 										role={role}
