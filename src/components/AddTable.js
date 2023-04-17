@@ -39,7 +39,7 @@ export default function AddTable({ googleUser, user, setUser }) {
 		};
 	}, []);
 
-	
+
 	async function fetchTables() {
 		const tables = await readAllTables();
 		setTableList(tables);

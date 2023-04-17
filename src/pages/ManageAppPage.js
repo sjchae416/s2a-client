@@ -158,6 +158,7 @@ export default function ManageAppPage({
 									<AppConfig user={user} app={app} setApp={setApp} />
 								) : view === 4 ? (
 									<ViewConfig
+										developer={user}
 										role={role}
 										setRole={setRole}
 										allowedAction={allowedAction}
