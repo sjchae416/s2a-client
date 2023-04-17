@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { loadTable } from '../api/tableApi';
+import { createTable, loadTable } from '../api/tableApi';
 
 export default function Table({ tablelist, setTableList }) {
 	const [sheetIndex, setSheetIndex] = useState('');
@@ -47,9 +47,24 @@ export default function Table({ tablelist, setTableList }) {
 		setShowTable(true);
 	};
 
-	const handleCreateClick = () => {
+	const handleCreateClick = async () => {
 		// Use the config array to perform desired action with the configuration
-		console.log(config);
+		// console.log(config);
+		// console.log(tableData);
+
+		const createdTable = await createTable(tableData);
+		if (createdTable && !createdTable.error) {
+			console.log(createdTable);
+			alert('Table created successfully');
+		} else {
+			const errorMessage =
+				createdTable && createdTable.message
+					? createdTable.message
+					: 'Error creating table.';
+			alert(errorMessage);
+			return;
+		}
+
 	};
 
 	const handleInputChange = (event, key, field) => {
@@ -129,7 +144,6 @@ export default function Table({ tablelist, setTableList }) {
 				<input
 					required
 					className="form-control"
-					defaultValue="1"
 					onChange={(e) => setSheetIndex(e.target.value)}
 				/>
 			</div>
