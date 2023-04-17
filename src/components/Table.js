@@ -11,7 +11,12 @@ export default function Table({ tablelist, setTableList, fetchTables }) {
 	const [config, setConfig] = useState([]);
 	
 	const isTypeColumnValid = () => {
-		return config.every((item) => item.type !== '');
+		for(let i = 0; i < config.length; i++) {
+			if(config[i].type === '') {
+				return false;
+			}
+		}
+		return true;
 	};
 	const keys = tableDataArray.length > 0 ? tableDataArray[0] : [];
 
@@ -54,13 +59,11 @@ export default function Table({ tablelist, setTableList, fetchTables }) {
 		setShowTable(true);
 	};
 
-	//FIXME - Make sure the config is consistent with the table data before creating.
 	const handleCreateClick = async () => {
 		// Use the config array to perform desired action with the configuration
 		// console.log(config);
 		// console.log(tableData);
 
-		// TODO - fix isTypeColumnValid, and each reference value should be sent as false.
 		if (!isTypeColumnValid()) {
 			alert('Please select a type for all rows');
 			return;
@@ -112,7 +115,7 @@ export default function Table({ tablelist, setTableList, fetchTables }) {
 					name: '',
 					key: false,
 					label: false,
-					reference: false,
+					reference: 'false',
 					type: '',
 				};
 				newConfig.name = key;
