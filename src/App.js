@@ -1,24 +1,10 @@
 import React from 'react';
 import './App.css';
-import {
-	// BrowserRouter as Router,
-	Navigate,
-	Routes,
-	Route,
-} from 'react-router-dom';
-import Box from '@mui/material/Box';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { createBrowserHistory } from 'history';
-import {
-	Login,
-	Dashboard,
-	Table,
-	ManageTable,
-	TableView,
-} from './components';
-import CreateTable from "./components/CreateTable";
-// replaced the CreateApp component with the page
-import CreateAppPage from "./pages/CreateAppPage";
+import { LoginPage, DashboardPage, ManageAppPage } from './pages';
+import { AddTable, TableView } from './components';
 
 export const customHistory = createBrowserHistory();
 
@@ -32,56 +18,50 @@ const App = () => {
 				// `http://localhost:${process.env.SERVER_PORT}/auth/login/success`,
 				{ credentials: 'include' }
 			);
-			if (response.status === 403) {
-				return console.error(
-					'HTTP status code 403: Unauthorized to redirect to the Dashboard. Please log in.'
-				);
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			// if (!response.ok) {
-			// 	throw new Error(`HTTP error! status: ${response.status}`);
-			// }
+
 			const data = await response.json();
+
 			setUser(data.user._json);
+			// setUser(data.user);
 		} catch (error) {
-			// NOTE Handle any errors that occur during the request
 			console.error('Fetch Error:', error);
 		}
 	};
 
 	useEffect(() => {
-		// REVIEW calls twice possibly beacuse is mounted and unmounted multiple (twice) times
 		getUser();
 	}, []);
 
+	// NOTE DELETE THIS BEFORE PRODUCTION
 	useEffect(() => {
 		console.table(user);
 	}, [user]);
 
 	return (
-		<Box>
+		<div>
 			{/* <Router forceRefresh={true}> */}
 			<Routes>
 				<Route
 					exact
 					path="/"
-					// element={<Dashboard user={user} />}
-					element={user ? <Dashboard user={user} /> : <Navigate to="/login" />}
+					element={
+						user ? <DashboardPage user={user} /> : <Navigate to="/login" />
+					}
 				/>
 				<Route
-					exact
 					path="/login"
-					// element={<Login />}
-					element={user ? <Navigate to="/" /> : <Login />}
+					element={user ? <Navigate to="/" /> : <LoginPage />}
 				/>
-				{/* <Route path="/" element={<Login />} /> */}
-				{/* <Route path="/dashboard" element={<Dashboard />} /> */}
-				<Route path="/create-table" element={<CreateTable user = {user}/>} />
-
-				<Route path="/add-view" element={<CreateAppPage user={user} />} />
+				<Route path="/manage-app" element={<ManageAppPage user={user} />} />
+				<Route path="/add-table" element={<AddTable user={user} />} />
 				<Route path="/table-view" element={<TableView />} />
 			</Routes>
 			{/* </Router> */}
-		</Box>
+		</div>
 	);
 };
 

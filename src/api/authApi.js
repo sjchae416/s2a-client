@@ -2,11 +2,12 @@ const defaultHeader = {
 	'Content-Type': 'application/json',
 };
 
-export const fetchToken = async () => {
+export const fetchTokenAPI = async () => {
 	try {
 		const response = await fetch(`http://localhost:3333/auth/token`, {
 			method: 'GET',
 			headers: defaultHeader,
+			credentials: 'include',
 		});
 
 		if (response.ok) {

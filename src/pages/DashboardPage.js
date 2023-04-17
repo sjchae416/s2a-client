@@ -1,56 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import { Link, useNavigate } from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
 import DashboardApp from '../components/DashboardApp';
-
 import apps from '../testData/test-apps.json';
+import { fetchTokenAPI } from '../api/authApi';
 
 export const name = '';
 
-export default function Dashboard({ user }) {
+export default function DashboardPage({ user }) {
 	const loggedInUser = user;
 	const [section, setSection] = useState('all');
 	const [showMenu, setShowMenu] = useState(false);
+	const [token, setToken] = useState('');
 
 	const publishedApps = apps.filter((app) => app.status === 'published');
 	const inDevelopmentApps = apps.filter((app) => app.inDevelopment);
 	const runnableApps = apps.filter((app) => app.runnable);
 
-	let navigate = useNavigate();
-	const createApp = (event) => {
-		event.preventDefault();
-		// name that the user enters is stored in name atm
-		// name = event.target;
-		// when the google sheets API is connected, update the database here
-
-		navigate('/manage-table');
+	const fetchToken = async () => {
+		try {
+			const token = await fetchTokenAPI();
+			setToken(token);
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
-	const handleOpen = () => {
-		// name that the user enters is stored in name atm
-		// name = event.target;
-		// when the google sheets API is connected, update the database here
+	useEffect(() => {
+    fetchToken();
+	}, [loggedInUser]);
 
-		navigate('/table-view');
-	};
-
-	// let app = (
-	//   <div className="col-4 mb-4">
-	//     <a href="#">
-	//       <div className="card p-0 text-center">
-	//         <h2 className="card-title">{app.name}</h2>
-	//         <hr />
-	//         <div className="p-1">
-	//           <small>Last modified mm/dd/yy</small>
-	//         </div>
-	//       </div>
-	//     </a>
-	//   </div>
-	// );
+	// NOTE DELETE THIS BEFORE PRODUCTION
+	useEffect(() => {
+		console.log(token);
+	}, [token]);
 
 	const logOut = () => {
 		window.open(
+			// FIXME do not reveal SERVER_PORT
 			`http://localhost:3333/auth/logout`,
 			// `http://localhost:${process.env.SERVER_PORT}/auth/logout`,
 			'_self'
@@ -66,17 +52,11 @@ export default function Dashboard({ user }) {
 			<br />
 			<br />
 			<div className="container">
+				{/* FIXME WHY NOT REUSE COMPONENT?! */}
 				<div className="card card_one">
 					<Link to="/">
-						{/* <Link to="/dashboard"> */}
 						<h3>S2A</h3>
 					</Link>
-					{/* <div style={{ display: 'flex', justifyContent: 'center' }}>
-						Hello, {loggedInUser.name}. You are now logged in with {loggedInUser.email}.
-					</div>
-					<button className="btn-log-out" onClick={logOut}>
-						Log Out
-					</button> */}
 					<span className="profile-letter ml-auto" onClick={toggleMenu}>
 						{loggedInUser.name && loggedInUser.name.charAt(0).toUpperCase()}
 					</span>
@@ -96,13 +76,13 @@ export default function Dashboard({ user }) {
 						<div className="box_three">
 							<div className="row">
 								<div className="col-auto">
-									<Link to="/add-view">
-										<button className="btn btn-info">Create App</button>
+									<Link to="/manage-app">
+										<button className="btn btn-info">Manage App</button>
 									</Link>
 									<br />
-									<Link to="/create-table">
+									<Link to="/add-table">
 										<button className="btn btn-info create_table_btn">
-											Create Table
+											Add Table
 										</button>
 									</Link>
 									<ul className="app_list">
