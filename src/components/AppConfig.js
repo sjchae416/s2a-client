@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import role from "../testData/test-role-sheet.json";
 import { loadTable } from "../api/tableApi";
 import { useDispatch } from "react-redux";
 import { actionSetRole } from "../redux/action";

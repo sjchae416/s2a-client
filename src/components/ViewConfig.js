@@ -1,7 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import Box from "@mui/material/Box";
-import role from "../testData/test-role-sheet.json";
-import test from "../testData/test2.json";
 import { useDispatch, useSelector } from "react-redux";
 import {
   actionAddView,
@@ -11,6 +8,7 @@ import {
 } from "../redux/action";
 
 const ViewConfig = ({
+  developer,
   role,
   setRole,
   allowedAction,
@@ -21,7 +19,11 @@ const ViewConfig = ({
   setViewName,
 }) => {
   const [showTable, setShowTable] = useState(false);
-  const columns = Object.keys(test[0]);
+  const [filter, setFilter] = useState('');
+  const [userFilter, setUserFilter] = useState('');
+  const [editFilter, setEditFilter] = useState('');
+  const [editableCols, setEditableCols] = useState([]);
+  const [boolConfigs, setBoolConfigs] = useState([]);
   const { isViewSelected, selectedView, clearInput, viewrole } = useSelector(
     (state) => state.app
   );
@@ -29,12 +31,31 @@ const ViewConfig = ({
   const [selectedColumns, setSelectedColumns] = useState([]);
   const formElement = useRef(null);
 
+  const testData = {
+    "name": "test",
+    "url" : "https://docs.google.com/spreadsheets/d/1yHt-_Pbu52TJW3znWxo9VlHnHOQaFVvRMTpkrWYtM_s/edit#gid=1530492309",
+    "sheetIndex" : "Sheet1",
+    "config": [
+      {"name" : "Name", "key" : "true", "label":"false","reference": "test2", "type": "string"},
+      {"name" : "Email", "key" : "false", "label":"true","reference": "test1", "type": "string"},
+      {"name" : "Class", "key" : "false", "label":"false","reference": "test1", "type": "string"},
+      {"name" : "Grade", "key" : "false", "label":"false","reference": "test2", "type": "string"},
+      {"name" : "Passed", "key" : "false", "label":"false","reference": "test2", "type": "bool"},
+    ]
+  };
+
+  const columns = testData.config.map((item) => item.name);
+
   useEffect(() => {
     setSelectedColumns(selectedView.selectedColumns);
     setViewName(selectedView.viewName);
     setViewType(selectedView.viewType);
     setAllowAction(selectedView.allowedAction);
     setRole(selectedView.role);
+    setFilter(selectedView.filter);
+    setUserFilter(selectedView.userFilter);
+    setEditFilter(selectedView.editFilter);
+    setEditableCols(selectedView.editableCols);
   }, [selectedView]);
 
   const viewData = {
@@ -44,6 +65,10 @@ const ViewConfig = ({
     viewType: viewType,
     allowedAction: allowedAction,
     role: role,
+    filter:filter, 
+    userFilter:userFilter,
+    editFilter: editFilter,
+    editableCols:editableCols
   };
 
   const handleRoleChange = (e) => {
@@ -130,6 +155,70 @@ const ViewConfig = ({
     setRole("");
   };
 
+  const handleUserFilterCheckboxChange = (e) => {
+    const { checked } = e.target;
+    if (checked) {
+      setUserFilter(developer.email);
+      console.log(developer.email);
+    } else {
+      setUserFilter("");
+    }
+    // console.log(allowedAction);
+  };
+
+  const handleFilterCheckboxChange = (e) => {
+    const {checked } = e.target;
+    if (checked) {
+      // Filter config objects where type is bool
+      const boolConfigs = testData.config.filter(config => config.type === "bool");
+      // Set the filtered bool configs to state
+      setBoolConfigs(boolConfigs);
+    } else {
+      // Clear the bool configs from state
+      setBoolConfigs([]);
+      setFilter('');
+      console.log(viewData);
+    }
+  };
+
+  const handleEditFilterCheckboxChange = (e) => {
+    const {checked } = e.target;
+    if (checked) {
+      // Filter config objects where type is bool
+      const boolConfigs = testData.config.filter(config => config.type === "bool");
+      // Set the filtered bool configs to state
+      setBoolConfigs(boolConfigs);
+    } else {
+      // Clear the bool configs from state
+      setBoolConfigs([]);
+      setEditFilter('');
+      console.log(viewData);
+    }
+  };
+
+  const handleFilterButtonChange = (e, name) => {
+    console.log(name);
+    setFilter(name);
+    console.log(viewData);
+  };
+
+  const handleEditFilterButtonChange = (e, name) => {
+    console.log(name);
+    setEditFilter(name);
+    console.log(viewData);
+  };
+
+  const handleTableView = (e) => {
+    setViewType(e.target.value)
+    setEditFilter('');
+  };
+
+  const handleDetailView = (e) => {
+    setViewType(e.target.value)
+    setFilter('');
+    setUserFilter('');
+  };
+
   return (
     <form
       onSubmit={handleOnSubmit}
@@ -177,7 +266,7 @@ const ViewConfig = ({
       <div class="form-group">
         <label className="can_btn">View Type</label>
         <input
-          onChange={(e) => setViewType(e.target.value)}
+          onChange={(e) => handleTableView(e)}
           type="radio"
           checked={viewType === "Table" ? true : false}
           id="Table"
@@ -187,7 +276,7 @@ const ViewConfig = ({
         <label for="Table">Table</label>{" "}
         <input
           checked={viewType === "Detail" ? true : false}
-          onChange={(e) => setViewType(e.target.value)}
+          onChange={(e) => handleDetailView(e)}
           type="radio"
           id="Detail"
           name="view_type"
@@ -213,6 +302,7 @@ const ViewConfig = ({
                 <label htmlFor={`checkbox-${record}`}>{record}</label>
               </div>
             ))
+            
           : ["Edit Record", "Delete Record"].map((record) => (
               <div key={record}>
                 <input
@@ -227,6 +317,63 @@ const ViewConfig = ({
                 <label htmlFor={`checkbox-${record}`}>{record}</label>
               </div>
             ))}
+            <label>Filters</label>
+            {viewType === "Table" ? (
+              <div>
+                <div>
+                  <input
+                    type="checkbox"
+                    id="checkbox-filter"
+                    name="filter"
+                    onChange={(e) => handleFilterCheckboxChange(e)}
+                  />
+                  <label htmlFor="checkbox-filter">Filter</label>
+                  {boolConfigs.map(config => (
+                    <div key={config.name}>
+                      <input
+                        type="radio"
+                        id={`radio-${config.name}`}
+                        name="filterOption"
+                        value={config.name}
+                        onChange={(e) => handleFilterButtonChange(e, config.name)}
+                      />
+                      <label htmlFor={`radio-${config.name}`}>{config.name}</label>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <input
+                    type="checkbox"
+                    id="checkbox-user-filter"
+                    name="userFilter"
+                    onChange={(e) => handleUserFilterCheckboxChange(e)}
+                  />
+                  <label htmlFor="checkbox-user-filter">User Filter</label>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <input
+                  type="checkbox"
+                  id="checkbox-edit-filter"
+                  name="editFilter"
+                  onChange={(e) => handleEditFilterCheckboxChange(e)}
+                />
+                <label htmlFor="checkbox-edit-filter">Edit Filter</label>
+                {boolConfigs.map(config => (
+                    <div key={config.name}>
+                      <input
+                        type="radio"
+                        id={`radio-${config.name}`}
+                        name="filterOption"
+                        value={config.name}
+                        onChange={(e) => handleEditFilterButtonChange(e, config.name)}
+                      />
+                      <label htmlFor={`radio-${config.name}`}>{config.name}</label>
+                    </div>
+                  ))}
+              </div>
+            )}
       </div>
       <div class="form-group">
         <label>Role</label>

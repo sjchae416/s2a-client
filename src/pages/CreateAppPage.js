@@ -142,7 +142,8 @@ export default function CreateAppPage({ user }) {
                 {view === 1 ? (
                   <App developer={user} />
                 ) : view === 4 ? (
-                  <ViewConfig
+                  <ViewConfig 
+                    developer={user}
                     role={role}
                     setRole={setRole}
                     allowedAction={allowedAction}
