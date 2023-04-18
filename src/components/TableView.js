@@ -9,30 +9,6 @@ const initialValues = Object.fromEntries(
 );
 
 export default function TableView() {
-  //  const test =  [
-  //       {
-  //         "name": "John Smith",
-  //         "id": "12345",
-  //         "email": "john.smith@example.com",
-  //         "assignment": "Homework 1",
-  //         "grade": "A",
-  //       },
-  //       {
-  //         "name": "Jane Doe",
-  //         "id": "67890",
-  //         "email": "jane.doe@example.com",
-  //         "assignment": "Homework 1",
-  //         "grade": "B+",
-  //       },
-  //       {
-  //         "name": "Bob Johnson",
-  //         "id": "24680",
-  //         "email": "bob.johnson@example.com",
-  //         "assignment": "Quiz 1",
-  //         "grade": "C-",
-  //       }
-  //     ]
-
   // state to store the row data for editing
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);

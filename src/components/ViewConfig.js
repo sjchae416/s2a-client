@@ -122,10 +122,9 @@ const ViewConfig = ({
 		}
 	};
 
-	const handleRoleChange = (e) => {
-		setRole(e.target.value);
+ 	const handleRoleChange = (e) => {
+ 		setRole(e.target.value);
 	};
-
 	const handleCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
 		if (checked) {
@@ -135,7 +134,6 @@ const ViewConfig = ({
 		}
 		// console.log(selectedColumns);
 	};
-
 	const handleAllowedActionCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
 		if (checked) {
@@ -145,7 +143,6 @@ const ViewConfig = ({
 		}
 		// console.log(allowedAction);
 	};
-
 	const handleOnSubmit = (e) => {
 		e.preventDefault();
 		console.log(role);
@@ -153,7 +150,6 @@ const ViewConfig = ({
 			return window.alert('Add role membership sheet first!');
 		}
 		if (viewName) dispatch(actionAddView(viewData));
-
 		formElement.current.reset();
 		setSelectedColumns([]);
 		setShowTable(false);
@@ -162,7 +158,6 @@ const ViewConfig = ({
 		setAllowAction([]);
 		setRole('');
 	};
-
 	useEffect(() => {
 		setSelectedColumns([]);
 		setShowTable(false);
@@ -170,10 +165,8 @@ const ViewConfig = ({
 		setViewType('Table');
 		setAllowAction([]);
 		setRole('');
-
 		dispatch(actionClearInput(false));
 	}, [clearInput]);
-
 	const handleCancel = () => {
 		setSelectedColumns([]);
 		setShowTable(false);
@@ -182,7 +175,6 @@ const ViewConfig = ({
 		setAllowAction([]);
 		setRole('');
 	};
-
 	const updateViewList = (e) => {
 		e.preventDefault();
 		dispatch(actionUpdateView(selectedView.id, viewData));
@@ -192,8 +184,8 @@ const ViewConfig = ({
 		setViewName('');
 		setViewType('Table');
 		setAllowAction([]);
-		setRole('');
-	};
+ 		setRole('');
+ 	};
 
 	const deleteViewList = () => {
 		dispatch(actionDeleteView(selectedView.id));
@@ -444,8 +436,8 @@ const ViewConfig = ({
 				</select>
 			</div>
 
-			{!isViewSelected ? (
-				<div className="text-right">
+ 			{!isViewSelected ? (
+ 				<div className="text-right">
 					<button
 						type="reset"
 						className="btn btn-danger can_btn"
@@ -472,7 +464,6 @@ const ViewConfig = ({
 					</button>
 				</div>
 			)}
-
 			<br />
 			<br />
 		</form>
