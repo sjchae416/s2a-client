@@ -12,8 +12,12 @@ export const customHistory = createBrowserHistory();
 const App = () => {
 	const [googleUser, setGoogleUser] = useState(null);
 	const [user, setUser] = useState(null);
-	const [apps, setApps] = useState([]);
+	const [appIds, setAppIds] = useState([]);
+	const [tableIds, setTableIds] = useState([]);
+	const [viewIds, setViewIds] = useState([]);
 	const [app, setApp] = useState(null);
+	const [tables, setTables] = useState([]);
+	const [views, setViews] = useState([]);
 
 	const getUser = async () => {
 		try {
@@ -36,22 +40,31 @@ const App = () => {
 		}
 	};
 
+	const loadAppIds = (user) => {
+		setAppIds(user.apps);
+	};
+
+	const loadTableIds = (user) => {
+		setTableIds(user.tables);
+	};
+
+	const loadViewIds = (user) => {
+		setViewIds(user.views);
+	};
+
 	useEffect(() => {
 		getUser();
 	}, []);
 
-	// NOTE DELETE THIS BEFORE PRODUCTION
-	useEffect(() => {
-		console.log('apps', apps);
-	}, [apps]);
 	useEffect(() => {
 		console.log('user', user);
+		if (user !== null) {
+			loadAppIds(user);
+			loadTableIds(user);
+			// TODO uncomment when View interaction is done
+			// loadViewIds(user)
+		}
 	}, [user]);
-	useEffect(() => {
-		// console.table(googleUser);
-		console.log('googleUser', googleUser);
-	}, [googleUser]);
-	// NOTE DELETE THIS BEFORE PRODUCTION
 
 	return (
 		<div>
@@ -65,7 +78,9 @@ const App = () => {
 							<DashboardPage
 								googleUser={googleUser}
 								setUser={setUser}
-								setApps={setApps}
+								setAppIds={setAppIds}
+								setTableIds={setTableIds}
+								setViewIds={setViewIds}
 							/>
 						) : (
 							<Navigate to="/login" />
@@ -83,21 +98,36 @@ const App = () => {
 							googleUser={googleUser}
 							user={user}
 							setUser={setUser}
-							apps={apps}
-							setApps={setApps}
+							appIds={appIds}
+							setAppIds={setAppIds}
 							app={app}
-							setApp={setApp}
+              setApp={setApp}
+              viewIds={viewIds}
+              setViewIds={setViewIds}
 						/>
 					}
 				/>
+				{/* REVIEW since AddTable is routed  */}
 				<Route
 					path="/add-table"
 					element={
-						<AddTable googleUser={googleUser} user={user} setUser={setUser} />
+						<AddTable
+							googleUser={googleUser}
+							user={user}
+							setUser={setUser}
+							tableIds={tableIds}
+							setTableIds={setTableIds}
+							tables={tables}
+							setTables={setTables}
+						/>
 					}
 				/>
+				{/* REVIEW use conditional rendering for TableView in RunnableAppPage */}
 				<Route path="/table-view" element={<TableView />} />
-				<Route path="/runnable-apps/:name" element={<RunnableAppPage user={user}/>} />
+				<Route
+					path="/runnable-appIds/:name"
+					element={<RunnableAppPage user={user} />}
+				/>
 			</Routes>
 			{/* </Router> */}
 		</div>

@@ -9,8 +9,12 @@ export const createApp = async (app) => {
 			headers: defaultHeader,
 			body: JSON.stringify(app),
 		});
-		return response.json();
+		const newApp = await response.json();
+		return newApp;
 	} catch (error) {
+		if (error.code === 11000 && error.keyPattern && error.keyPattern.name) {
+			throw new Error('The app name alreadyl exists!');
+		}
 		console.error('Error creating app:', error);
 	}
 };

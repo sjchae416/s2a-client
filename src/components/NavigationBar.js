@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { Link, useNavigate } from 'react-router-dom';
-import { createApp } from '../api/appApi';
+import { createApp, getAppById, updateApp } from '../api/appApi';
 import { updateUser } from '../api/userApi';
 
 export default function NavigationBar({
 	googleUser,
 	user,
 	setUser,
-	apps,
-	setApps,
+	appIds,
+	setAppIds,
 	app,
+	setApp,
 }) {
 	const loggedInUser = googleUser;
-	const [appsToSave, setAppsToSave] = useState();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showMenu, setShowMenu] = useState(false);
 	const handleSaveClick = () => {
@@ -22,29 +22,43 @@ export default function NavigationBar({
 
 	let navigate = useNavigate();
 
-	const saveApp = async (app) => {
+	// FIXME prevent duplicate names being saved from server side and alert error
+	const saveApp = async (app, appId) => {
 		try {
-			const newApp = await createApp(app);
-			if (newApp) {
-				setApps([...apps, newApp._id]);
+			// FIXME if the App alreadly exits, update the field with passed id(appId), else creat and save
+			if (appId) {
+				const update = { app };
+				await updateApp(appId, update);
+			} else {
+				const newApp = await createApp(app);
+				if (newApp) {
+					const now = new Date();
+					const nycTimeString = now.toLocaleString('en-US', {
+						timeZone: 'America/New_York',
+					});
+					const newAppIds = [...appIds, newApp._id];
+					const update = { apps: newAppIds, lastModifiedDate: nycTimeString };
+					const updatedUser = await updateUser(user._id, update);
+
+					setAppIds(newAppIds);
+					setApp(null);
+					setUser(updatedUser);
+				}
 			}
 		} catch (error) {
-			console.error('Error while creating the App', error);
+			if (error.code === 11000) {
+				window.alert(
+					'Tha app name alreadyl exists! Duplicate app names are not allowed!'
+				);
+			} else {
+				console.error('Error while creating the App', error);
+			}
 		}
 	};
 
-	const updateUserInfo = async (id, update) => {
-		try {
-			const updatedUser = await updateUser(id, update);
-			setUser(updatedUser);
-		} catch (error) {}
-	};
-
-	const handleConfirmClick = () => {
-		saveApp(app);
-
-		const update = { apps: appsToSave };
-		updateUserInfo(user._id, update);
+	const handleConfirmClick = async () => {
+		await saveApp(app);
+		// await saveApp(app, appId);
 
 		navigate('/');
 		setIsModalOpen(false);
@@ -66,10 +80,6 @@ export default function NavigationBar({
 		setShowMenu(!showMenu);
 	};
 
-	useEffect(() => {
-		setAppsToSave(apps);
-	}, []);
-
 	return (
 		<div className="card text-right card_one">
 			<h3 id="save-change">S2A</h3>
@@ -88,7 +98,9 @@ export default function NavigationBar({
 					<button onClick={handleConfirmClick}>Confirm</button>
 				</Modal>
 				<span className="profile-letter ml-auto" onClick={toggleMenu}>
-					{loggedInUser.name && loggedInUser.name.charAt(0).toUpperCase()}
+					{/* REVIEW changed condition logic and fixed warning */}
+					{loggedInUser ? loggedInUser.name.charAt(0).toUpperCase() : '!'}
+					{/* {loggedInUser.name && loggedInUser.name.charAt(0).toUpperCase()} */}
 				</span>
 				{showMenu && (
 					<div className="dropdown-menu">

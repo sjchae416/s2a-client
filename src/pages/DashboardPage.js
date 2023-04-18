@@ -7,13 +7,18 @@ import { createUser, getUserByEmail } from '../api/userApi';
 
 export const name = '';
 
-export default function DashboardPage({ googleUser, setUser, setApps }) {
-	const loggedInUser = googleUser;
+export default function DashboardPage({
+	googleUser,
+	setUser,
+	setAppIds,
+	setTableIds,
+	setViewIds,
+}) {
 	const [section, setSection] = useState('all');
 	const [showMenu, setShowMenu] = useState(false);
 	const [token, setToken] = useState('');
-	const [tables, setTables] = useState(null);
-	const [views, setViews] = useState(null);
+
+	const loggedInUser = googleUser;
 
 	const publishedApps = apps.filter((app) => app.status === 'published');
 	const inDevelopmentApps = apps.filter((app) => app.inDevelopment);
@@ -24,34 +29,35 @@ export default function DashboardPage({ googleUser, setUser, setApps }) {
 			const token = await fetchTokenAPI();
 			setToken(token);
 		} catch (error) {
-			console.error(error);
+			console.error('Error fetching the access token', error);
 		}
 	};
 
-	// FN if the user exists in DB, read the User document
-	// FN else save the user to DB
 	const loadUser = async (email) => {
 		try {
 			const user = await getUserByEmail(email);
+
 			if (user) {
 				setUser(user);
-				setApps(user.apps);
+				setAppIds(user.apps);
+				setTableIds(user.tables);
+				setViewIds(user.views);
 			} else {
-				const newUser = await createUser(email);
-				setUser(newUser);
+				try {
+					const newUser = await createUser(email);
+
+					setUser(newUser);
+					setAppIds(newUser.apps);
+					setTableIds(newUser.tables);
+					setViewIds(newUser.views);
+				} catch (error) {
+					console.error('Error creating a new User', error);
+				}
 			}
-		} catch (error) {}
+		} catch (error) {
+			console.error('Error getting the User', error);
+		}
 	};
-
-	useEffect(() => {
-		fetchToken();
-		loadUser(loggedInUser.email);
-	}, [loggedInUser]);
-
-	// NOTE DELETE THIS BEFORE PRODUCTION
-	// useEffect(() => {
-	// 	console.log(token);
-	// }, [token]);
 
 	const logOut = () => {
 		window.open(
@@ -65,6 +71,11 @@ export default function DashboardPage({ googleUser, setUser, setApps }) {
 	const toggleMenu = () => {
 		setShowMenu(!showMenu);
 	};
+
+	useEffect(() => {
+		fetchToken();
+		loadUser(loggedInUser.email);
+	}, [loggedInUser]);
 
 	return (
 		<div>
