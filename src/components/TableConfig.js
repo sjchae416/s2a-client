@@ -20,9 +20,21 @@ export default function TableConfig({
 	const [config, setConfig] = useState([]);
 	const [keys, setKeys] = useState([]);
 
+	const clearForms = () => {
+		setSheetIndex('');
+		setName('');
+		setUrl('');
+		setShowTable(false);
+		setTableDataArray([]);
+		setConfig([]);
+		setKeys([]);
+
+		
+	};
+
 	const isTypeColumnValid = () => {
 		for (let i = 0; i < config.length; i++) {
-			if (!config[i].type || config[i].type === '' || config.length === 0) {
+			if(!config[i].type || config[i].type === ''){
 				return false;
 			}
 		}
@@ -48,6 +60,10 @@ export default function TableConfig({
 	// useEffect(() => {
 	// 	fetchTables();
 	// }, []);
+
+	useEffect(() => {
+		console.log('user', user);
+	}, []);
 
 	useEffect(() => {
 		if (tableDataArray.length > 0) {
@@ -134,11 +150,12 @@ export default function TableConfig({
 			alert(errorMessage);
 			return;
 		}
-		const newTableIds = [...tableIds, createdTable._id];
+		const newTableIds = createdTable._id == null ? [...tableIds]: [...tableIds, createdTable._id];
 		const update = { tables: newTableIds };
 		const updatedUser = await updateUser(user._id, update);
 		setUser(updatedUser);
 		setTableIds(newTableIds);
+		clearForms();
 		// fetchTables();
 	};
 
@@ -202,6 +219,7 @@ export default function TableConfig({
 					required
 					type="text"
 					className="form-control"
+					value={name}
 					onChange={(e) => setName(e.target.value)}
 				/>
 			</div>
@@ -211,6 +229,7 @@ export default function TableConfig({
 					required
 					type="text"
 					className="form-control"
+					value={url}
 					onChange={(e) => setUrl(e.target.value)}
 				/>
 			</div>
@@ -219,6 +238,7 @@ export default function TableConfig({
 				<input
 					required
 					className="form-control"
+					value={sheetIndex}
 					onChange={(e) => setSheetIndex(e.target.value)}
 				/>
 			</div>
