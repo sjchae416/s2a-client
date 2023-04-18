@@ -4,15 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createApp, getAppById, updateApp } from '../api/appApi';
 import { updateUser } from '../api/userApi';
 
-export default function NavigationBar({
-	googleUser,
-	user,
-	setUser,
-	appIds,
-	setAppIds,
-	app,
-	setApp,
-}) {
+export default function NavigationBar({ googleUser }) {
 	const loggedInUser = googleUser;
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showMenu, setShowMenu] = useState(false);
@@ -21,53 +13,6 @@ export default function NavigationBar({
 	};
 
 	let navigate = useNavigate();
-
-	// FIXME prevent duplicate names being saved from server side and alert error
-	const saveApp = async (app, appId) => {
-		try {
-			// FIXME if the App alreadly exits, update the field with passed id(appId), else creat and save
-			if (appId) {
-				const update = { app };
-				await updateApp(appId, update);
-			} else {
-				const newApp = await createApp(app);
-				if (newApp) {
-					const now = new Date();
-					const nycTimeString = now.toLocaleString('en-US', {
-						timeZone: 'America/New_York',
-					});
-					var newAppIds = [];
-					if (appIds) {
-						newAppIds = [...appIds, newApp._id];
-					} else {
-						newAppIds = [newApp._id];
-					}
-					const update = { apps: newAppIds, lastModifiedDate: nycTimeString };
-					const updatedUser = await updateUser(user._id, update);
-
-					setAppIds(newAppIds);
-					setApp(null);
-					setUser(updatedUser);
-				}
-			}
-		} catch (error) {
-			if (error.code === 11000) {
-				window.alert(
-					'Tha app name alreadyl exists! Duplicate app names are not allowed!'
-				);
-			} else {
-				console.error('Error while creating the App', error);
-			}
-		}
-	};
-
-	const handleConfirmClick = async () => {
-		await saveApp(app);
-		// await saveApp(app, appId);
-
-		navigate('/');
-		setIsModalOpen(false);
-	};
 
 	const handleCancelClick = () => {
 		setIsModalOpen(false);

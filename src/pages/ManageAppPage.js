@@ -121,20 +121,22 @@ export default function ManageAppPage({
 			<br />
 			<br />
 			<div className="container">
-				<NavigationBar
-					googleUser={googleUser}
-					user={user}
-					setUser={setUser}
-					appIds={appIds}
-					setAppIds={setAppIds}
-					app={app}
-					setApp={setApp}
-				/>
+				<NavigationBar googleUser={googleUser} />
 				<br />
 
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
-						<Sidebar setView={setView} viewName={viewName} myfun={myfun} />
+						<Sidebar
+							setView={setView}
+							viewName={viewName}
+							myfun={myfun}
+							user={user}
+							setUser={setUser}
+							appIds={appIds}
+							setAppIds={setAppIds}
+							app={app}
+							setApp={setApp}
+						/>
 
 						<div className="col-1 border-right text-center">
 							{view === 4 ? (

@@ -1,100 +1,160 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { createApp, updateApp } from '../api/appApi';
+import { updateUser } from '../api/userApi';
 
-const Sidebar = ({ setView, viewName, myfun }) => {
-  const { isViewSelected } = useSelector((state) => state.app);
+const Sidebar = ({
+	setView,
+	viewName,
+	myfun,
+	user,
+	setUser,
+	appIds,
+	setAppIds,
+	app,
+	setApp,
+}) => {
+	const { isViewSelected } = useSelector((state) => state.app);
 
-  const navigate = useNavigate();
+	const navigate = useNavigate();
 
-  // save changes modal
-  useEffect(() => {
-    const create_app_modal_btn = document.querySelector("#save-changes");
-    const create_app_modal = document.querySelector("#save-changes-modals");
-    const dismiss_create_app_modal = document.querySelector(
-      "#dismiss_create_app_modals"
-    );
-    const create_app_btn = document.querySelector("#save-changes-btn");
+	// FIXME initial app not saved
+	// FIXME prevent duplicate names being saved from server side and alert error
+	const saveApp = async (app) => {
+		// const saveApp = async (app, appId) => {
+		try {
+			// FIXME if the App alreadly exits, update the field with passed id(appId), else creat and save
+			// if (appId) {
+			// 	const update = { app };
+			// 	await updateApp(appId, update);
+			// } else {
+			const newApp = await createApp(app);
+			if (newApp) {
+				const now = new Date();
+				const nycTimeString = now.toLocaleString('en-US', {
+					timeZone: 'America/New_York',
+				});
+				var newAppIds = [];
+				if (appIds) {
+					newAppIds = [...appIds, newApp._id];
+				} else {
+					newAppIds = [newApp._id];
+				}
+				const update = { apps: newAppIds, lastModifiedDate: nycTimeString };
+				const updatedUser = await updateUser(user._id, update);
 
-    create_app_modal_btn.onclick = () => {
-      create_app_modal.style.display = "block";
-    };
+				setAppIds(newAppIds);
+				setApp(null);
+				setUser(updatedUser);
+			}
+			// }
+		} catch (error) {
+			if (error.code === 11000) {
+				window.alert(
+					'Tha app name alreadyl exists! Duplicate app names are not allowed!'
+				);
+			} else {
+				console.error('Error while creating the App', error);
+			}
+		}
+	};
 
-    window.onclick = (event) => {
-      if (event.target === create_app_modal) {
-        create_app_modal.style.display = "none";
-      }
-    };
+	const handleSave = async () => {
+		await saveApp(app);
+		// await saveApp(app, appId);
 
-    dismiss_create_app_modal.onclick = (event) => {
-      create_app_modal.style.display = "none";
-    };
-    create_app_btn.onclick = (event) => {
-      create_app_modal.style.display = "none";
-    };
-  }, []);
+		navigate('/');
+		// setIsModalOpen(false);
+	};
 
-  return (
-    <div className="col-1 border-right text-center">
-      <button
-        onClick={() => {
-          if (!isViewSelected && viewName) {
-            if (
-              window.confirm(
-                "You have unsaved changes, Are you sure you want to leave!"
-              ) === true
-            ) {
-              setView(1);
-            }
-          } else {
-            setView(1);
-          }
-        }}
-      >
-        App
-      </button>
-      <hr />
-      <button onClick={() => setView(4)}>View</button>
-      <hr />
-      <button onClick={myfun}>Publish</button>
-      <hr />
+	// save changes modal
+	useEffect(() => {
+		const create_app_modal_btn = document.querySelector('#save-changes');
+		const create_app_modal = document.querySelector('#save-changes-modals');
+		const dismiss_create_app_modal = document.querySelector(
+			'#dismiss_create_app_modals'
+		);
+		const create_app_btn = document.querySelector('#save-changes-btn');
 
-      {/* save button added here */}
-      <button id="save-changes">Save</button>
-      <hr />
-      <div className="modal" id="save-changes-modals">
-        <div className="modal-dialog-centered">
-          <div className="modal-content">
-            <div className="card">
-              <div className="form-group save_ur_chnage">
-                <h5>Save Changes</h5>
-                <h5>Would you like to save your changes before proceeding?</h5>
-                <button
-                  onClick={() => navigate("/")}
-                  className="btn btn-danger "
-                  id="dismiss_create_app_modals"
-                >
-                  Discard
-                </button>
-                <button
-                  onClick={() => navigate("/")}
-                  className="btn btn-success"
-                  id="save-changes-btns"
-                >
-                  Save
-                </button>
-                <button className="btn btn-danger " id="save-changes-btn">
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+		create_app_modal_btn.onclick = () => {
+			create_app_modal.style.display = 'block';
+		};
 
+		window.onclick = (event) => {
+			if (event.target === create_app_modal) {
+				create_app_modal.style.display = 'none';
+			}
+		};
 
-    </div>
-  );
+		dismiss_create_app_modal.onclick = (event) => {
+			create_app_modal.style.display = 'none';
+		};
+		create_app_btn.onclick = (event) => {
+			create_app_modal.style.display = 'none';
+		};
+	}, []);
+
+	return (
+		<div className="col-1 border-right text-center">
+			<button
+				onClick={() => {
+					if (!isViewSelected && viewName) {
+						if (
+							window.confirm(
+								'You have unsaved changes, Are you sure you want to leave!'
+							) === true
+						) {
+							setView(1);
+						}
+					} else {
+						setView(1);
+					}
+				}}
+			>
+				App
+			</button>
+			<hr />
+			<button onClick={() => setView(4)}>View</button>
+			<hr />
+			<button onClick={myfun}>Publish</button>
+			<hr />
+
+			{/* save button added here */}
+			<button id="save-changes">Save</button>
+			<hr />
+			<div className="modal" id="save-changes-modals">
+				<div className="modal-dialog-centered">
+					<div className="modal-content">
+						<div className="card">
+							<div className="form-group save_ur_chnage">
+								<h5>Save Changes</h5>
+								<h5>Would you like to save your changes before proceeding?</h5>
+								<button
+									onClick={() => navigate('/')}
+									className="btn btn-danger "
+									id="dismiss_create_app_modals"
+								>
+									Discard
+								</button>
+								<button
+									onClick={handleSave}
+									// onClick={() => navigate('/')}
+									className="btn btn-success"
+									id="save-changes-btns"
+								>
+									Save
+								</button>
+								<button className="btn btn-danger " id="save-changes-btn">
+									Cancel
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default Sidebar;

@@ -38,18 +38,21 @@ export default function DashboardPage({
 			const user = await getUserByEmail(email);
 
 			if (user) {
+				console.log('IF');
 				setUser(user);
 				setAppIds(user.apps);
 				setTableIds(user.tables);
 				setViewIds(user.views);
 			} else {
+				console.log('ELSE');
 				try {
+					// REVIEW called 3 times so first create properly then next 2 cause duplicate email error
 					const newUser = await createUser(email);
 
 					setUser(newUser);
-					setAppIds(newUser.apps);
-					setTableIds(newUser.tables);
-					setViewIds(newUser.views);
+					// setAppIds(newUser.apps);
+					// setTableIds(newUser.tables);
+					// setViewIds(newUser.views);
 				} catch (error) {
 					console.error('Error creating a new User', error);
 				}

@@ -5,7 +5,7 @@ import { actionSetRole } from '../redux/action';
 
 const AppConfig = ({ email, user, app, setApp }) => {
 	const [name, setName] = useState('');
-	const [creator, setCreator] = useState(email);
+	// const [creator, setCreator] = useState(email);
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
 	const [showTable, setShowTable] = useState(false);
 	const [roleData, setRoleData] = useState([]);
@@ -19,7 +19,7 @@ const AppConfig = ({ email, user, app, setApp }) => {
 
 	const appData = {
 		name: name,
-		creator: creator,
+		creator: email,
 		roleMembershipSheet: roleMembershipSheet,
 		// tables: tables,
 		// view: views,
@@ -27,10 +27,6 @@ const AppConfig = ({ email, user, app, setApp }) => {
 		// lastModifiedDate: new Date().toISOString(),
 		// lastOpenedDate: new Date().toISOString(),
 	};
-
-	useEffect(() => {
-		console.log(appData);
-	}, [appData]);
 
 	const handleSaveAppName = (name) => {
 		setName(name);
@@ -76,11 +72,11 @@ const AppConfig = ({ email, user, app, setApp }) => {
 		appData.roleMembershipSheet = roleMembershipSheet;
 	}, [name, roleMembershipSheet]);
 
-	useEffect(() => {
-		if (user) {
-			setCreator(user.email);
-		}
-	}, [user]);
+	// useEffect(() => {
+	// 	if (user) {
+	// 		setCreator(user.email);
+	// 	}
+	// }, [user]);
 
 	useEffect(() => {
 		console.log(app);
@@ -97,7 +93,7 @@ const AppConfig = ({ email, user, app, setApp }) => {
 		>
 			<div className="form-group">
 				<label>Creator's Email</label>
-				<div>{creator}</div>
+				<div>{email}</div>
 			</div>
 			<div className="form-group">
 				<label>App Name</label>
