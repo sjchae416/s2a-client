@@ -1150,6 +1150,13 @@ tr:hover {
   margin-top: 0;
 }
 
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
 /* Modal form */
 .ReactModal__Content form {
   margin: 20px 0;
