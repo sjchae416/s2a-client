@@ -36,7 +36,12 @@ export default function NavigationBar({
 					const nycTimeString = now.toLocaleString('en-US', {
 						timeZone: 'America/New_York',
 					});
-					const newAppIds = [...appIds, newApp._id];
+					var newAppIds = [];
+					if (appIds) {
+						newAppIds = [...appIds, newApp._id];
+					} else {
+						newAppIds = [newApp._id];
+					}
 					const update = { apps: newAppIds, lastModifiedDate: nycTimeString };
 					const updatedUser = await updateUser(user._id, update);
 

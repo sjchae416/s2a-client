@@ -153,7 +153,12 @@ export default function ManageAppPage({
 							<div className="container">
 								<br />
 								{view === 1 ? (
-									<AppConfig user={user} app={app} setApp={setApp} />
+									<AppConfig
+										email={googleUser.email}
+										user={user}
+										app={app}
+										setApp={setApp}
+									/>
 								) : view === 4 ? (
 									<ViewConfig
 										developer={user}
