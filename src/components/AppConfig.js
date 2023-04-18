@@ -3,9 +3,9 @@ import { loadTable } from '../api/tableApi';
 import { useDispatch } from 'react-redux';
 import { actionSetRole } from '../redux/action';
 
-const AppConfig = ({ user, app, setApp }) => {
+const AppConfig = ({ email, user, app, setApp }) => {
 	const [name, setName] = useState('');
-	const [creator, setCreator] = useState('');
+	const [creator, setCreator] = useState(email);
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
 	const [showTable, setShowTable] = useState(false);
 	const [roleData, setRoleData] = useState([]);
@@ -27,6 +27,10 @@ const AppConfig = ({ user, app, setApp }) => {
 		// lastModifiedDate: new Date().toISOString(),
 		// lastOpenedDate: new Date().toISOString(),
 	};
+
+	useEffect(() => {
+		console.log(appData);
+	}, [appData]);
 
 	const handleSaveAppName = (name) => {
 		setName(name);
