@@ -52,7 +52,6 @@ export default function ManageAppPage({
 			'#dismiss_create_app_modal'
 		);
 		const create_app_btn = document.querySelector('#create-app-btn');
-		//const create_app_btns = document.querySelector('#create-app-btns');
 
 		if (create_app_modal_btn) {
 			create_app_modal_btn.onclick = () => {
@@ -72,9 +71,6 @@ export default function ManageAppPage({
 		create_app_btn.onclick = (event) => {
 			create_app_modal.style.display = 'none';
 		};
-		//create_app_btns.onclick = (event) => {
-		//	create_app_modal.style.display = 'none';
-		//};
 	}, []);
 
 	useEffect(() => {
@@ -114,10 +110,6 @@ export default function ManageAppPage({
 
 	const handleConfirmClick = () => {
 		// TODO: handle the confirmation
-		setIsModalOpen(false);
-	};
-
-	const handleCancelClick = () => {
 		setIsModalOpen(false);
 	};
 
@@ -231,11 +223,6 @@ export default function ManageAppPage({
 									<button className="btn btn-success" id="create-app-btn">
 										Yes
 									</button>
-									{/*
-									<button className="btn btn-danger" id="create-app-btns">
-										Cancel
-									</button>
-								*/}
 								</div>
 							</div>
 						</div>
