@@ -14,7 +14,8 @@ const App = () => {
 	const [user, setUser] = useState(null);
 	const [appIds, setAppIds] = useState([]);
 	const [tableIds, setTableIds] = useState([]);
-	const [viewIds, setViewIds] = useState([]);
+  const [viewIds, setViewIds] = useState([]);
+  // NOTE appData in AppConfig.js
 	const [app, setApp] = useState(null);
 	const [tables, setTables] = useState([]);
 	const [views, setViews] = useState([]);
