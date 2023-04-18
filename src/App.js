@@ -12,7 +12,9 @@ export const customHistory = createBrowserHistory();
 const App = () => {
 	const [googleUser, setGoogleUser] = useState(null);
 	const [user, setUser] = useState(null);
-	const [apps, setApps] = useState([]);
+	const [appIds, setAppIds] = useState([]);
+	const [tableIds, setTableIds] = useState([]);
+	const [viewIds, setViewIds] = useState([]);
 	const [app, setApp] = useState(null);
 
 	const getUser = async () => {
@@ -41,16 +43,20 @@ const App = () => {
 	}, []);
 
 	// NOTE DELETE THIS BEFORE PRODUCTION
+	// useEffect(() => {
+	// 	// LOG
+	// 	console.log('appIds', appIds);
+	// 	console.log('tableIds', tableIds);
+	// 	console.log('viewIds', viewIds);
+	// }, [appIds]);
 	useEffect(() => {
-		console.log('apps', apps);
-	}, [apps]);
-	useEffect(() => {
+		// LOG
 		console.log('user', user);
 	}, [user]);
-	useEffect(() => {
-		// console.table(googleUser);
-		console.log('googleUser', googleUser);
-	}, [googleUser]);
+	// useEffect(() => {
+	// 	// LOG
+	// 	console.log('googleUser', googleUser);
+	// }, [googleUser]);
 	// NOTE DELETE THIS BEFORE PRODUCTION
 
 	return (
@@ -65,7 +71,9 @@ const App = () => {
 							<DashboardPage
 								googleUser={googleUser}
 								setUser={setUser}
-								setApps={setApps}
+								setAppIds={setAppIds}
+								setTableIds={setTableIds}
+								setViewIds={setViewIds}
 							/>
 						) : (
 							<Navigate to="/login" />
@@ -83,8 +91,8 @@ const App = () => {
 							googleUser={googleUser}
 							user={user}
 							setUser={setUser}
-							apps={apps}
-							setApps={setApps}
+							appIds={appIds}
+							setAppIds={setAppIds}
 							app={app}
 							setApp={setApp}
 						/>
@@ -97,7 +105,10 @@ const App = () => {
 					}
 				/>
 				<Route path="/table-view" element={<TableView />} />
-				<Route path="/runnable-apps/:name" element={<RunnableAppPage user={user}/>} />
+				<Route
+					path="/runnable-appIds/:name"
+					element={<RunnableAppPage user={user} />}
+				/>
 			</Routes>
 			{/* </Router> */}
 		</div>

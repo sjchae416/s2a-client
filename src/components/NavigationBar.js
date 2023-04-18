@@ -8,12 +8,12 @@ export default function NavigationBar({
 	googleUser,
 	user,
 	setUser,
-	apps,
-	setApps,
+	appIds,
+	setAppIds,
 	app,
+	setApp,
 }) {
 	const loggedInUser = googleUser;
-	const [appsToSave, setAppsToSave] = useState();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showMenu, setShowMenu] = useState(false);
 	const handleSaveClick = () => {
@@ -22,29 +22,32 @@ export default function NavigationBar({
 
 	let navigate = useNavigate();
 
+	// FIXME prevent duplicate names being saved from server side and alert error
 	const saveApp = async (app) => {
 		try {
 			const newApp = await createApp(app);
 			if (newApp) {
-				setApps([...apps, newApp._id]);
+				const newApps = [...appIds, newApp._id];
+				const update = { apps: newApps };
+				const updatedUser = await updateUser(user._id, update);
+
+				setAppIds(newApps);
+				setApp(null);
+				setUser(updatedUser);
 			}
 		} catch (error) {
-			console.error('Error while creating the App', error);
+			if (error.code === 11000) {
+				window.alert(
+					'Tha app name alreadyl exists! Duplicate app names are not allowed!'
+				);
+			} else {
+				console.error('Error while creating the App', error);
+			}
 		}
 	};
 
-	const updateUserInfo = async (id, update) => {
-		try {
-			const updatedUser = await updateUser(id, update);
-			setUser(updatedUser);
-		} catch (error) {}
-	};
-
-	const handleConfirmClick = () => {
-		saveApp(app);
-
-		const update = { apps: appsToSave };
-		updateUserInfo(user._id, update);
+	const handleConfirmClick = async () => {
+		await saveApp(app);
 
 		navigate('/');
 		setIsModalOpen(false);
@@ -65,10 +68,6 @@ export default function NavigationBar({
 	const toggleMenu = () => {
 		setShowMenu(!showMenu);
 	};
-
-	useEffect(() => {
-		setAppsToSave(apps);
-	}, []);
 
 	return (
 		<div className="card text-right card_one">

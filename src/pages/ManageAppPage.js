@@ -13,8 +13,8 @@ export default function ManageAppPage({
 	googleUser,
 	user,
 	setUser,
-	apps,
-	setApps,
+	appIds,
+	setAppIds,
 	app,
 	setApp,
 }) {
@@ -29,6 +29,7 @@ export default function ManageAppPage({
 	const dispatch = useDispatch();
 	let navigate = useNavigate();
 
+	// FIXME have an appropriate and descriptive function name
 	const myfun = () => {
 		if (viewName) {
 			if (
@@ -130,15 +131,17 @@ export default function ManageAppPage({
 					googleUser={googleUser}
 					user={user}
 					setUser={setUser}
-					apps={apps}
-					setApps={setApps}
+					appIds={appIds}
+					setAppIds={setAppIds}
 					app={app}
+					setApp={setApp}
 				/>
 				<br />
 
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
 						<Sidebar setView={setView} viewName={viewName} myfun={myfun} />
+
 						<div className="col-1 border-right text-center">
 							{view === 4 ? (
 								<>
@@ -151,6 +154,7 @@ export default function ManageAppPage({
 								''
 							)}
 						</div>
+
 						<div className="col-auto">
 							<div className="container">
 								<br />
@@ -197,7 +201,6 @@ export default function ManageAppPage({
 									</button>
 									<button
 										onClick={() => navigate('/')}
-										// onClick={() => navigate("/dashboard")}
 										className="btn btn-success"
 										id="save-change-btns"
 									>
