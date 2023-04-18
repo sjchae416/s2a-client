@@ -7,7 +7,7 @@ export default function Table({ tablelist, setTableList, fetchTables }) {
   const [url, setUrl] = useState("");
   const [showTable, setShowTable] = useState(false);
   const [tableDataArray, setTableDataArray] = useState([]);
-  const dummyRef = ["test1", "test2", "false"];
+  const dummyRef = ["test1", "test2"];
   const [config, setConfig] = useState([]);
   const [keys, setKeys] = useState([]);
 
@@ -108,10 +108,10 @@ export default function Table({ tablelist, setTableList, fetchTables }) {
     // Use the config array to perform desired action with the configuration
     // console.log(config);
     // console.log(tableData);
-    if (!isTypeColumnValid()) {
-      alert("Please select a type for all rows");
-      return;
-    }
+    // if (!isTypeColumnValid()) {
+    //   alert("Please select a type for all rows");
+    //   return;
+    // }
 
     const createdTable = await createTable(tableData);
     if (createdTable && !createdTable.error) {
@@ -173,6 +173,7 @@ export default function Table({ tablelist, setTableList, fetchTables }) {
   const handleAddTable = () => {
     if (name) setTableList([...tablelist, name]);
   };
+
   return (
     <div
       className="card"

@@ -14,11 +14,7 @@ export default function NavigationBar({
 }) {
 	const loggedInUser = googleUser;
 	const [appsToSave, setAppsToSave] = useState();
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showMenu, setShowMenu] = useState(false);
-	const handleSaveClick = () => {
-		setIsModalOpen(true);
-	};
 
 	let navigate = useNavigate();
 
@@ -38,20 +34,6 @@ export default function NavigationBar({
 			const updatedUser = await updateUser(id, update);
 			setUser(updatedUser);
 		} catch (error) {}
-	};
-
-	const handleConfirmClick = () => {
-		saveApp(app);
-
-		const update = { apps: appsToSave };
-		updateUserInfo(user._id, update);
-
-		navigate('/');
-		setIsModalOpen(false);
-	};
-
-	const handleCancelClick = () => {
-		setIsModalOpen(false);
 	};
 
 	const logOut = () => {
@@ -74,19 +56,6 @@ export default function NavigationBar({
 		<div className="card text-right card_one">
 			<h3 id="save-change">S2A</h3>
 			<span className=" ml-auto">
-				<button className="btn btn-info"> {'<'} </button>&nbsp;
-				<span className=" ml-auto" />
-				<button className="btn btn-info"> {'>'} </button>&nbsp;
-				<span className=" ml-auto" />
-				<button className="btn btn-info" onClick={handleSaveClick}>
-					Save
-				</button>
-				<Modal isOpen={isModalOpen}>
-					<h2>Confirm Save</h2>
-					<p>Are you sure you want to save?</p>
-					<button onClick={handleCancelClick}>Cancel</button>
-					<button onClick={handleConfirmClick}>Confirm</button>
-				</Modal>
 				<span className="profile-letter ml-auto" onClick={toggleMenu}>
 					{loggedInUser.name && loggedInUser.name.charAt(0).toUpperCase()}
 				</span>

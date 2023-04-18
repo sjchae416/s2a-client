@@ -6,8 +6,7 @@ import Table from './Table';
 // importing common list component
 import List from './List';
 import { readAllTables } from '../api/tableApi';
-
-import NavigationBar from './NavigationBar';
+import NavigationBar from '../components/NavigationBar.js';
 
 export default function AddTable({ googleUser, user, setUser }) {
 	const [tablelist, setTableList] = useState([]);
