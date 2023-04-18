@@ -156,9 +156,10 @@ export default function TableView({app}) {
               <br/>
             </div>
           ))}
+          <br/>
           <div>
+           <Button variant="contained" onClick={handleClose}>Cancel</Button>
             <Button className="btn btn-danger " variant="contained" onClick={handleAddRow}>Add</Button>
-          <Button variant="contained" onClick={handleClose}>Cancel</Button>
           </div>
           
         </div>
