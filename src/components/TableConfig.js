@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { createTable, loadTable } from '../api/tableApi';
+import { updateUser } from '../api/userApi';
 
-export default function TableConfig({ tables, setTables, fetchTables }) {
+export default function TableConfig({
+	user,
+	setUser,
+	tableIds,
+	setTableIds,
+	tables,
+	setTables,
+	fetchTables,
+}) {
 	const [sheetIndex, setSheetIndex] = useState('');
 	const [name, setName] = useState('');
 	const [url, setUrl] = useState('');
@@ -36,9 +45,9 @@ export default function TableConfig({ tables, setTables, fetchTables }) {
 		config: config,
 	};
 
-	useEffect(() => {
-		fetchTables();
-	}, []);
+	// useEffect(() => {
+	// 	fetchTables();
+	// }, []);
 
 	useEffect(() => {
 		if (tableDataArray.length > 0) {
@@ -125,7 +134,12 @@ export default function TableConfig({ tables, setTables, fetchTables }) {
 			alert(errorMessage);
 			return;
 		}
-		fetchTables();
+		const newTableIds = [...tableIds, createdTable._id];
+		const update = { tables: newTableIds };
+		const updatedUser = await updateUser(user._id, update);
+		setUser(updatedUser);
+		setTableIds(newTableIds);
+		// fetchTables();
 	};
 
 	const handleInputChange = (event, key, field) => {
@@ -291,6 +305,7 @@ export default function TableConfig({ tables, setTables, fetchTables }) {
 					</table>
 					<div className="text-right">
 						<button
+							// FIXME why create function in Cancel btn?
 							onClick={handleCreateClick}
 							className="btn btn-danger can_btn"
 						>

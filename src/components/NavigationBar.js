@@ -27,11 +27,11 @@ export default function NavigationBar({
 		try {
 			const newApp = await createApp(app);
 			if (newApp) {
-				const newApps = [...appIds, newApp._id];
-				const update = { apps: newApps };
+				const newAppIds = [...appIds, newApp._id];
+				const update = { apps: newAppIds };
 				const updatedUser = await updateUser(user._id, update);
 
-				setAppIds(newApps);
+				setAppIds(newAppIds);
 				setApp(null);
 				setUser(updatedUser);
 			}

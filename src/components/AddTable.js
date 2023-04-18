@@ -13,6 +13,8 @@ export default function AddTable({
 	googleUser,
 	user,
 	setUser,
+	tableIds,
+	setTableIds,
 	tables,
 	setTables,
 }) {
@@ -43,10 +45,11 @@ export default function AddTable({
 		};
 	}, []);
 
-	async function fetchTables() {
-		const tables = await readAllTables();
-		setTables(tables);
-	}
+	// REVIEW commented since this reads 'all' Tables; we need user-specific Tables
+	// async function fetchTables() {
+	// 	const tables = await readAllTables();
+	// 	setTables(tables);
+	// }
 
 	return (
 		<Box>
@@ -82,9 +85,13 @@ export default function AddTable({
 						</div>
 						<div className="col-auto">
 							<TableConfig
+								user={user}
+								setUser={setUser}
+								tableIds={tableIds}
+								setTableIds={setTableIds}
 								tables={tables}
 								setTables={setTables}
-								fetchTables={fetchTables}
+								// fetchTables={fetchTables}
 							/>
 							<div className="modal" id="create-app-modal">
 								<div className="modal-dialog-centered">

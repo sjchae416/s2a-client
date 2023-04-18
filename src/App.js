@@ -17,6 +17,7 @@ const App = () => {
 	const [viewIds, setViewIds] = useState([]);
 	const [app, setApp] = useState(null);
 	const [tables, setTables] = useState([]);
+	const [views, setViews] = useState([]);
 
 	const getUser = async () => {
 		try {
@@ -110,6 +111,8 @@ const App = () => {
 							googleUser={googleUser}
 							user={user}
 							setUser={setUser}
+							tableIds={tableIds}
+							setTableIds={setTableIds}
 							tables={tables}
 							setTables={setTables}
 						/>
