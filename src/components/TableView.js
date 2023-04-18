@@ -19,30 +19,11 @@ export default function TableView({app}) {
   if(app.editableCols != []) editableCols = app.editableCols;
 
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({});
+  const [openDelete, setDeleteOpen] = useState(false);
+  const [newRowData, setNewRowData] = useState({});
+  const [selectedRowData, setSelectedRowData] = useState(null);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleInputChange = (event) => {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-    setFormData({ ...formData, [name]: value });
-  }
-
-  const handleAddRow = () => {
-    // add the new row to the table
-    console.log(formData);
-    handleClose();
-  }
-
-  const test = [
+  const [test, setTest] = useState([
     {
       "Name": "George Chen",
       "Email": "george@gmail.com",
@@ -85,7 +66,55 @@ export default function TableView({app}) {
       "Grade": "A",
       "Passed": true
     }
-  ]
+  ]);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setDeleteOpen(false);
+  };
+
+  const handleModalInputChange = (event) => {
+    const { name, value } = event.target;
+    setNewRowData({ ...newRowData, [name]: value });
+  };
+
+  const handleAddRow = () => {
+    //check if the fields are empty
+    for(let i = 0; i < col.length; i++) {
+      if(!newRowData[col[i]]) {
+        alert("Please fill in all fields");
+        return;
+      }
+    }
+
+    const newRow = {};
+    col.forEach((column) => {
+      newRow[column] = newRowData[column] || '';
+    });
+    setTest([...test, newRow]); // Add the new row to the table data
+    console.log(newRow);
+    handleClose();
+  };
+
+  const handleRowClick = (rowData) => {
+    setSelectedRowData(rowData);
+    setDeleteOpen(true);
+  };
+
+  const handleDelete = () => {
+    const deletedRow = {};
+    col.forEach((columnName) => {
+      deletedRow[columnName] = selectedRowData[columnName];
+    });
+    console.log('Deleted Row:', deletedRow);
+    // Call the delete function to remove the row from the data
+    // ...
+    handleClose();
+  };
 
   const filteredTest = test.filter(row => row[filter]);
 
@@ -103,7 +132,7 @@ export default function TableView({app}) {
         </thead>
         <tbody>
           {filteredTest.map((row) => (
-            <tr key={row.Name}>
+            <tr key={row.Name} onClick={() => handleRowClick(row)}>
               {col.map((column) => (
                 <td key={column}>{row[column]}</td>
               ))}
@@ -111,6 +140,56 @@ export default function TableView({app}) {
           ))}
         </tbody>
       </table>
+      <Modal open={open} onClose={handleClose}>
+        <div className="modal-content">
+          <h2>ADD ROW</h2>
+          {col.map((columnName) => (
+            <div>
+              <TextField
+                key={columnName}
+                name={columnName}
+                label={columnName}
+                value={newRowData[columnName] || ''}
+                onChange={handleModalInputChange}
+              />
+              <br/>
+              <br/>
+            </div>
+          ))}
+          <br/>
+          <div>
+           <Button variant="contained" onClick={handleClose}>Cancel</Button>
+            <Button className="btn btn-danger " variant="contained" onClick={handleAddRow}>Add</Button>
+          </div>
+          
+        </div>
+      </Modal>
+      <Modal open={openDelete} onClose={handleClose}>
+        <div className="modal-content">
+          <h2>Delete Row</h2>
+          <h4>Are you sure you want to delete this row?</h4>
+          {selectedRowData && (
+            <div>
+             {col.map((columnName) => (
+              <div key={columnName}>
+                <strong>{columnName}: </strong>
+                <span>{selectedRowData[columnName]}</span>
+                <br />
+                <br />
+              </div>
+            ))}
+            </div>
+          )}
+          <div>
+            <Button variant="contained" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="contained" onClick={handleDelete}>
+              Confirm
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
