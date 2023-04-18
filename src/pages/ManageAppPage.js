@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
+import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { actionClearInput } from '../redux/action.js';
@@ -8,6 +9,9 @@ import { AppConfig } from '../components/AppConfig.js';
 import Sidebar from '../components/Sidebar.js';
 import List from '../components/List.js';
 import { ViewConfig } from '../components/ViewConfig.js';
+
+import { createApp } from '../api/appApi';
+import { updateUser } from '../api/userApi';
 
 export default function ManageAppPage({
 	googleUser,
@@ -27,6 +31,7 @@ export default function ManageAppPage({
 	const [viewType, setViewType] = useState('Table');
 	const [allowedAction, setAllowAction] = useState([]);
 	const [role, setRole] = useState('');
+	const [appsToSave, setAppsToSave] = useState();
 
 	const dispatch = useDispatch();
 	let navigate = useNavigate();
@@ -112,8 +117,35 @@ export default function ManageAppPage({
 	};
 
 	const handleConfirmClick = () => {
-		// TODO: handle the confirmation
+		saveApp(app);
+
+		const update = { apps: appsToSave };
+		updateUserInfo(user._id, update);
+
+		navigate('/');
 		setIsModalOpen(false);
+	};
+
+	const handleCancelClick = () => {
+		setIsModalOpen(false);
+	};
+
+	const saveApp = async (app) => {
+		try {
+			const newApp = await createApp(app);
+			if (newApp) {
+				setApps([...apps, newApp._id]);
+			}
+		} catch (error) {
+			console.error('Error while creating the App', error);
+		}
+	};
+
+	const updateUserInfo = async (id, update) => {
+		try {
+			const updatedUser = await updateUser(id, update);
+			setUser(updatedUser);
+		} catch (error) {}
 	};
 
 	return (
@@ -123,6 +155,20 @@ export default function ManageAppPage({
 			<div className="container">
 				<NavigationBar googleUser={googleUser} />
 				<br />
+			<span className="card text-right card_one">
+				<span className=" ml-auto" />
+					<button className="btn btn-info"> {'<'} </button>&nbsp;
+					<button className="btn btn-info"> {'>'} </button>&nbsp;
+					<button className="btn btn-info" onClick={handleSaveClick}>
+						Save
+					</button>
+					<Modal isOpen={isModalOpen}>
+						<h2>Confirm Save</h2>
+						<p>Are you sure you want to save?</p>
+						<button onClick={handleCancelClick}>Cancel</button>
+						<button onClick={handleConfirmClick}>Confirm</button>
+					</Modal>
+				</span>
 
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">

@@ -8,9 +8,6 @@ export default function NavigationBar({ googleUser }) {
 	const loggedInUser = googleUser;
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showMenu, setShowMenu] = useState(false);
-	const handleSaveClick = () => {
-		setIsModalOpen(true);
-	};
 
 	let navigate = useNavigate();
 
