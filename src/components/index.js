@@ -5,4 +5,4 @@ import TableView from './TableView';
 
 import RunnableAppPage from '../pages/RunnableAppPage';
 
-export { AppBanner, AddTable, TableConfig, TableView };
+export { AddTable, TableConfig, TableView };
