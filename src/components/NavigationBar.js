@@ -88,15 +88,15 @@ export default function NavigationBar({
 				<span className=" ml-auto" />
 				<button className="btn btn-info"> {'>'} </button>&nbsp;
 				<span className=" ml-auto" />
-				<button className="btn btn-info" onClick={handleSaveClick}>
+				{/*<button className="btn btn-info" onClick={handleSaveClick}>
 					Save
-				</button>
+	            </button>
 				<Modal isOpen={isModalOpen}>
 					<h2>Confirm Save</h2>
 					<p>Are you sure you want to save?</p>
 					<button onClick={handleCancelClick}>Cancel</button>
 					<button onClick={handleConfirmClick}>Confirm</button>
-				</Modal>
+				</Modal>*/}
 				<span className="profile-letter ml-auto" onClick={toggleMenu}>
 					{/* REVIEW changed condition logic and fixed warning */}
 					{loggedInUser ? loggedInUser.name.charAt(0).toUpperCase() : '!'}
