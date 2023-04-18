@@ -17,6 +17,8 @@ export default function ManageAppPage({
 	setAppIds,
 	app,
 	setApp,
+	viewIds,
+	setViewIds,
 }) {
 	const [view, setView] = useState(1);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -173,6 +175,9 @@ export default function ManageAppPage({
 										setSelectedColumns={setSelectedColumns}
 										viewName={viewName}
 										setViewName={setViewName}
+										setUser={setUser}
+										viewIds={viewIds}
+										setViewIds={setViewIds}
 									/>
 								) : (
 									''

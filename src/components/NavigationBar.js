@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { Link, useNavigate } from 'react-router-dom';
-import { createApp } from '../api/appApi';
+import { createApp, getAppById, updateApp } from '../api/appApi';
 import { updateUser } from '../api/userApi';
 
 export default function NavigationBar({
@@ -23,17 +23,27 @@ export default function NavigationBar({
 	let navigate = useNavigate();
 
 	// FIXME prevent duplicate names being saved from server side and alert error
-	const saveApp = async (app) => {
+	const saveApp = async (app, appId) => {
 		try {
-			const newApp = await createApp(app);
-			if (newApp) {
-				const newAppIds = [...appIds, newApp._id];
-				const update = { apps: newAppIds };
-				const updatedUser = await updateUser(user._id, update);
+			// FIXME if the App alreadly exits, update the field with passed id(appId), else creat and save
+			if (appId) {
+				const update = { app };
+				await updateApp(appId, update);
+			} else {
+				const newApp = await createApp(app);
+				if (newApp) {
+					const now = new Date();
+					const nycTimeString = now.toLocaleString('en-US', {
+						timeZone: 'America/New_York',
+					});
+					const newAppIds = [...appIds, newApp._id];
+					const update = { apps: newAppIds, lastModifiedDate: nycTimeString };
+					const updatedUser = await updateUser(user._id, update);
 
-				setAppIds(newAppIds);
-				setApp(null);
-				setUser(updatedUser);
+					setAppIds(newAppIds);
+					setApp(null);
+					setUser(updatedUser);
+				}
 			}
 		} catch (error) {
 			if (error.code === 11000) {
@@ -48,6 +58,7 @@ export default function NavigationBar({
 
 	const handleConfirmClick = async () => {
 		await saveApp(app);
+		// await saveApp(app, appId);
 
 		navigate('/');
 		setIsModalOpen(false);
@@ -87,7 +98,9 @@ export default function NavigationBar({
 					<button onClick={handleConfirmClick}>Confirm</button>
 				</Modal>
 				<span className="profile-letter ml-auto" onClick={toggleMenu}>
-					{loggedInUser.name && loggedInUser.name.charAt(0).toUpperCase()}
+					{/* REVIEW changed condition logic and fixed warning */}
+					{loggedInUser ? loggedInUser.name.charAt(0).toUpperCase() : '!'}
+					{/* {loggedInUser.name && loggedInUser.name.charAt(0).toUpperCase()} */}
 				</span>
 				{showMenu && (
 					<div className="dropdown-menu">

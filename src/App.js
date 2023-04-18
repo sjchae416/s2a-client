@@ -40,29 +40,31 @@ const App = () => {
 		}
 	};
 
+	const loadAppIds = (user) => {
+		setAppIds(user.apps);
+	};
+
+	const loadTableIds = (user) => {
+		setTableIds(user.tables);
+	};
+
+	const loadViewIds = (user) => {
+		setViewIds(user.views);
+	};
+
 	useEffect(() => {
 		getUser();
 	}, []);
 
-	// NOTE DELETE THIS BEFORE PRODUCTION
-	// useEffect(() => {
-	// 	// LOG
-	// 	console.log('appIds', appIds);
-	// 	console.log('tableIds', tableIds);
-	// 	console.log('viewIds', viewIds);
-	// }, [appIds]);
 	useEffect(() => {
-		// LOG
 		console.log('user', user);
-		// setAppIds(user.apps);
-		// setTableIds(user.tables);
-		// setViewIds(user.views);
+		if (user !== null) {
+			loadAppIds(user);
+			loadTableIds(user);
+			// TODO uncomment when View interaction is done
+			// loadViewIds(user)
+		}
 	}, [user]);
-	// useEffect(() => {
-	// 	// LOG
-	// 	console.log('googleUser', googleUser);
-	// }, [googleUser]);
-	// NOTE DELETE THIS BEFORE PRODUCTION
 
 	return (
 		<div>
@@ -99,7 +101,9 @@ const App = () => {
 							appIds={appIds}
 							setAppIds={setAppIds}
 							app={app}
-							setApp={setApp}
+              setApp={setApp}
+              viewIds={viewIds}
+              setViewIds={setViewIds}
 						/>
 					}
 				/>
