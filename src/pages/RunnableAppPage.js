@@ -9,7 +9,6 @@ import { TableView } from '../components';
 
 export default function RunnableAppPage({user}) {
     const { name } = useParams();
-    const loggedInUser = user;
 
     const app1 = {
         "name" : "test1",
@@ -27,15 +26,14 @@ export default function RunnableAppPage({user}) {
         },
         "columns" : ["Name", "Email", "Class", "Grade"],
         "viewType" : "Table",
-        
-    };
+        "allowedActions": ["Add Record", "Delete Record"],
+        "roles" : ["Developer"],
+        "filter" : "Passed",
+        "userFilter": "",
+        "editFilter": "",
+        "editableCols": []
 
-    const logOut = () => {
-        window.open(
-          `http://localhost:3333/auth/logout`,
-          // `http://localhost:${process.env.SERVER_PORT}/auth/logout`,
-          "_self"
-        );
+        
     };
 
     return (
@@ -46,7 +44,7 @@ export default function RunnableAppPage({user}) {
                 <NavigationBar googleUser={user}/>
                 <div>
                     <h2>{name}</h2>
-                    <TableView/>
+                    <TableView app = {app1}/>
                 </div>
             </div>
         </div>

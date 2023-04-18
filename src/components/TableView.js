@@ -1,177 +1,116 @@
 import React, { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import Modal from "react-modal";
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
-import test from "../testData/test.json";
 
-const initialValues = Object.fromEntries(
-  Object.keys(test[0]).map((key) => [key, ""])
-);
+export default function TableView({app}) {
+  const name = app.name;
+  const table = app.table;
+  const col = app.columns;
+  const type = app.viewType;
+  const allowedActions = app.allowedActions;
+  const role = app.roles;
 
-export default function TableView() {
-  // state to store the row data for editing
-  const [addModalIsOpen, setAddModalIsOpen] = useState(false);
-  const [editModalIsOpen, setEditModalIsOpen] = useState(false);
-  const [rowData, setRowData] = useState({});
-  const [editData, setEditData] = useState({});
-  const [formValues, setFormValues] = useState(initialValues);
-  const [isEditing, setIsEditing] = useState(false);
+  let filter = "", userFilter = "", editFilter = "", editableCols = [];
+  if(app.filter != "") filter = app.filter;
+  if(app.userFilter != "") userFilter = app.userFilter;
+  if(app.editFilter != "") editFilter = app.editFilter;
+  if(app.editableCols != []) editableCols = app.editableCols;
 
-  const handleRowClick = (rowData) => {
-    setRowData(rowData);
-    setEditData(rowData);
-    setEditModalIsOpen(true);
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setEditData((prevData) => ({ ...prevData, [name]: value }));
-  };
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    setFormData({ ...formData, [name]: value });
+  }
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const newData = test.map((item) => {
-      if (item.id === editData.id) {
-        return editData;
-      }
-      return item;
-    });
-    setRowData(newData);
-    setEditModalIsOpen(false);
-  };
+  const handleAddRow = () => {
+    // add the new row to the table
+    console.log(formData);
+    handleClose();
+  }
 
-  const handleOpenModal = () => {
-    setAddModalIsOpen(true);
-  };
+  const test = [
+    {
+      "Name": "George Chen",
+      "Email": "george@gmail.com",
+      "Class": "CSE 314",
+      "Grade": "B",
+      "Passed": true
+    },
+    {
+      "Name": "Bob Ross",
+      "Email": "bob@gmail.com",
+      "Class": "CSE 215",
+      "Grade": "A",
+      "Passed": true
+    },
+    {
+      "Name": "John Smith",
+      "Email": "john@gmail.com",
+      "Class": "CSE 220",
+      "Grade": "B-",
+      "Passed": true
+    },
+    {
+      "Name": "Kevin Lin",
+      "Email": "kevin@gmail.com",
+      "Class": "CSE 214",
+      "Grade": "C-",
+      "Passed": false
+    },
+    {
+      "Name": "George Chen",
+      "Email": "george@gmail.com",
+      "Class": "CSE 312",
+      "Grade": "A",
+      "Passed": true
+    },
+    {
+      "Name": "Bob Ross",
+      "Email": "bob@gmail.com",
+      "Class": "CSE 216",
+      "Grade": "A",
+      "Passed": true
+    }
+  ]
 
-  const handleCloseModal = () => {
-    setAddModalIsOpen(false);
-  };
-
-  const handleSaveModal = () => {
-    const newRecord = { ...formValues };
-    test.push(newRecord);
-    setFormValues(initialValues);
-    setAddModalIsOpen(false);
-  };
-
-  const handleAddInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
-
-  let AddRecordModal = (
-    <Modal isOpen={addModalIsOpen} onRequestClose={handleCloseModal}>
-      <h2>Add Record</h2>
-      <form>
-        {Object.keys(initialValues).map((key) => (
-          <div key={key}>
-            <label htmlFor={key}>{key}</label>
-            <input
-              type="text"
-              id={key}
-              name={key}
-              value={formValues[key]}
-              onChange={handleAddInputChange}
-            />
-          </div>
-        ))}
-      </form>
-      <button onClick={handleCloseModal}>Cancel</button>
-      <button onClick={handleSaveModal}>Save</button>
-    </Modal>
-  );
-
-  const handleEditClose = () => {
-    setEditModalIsOpen(false);
-    setIsEditing(false);
-  };
-
-  // adds the info edited into json
-  const handleEditSubmit = () => {
-    setEditModalIsOpen(false);
-    setIsEditing(false);
-  };
-
-  let EditRecordModal = (
-    <Modal
-      isOpen={editModalIsOpen}
-      onRequestClose={() => setEditModalIsOpen(false)}
-      ariaHideApp={false}
-    >
-      <h2>{isEditing ? "Edit Row Data" : "Detail View"}</h2>
-      {isEditing ? (
-        <form onSubmit={handleSubmit}>
-          {Object.entries(rowData).map(([key, value]) => (
-            <div key={key}>
-              <label>
-                {key}
-                <input
-                  type="text"
-                  name={key}
-                  value={editData[key] || ""}
-                  onChange={handleInputChange}
-                />
-              </label>
-            </div>
-          ))}
-          <button onClick={handleEditClose}>Cancel</button>
-          <button onClick={handleEditSubmit} type="submit">
-            Save
-          </button>
-        </form>
-      ) : (
-        <>
-          <button onClick={() => setIsEditing(true)}>Edit</button>
-          {Object.entries(rowData).map(([key, value]) => (
-            <div key={key}>
-              <label>
-                {key}:&nbsp;&nbsp;
-                <span>{value}</span>
-              </label>
-            </div>
-          ))}
-          <button onClick={handleEditClose}>Close</button>
-        </>
-      )}
-    </Modal>
-  );
+  const filteredTest = test.filter(row => row[filter]);
 
   return (
-    <Box>
-      <div>
-        <div>
-          <button
-            className="btn btn-info"
-            style={{ padding: "50px", display: "inline-block" }}
-            onClick={handleOpenModal}
-          >
-            Add Record
-          </button>
-        </div>
-        {AddRecordModal}
-      </div>
-      <br />
-      <br />
+    <div>
+      <Button variant="contained" onClick={handleOpen}>Add Row</Button>
+      <br/>
       <table>
         <thead>
           <tr>
-            {Object.keys(test[0]).map((header) => (
-              <th key={header}>{header}</th>
+            {col.map((column) => (
+              <th key={column}>{column}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {test.map((rowData) => (
-            <tr key={rowData.id} onClick={() => handleRowClick(rowData)}>
-              {Object.values(rowData).map((value, index) => (
-                <td key={index}>{value}</td>
+          {filteredTest.map((row) => (
+            <tr key={row.Name}>
+              {col.map((column) => (
+                <td key={column}>{row[column]}</td>
               ))}
             </tr>
           ))}
         </tbody>
       </table>
-      {EditRecordModal}
-    </Box>
+    </div>
   );
 }

@@ -46,7 +46,7 @@ export default function NavigationBar({ googleUser }) {
 				</Modal>*/}
 				<span className="profile-letter ml-auto" onClick={toggleMenu}>
 					{/* REVIEW changed condition logic and fixed warning */}
-					{loggedInUser ? loggedInUser.name.charAt(0).toUpperCase() : '!'}
+					{loggedInUser ? loggedInUser?.name?.charAt(0).toUpperCase() : '!'}
 					{/* {loggedInUser.name && loggedInUser.name.charAt(0).toUpperCase()} */}
 				</span>
 				{showMenu && (

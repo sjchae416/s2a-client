@@ -123,6 +123,7 @@ const App = () => {
 					}
 				/>
 				{/* REVIEW use conditional rendering for TableView in RunnableAppPage */}
+				{/* Add route to RunnableAppPage instead */}
 				<Route path="/table-view" element={<TableView />} />
 				<Route
 					path="/runnable-appIds/:name"
