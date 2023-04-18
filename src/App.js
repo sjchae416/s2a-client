@@ -16,6 +16,7 @@ const App = () => {
 	const [tableIds, setTableIds] = useState([]);
 	const [viewIds, setViewIds] = useState([]);
 	const [app, setApp] = useState(null);
+	const [tables, setTables] = useState([]);
 
 	const getUser = async () => {
 		try {
@@ -52,6 +53,9 @@ const App = () => {
 	useEffect(() => {
 		// LOG
 		console.log('user', user);
+		// setAppIds(user.apps);
+		// setTableIds(user.tables);
+		// setViewIds(user.views);
 	}, [user]);
 	// useEffect(() => {
 	// 	// LOG
@@ -98,12 +102,20 @@ const App = () => {
 						/>
 					}
 				/>
+				{/* REVIEW since AddTable is routed  */}
 				<Route
 					path="/add-table"
 					element={
-						<AddTable googleUser={googleUser} user={user} setUser={setUser} />
+						<AddTable
+							googleUser={googleUser}
+							user={user}
+							setUser={setUser}
+							tables={tables}
+							setTables={setTables}
+						/>
 					}
 				/>
+				{/* REVIEW use conditional rendering for TableView in RunnableAppPage */}
 				<Route path="/table-view" element={<TableView />} />
 				<Route
 					path="/runnable-appIds/:name"

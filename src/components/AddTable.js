@@ -2,16 +2,20 @@ import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { Link, useNavigate } from 'react-router-dom';
 // removed this - import TableList from "./TableList";
-import Table from './Table';
+import TableConfig from './TableConfig';
 // importing common list component
 import List from './List';
 import { readAllTables } from '../api/tableApi';
 
 import NavigationBar from './NavigationBar';
 
-export default function AddTable({ googleUser, user, setUser }) {
-	const [tablelist, setTableList] = useState([]);
-
+export default function AddTable({
+	googleUser,
+	user,
+	setUser,
+	tables,
+	setTables,
+}) {
 	let navigate = useNavigate();
 	useEffect(() => {
 		const create_app_modal_btn = document.querySelector('#create-app');
@@ -39,17 +43,16 @@ export default function AddTable({ googleUser, user, setUser }) {
 		};
 	}, []);
 
-
 	async function fetchTables() {
 		const tables = await readAllTables();
-		setTableList(tables);
+		setTables(tables);
 	}
-		
 
 	return (
 		<Box>
 			<br />
 			<br />
+			{/* FIXME use NavigationBar Component! */}
 			<div className="container">
 				<div className="card text-right card_one">
 					<h3 id="create-app">S2A</h3>
@@ -78,7 +81,11 @@ export default function AddTable({ googleUser, user, setUser }) {
 							<List type="table" />
 						</div>
 						<div className="col-auto">
-							<Table tablelist={tablelist} setTableList={setTableList} fetchTables={fetchTables}/>
+							<TableConfig
+								tables={tables}
+								setTables={setTables}
+								fetchTables={fetchTables}
+							/>
 							<div className="modal" id="create-app-modal">
 								<div className="modal-dialog-centered">
 									<div className="modal-content">
