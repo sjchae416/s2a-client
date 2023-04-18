@@ -18,31 +18,31 @@ export default function AddTable({
 	setTables,
 }) {
 	let navigate = useNavigate();
-	useEffect(() => {
-		const create_app_modal_btn = document.querySelector('#create-app');
-		const create_app_modal = document.querySelector('#create-app-modal');
-		const dismiss_create_app_modal = document.querySelector(
-			'#dismiss_create_app_modal'
-		);
-		const create_app_btn = document.querySelector('#create-app-btn');
+	// useEffect(() => {
+	// 	const create_app_modal_btn = document.querySelector('#create-app');
+	// 	const create_app_modal = document.querySelector('#create-app-modal');
+	// 	const dismiss_create_app_modal = document.querySelector(
+	// 		'#dismiss_create_app_modal'
+	// 	);
+	// 	const create_app_btn = document.querySelector('#create-app-btn');
 
-		create_app_modal_btn.onclick = () => {
-			create_app_modal.style.display = 'block';
-		};
+	// 	create_app_modal_btn.onclick = () => {
+	// 		create_app_modal.style.display = 'block';
+	// 	};
 
-		window.onclick = (event) => {
-			if (event.target === create_app_modal) {
-				create_app_modal.style.display = 'none';
-			}
-		};
+	// 	window.onclick = (event) => {
+	// 		if (event.target === create_app_modal) {
+	// 			create_app_modal.style.display = 'none';
+	// 		}
+	// 	};
 
-		dismiss_create_app_modal.onclick = (event) => {
-			create_app_modal.style.display = 'none';
-		};
-		create_app_btn.onclick = (event) => {
-			create_app_modal.style.display = 'none';
-		};
-	}, []);
+	// 	dismiss_create_app_modal.onclick = (event) => {
+	// 		create_app_modal.style.display = 'none';
+	// 	};
+	// 	create_app_btn.onclick = (event) => {
+	// 		create_app_modal.style.display = 'none';
+	// 	};
+	// }, []);
 
 	// REVIEW commented since this reads 'all' Tables; we need user-specific Tables
 	// async function fetchTables() {
@@ -56,21 +56,7 @@ export default function AddTable({
 			<br />
 			{/* FIXME use NavigationBar Component! */}
 			<div className="container">
-				<div className="card text-right card_one">
-					<h3 id="create-app">S2A</h3>
-
-					<span className=" ml-auto">
-						<button className="btn btn-info"> {'<'} </button>&nbsp;
-						<span className=" ml-auto" />
-						<button className="btn btn-info"> {'>'} </button>&nbsp;
-						<span className=" ml-auto" />
-						<button className="btn btn-info">Save</button>&nbsp;
-						<a className="profile-letter" href="profile.html">
-							P
-						</a>
-					</span>
-				</div>
-
+				<NavigationBar googleUser={googleUser}/>
 				<br />
 
 				<div className="card p-0">
