@@ -31,11 +31,13 @@ export default function NavigationBar({ googleUser }) {
 		<div className="card text-right card_one">
 			<h3 id="save-change">S2A</h3>
 			<span className=" ml-auto">
+				{/* Here are the Undo-Redo and Save buttons
 				<button className="btn btn-info"> {'<'} </button>&nbsp;
 				<span className=" ml-auto" />
 				<button className="btn btn-info"> {'>'} </button>&nbsp;
 				<span className=" ml-auto" />
-				{/*<button className="btn btn-info" onClick={handleSaveClick}>
+
+				<button className="btn btn-info" onClick={handleSaveClick}>
 					Save
 	            </button>
 				<Modal isOpen={isModalOpen}>
@@ -43,7 +45,8 @@ export default function NavigationBar({ googleUser }) {
 					<p>Are you sure you want to save?</p>
 					<button onClick={handleCancelClick}>Cancel</button>
 					<button onClick={handleConfirmClick}>Confirm</button>
-				</Modal>*/}
+				</Modal>
+				*/}
 				<span className="profile-letter ml-auto" onClick={toggleMenu}>
 					{/* REVIEW changed condition logic and fixed warning */}
 					{loggedInUser ? loggedInUser?.name?.charAt(0).toUpperCase() : '!'}
