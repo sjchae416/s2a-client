@@ -134,7 +134,6 @@ export default function ManageAppPage({
 							user={user}
 							setUser={setUser}
 							appIds={appIds}
-							setAppIds={setAppIds}
 							app={app}
 							setApp={setApp}
 						/>

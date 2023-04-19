@@ -7,13 +7,8 @@ import { createUser, getUserByEmail } from '../api/userApi';
 
 export const name = '';
 
-export default function DashboardPage({
-	googleUser,
-	setUser,
-	setAppIds,
-	setTableIds,
-	setViewIds,
-}) {
+export default function DashboardPage({ googleUser, setUser }) {
+	const [isLoading, setIsLoading] = useState(true);
 	const [section, setSection] = useState('all');
 	const [showMenu, setShowMenu] = useState(false);
 	const [token, setToken] = useState('');
@@ -40,19 +35,13 @@ export default function DashboardPage({
 			if (user) {
 				console.log('IF');
 				setUser(user);
-				setAppIds(user.apps);
-				setTableIds(user.tables);
-				setViewIds(user.views);
 			} else {
 				console.log('ELSE');
 				try {
-					// REVIEW called 3 times so first create properly then next 2 cause duplicate email error
+					// REVIEW gets called more than once (2 or 3) so first create properly then next 2 cause duplicate email error
 					const newUser = await createUser(email);
 
 					setUser(newUser);
-					// setAppIds(newUser.apps);
-					// setTableIds(newUser.tables);
-					// setViewIds(newUser.views);
 				} catch (error) {
 					console.error('Error creating a new User', error);
 				}

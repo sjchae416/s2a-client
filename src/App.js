@@ -76,13 +76,7 @@ const App = () => {
 					path="/"
 					element={
 						googleUser ? (
-							<DashboardPage
-								googleUser={googleUser}
-								setUser={setUser}
-								setAppIds={setAppIds}
-								setTableIds={setTableIds}
-								setViewIds={setViewIds}
-							/>
+							<DashboardPage googleUser={googleUser} setUser={setUser} />
 						) : (
 							<Navigate to="/login" />
 						)
@@ -122,8 +116,7 @@ const App = () => {
 						/>
 					}
 				/>
-				{/* REVIEW use conditional rendering for TableView in RunnableAppPage */}
-				{/* Add route to RunnableAppPage instead */}
+				{/* FIXME use conditional rendering for TableView in RunnableAppPage, not path routing */}
 				<Route path="/table-view" element={<TableView />} />
 				<Route
 					path="/runnable-appIds/:name"

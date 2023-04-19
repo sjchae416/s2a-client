@@ -11,7 +11,6 @@ const Sidebar = ({
 	user,
 	setUser,
 	appIds,
-	setAppIds,
 	app,
 	setApp,
 }) => {
@@ -44,7 +43,6 @@ const Sidebar = ({
 				const update = { apps: newAppIds, lastModifiedDate: nycTimeString };
 				const updatedUser = await updateUser(user._id, update);
 
-				setAppIds(newAppIds);
 				setApp(null);
 				setUser(updatedUser);
 			}

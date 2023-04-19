@@ -6,10 +6,8 @@ export default function TableConfig({
 	user,
 	setUser,
 	tableIds,
-	setTableIds,
 	tables,
 	setTables,
-	fetchTables,
 }) {
 	const [sheetIndex, setSheetIndex] = useState('');
 	const [name, setName] = useState('');
@@ -28,13 +26,11 @@ export default function TableConfig({
 		setTableDataArray([]);
 		setConfig([]);
 		setKeys([]);
-
-		
 	};
 
 	const isTypeColumnValid = () => {
 		for (let i = 0; i < config.length; i++) {
-			if(!config[i].type || config[i].type === ''){
+			if (!config[i].type || config[i].type === '') {
 				return false;
 			}
 		}
@@ -56,10 +52,6 @@ export default function TableConfig({
 		sheetIndex: sheetIndex,
 		config: config,
 	};
-
-	// useEffect(() => {
-	// 	fetchTables();
-	// }, []);
 
 	useEffect(() => {
 		console.log('user', user);
@@ -150,13 +142,15 @@ export default function TableConfig({
 			alert(errorMessage);
 			return;
 		}
-		const newTableIds = createdTable._id == null ? [...tableIds]: [...tableIds, createdTable._id];
+		const newTableIds =
+			createdTable._id == null
+				? [...tableIds]
+				: [...tableIds, createdTable._id];
 		const update = { tables: newTableIds };
 		const updatedUser = await updateUser(user._id, update);
+
 		setUser(updatedUser);
-		setTableIds(newTableIds);
 		clearForms();
-		// fetchTables();
 	};
 
 	const handleInputChange = (event, key, field) => {
