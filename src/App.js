@@ -3,8 +3,8 @@ import './App.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { createBrowserHistory } from 'history';
-import { LoginPage, DashboardPage, ManageAppPage } from './pages';
-import { AddTable, TableView } from './components';
+import { LoginPage, DashboardPage, ManageAppPage, AddTablePage } from './pages';
+import { TableView } from './components';
 import RunnableAppPage from './pages/RunnableAppPage';
 
 export const customHistory = createBrowserHistory();
@@ -14,8 +14,8 @@ const App = () => {
 	const [user, setUser] = useState(null);
 	const [appIds, setAppIds] = useState([]);
 	const [tableIds, setTableIds] = useState([]);
-  const [viewIds, setViewIds] = useState([]);
-  // NOTE appData in AppConfig.js
+	const [viewIds, setViewIds] = useState([]);
+	// NOTE appData in AppConfig.js
 	const [app, setApp] = useState(null);
 	const [tables, setTables] = useState([]);
 	const [views, setViews] = useState([]);
@@ -102,17 +102,16 @@ const App = () => {
 							appIds={appIds}
 							setAppIds={setAppIds}
 							app={app}
-              setApp={setApp}
-              viewIds={viewIds}
-              setViewIds={setViewIds}
+							setApp={setApp}
+							viewIds={viewIds}
+							setViewIds={setViewIds}
 						/>
 					}
 				/>
-				{/* REVIEW since AddTable is routed  */}
 				<Route
 					path="/add-table"
 					element={
-						<AddTable
+						<AddTablePage
 							googleUser={googleUser}
 							user={user}
 							setUser={setUser}

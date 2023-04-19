@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { Link, useNavigate } from 'react-router-dom';
 // removed this - import TableList from "./TableList";
-import TableConfig from './TableConfig';
+import TableConfig from '../components/TableConfig';
 // importing common list component
-import List from './List';
+import List from '../components/List';
 import { readAllTables } from '../api/tableApi';
 import NavigationBar from '../components/NavigationBar.js';
 
-export default function AddTable({
+export default function AddTablePage({
 	googleUser,
 	user,
 	setUser,
@@ -56,7 +56,7 @@ export default function AddTable({
 			<br />
 			{/* FIXME use NavigationBar Component! */}
 			<div className="container">
-				<NavigationBar googleUser={googleUser}/>
+				<NavigationBar googleUser={googleUser} />
 				<br />
 
 				<div className="card p-0">
