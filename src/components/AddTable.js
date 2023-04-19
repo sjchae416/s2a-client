@@ -16,6 +16,7 @@ export default function AddTable({
 	setTableIds,
 	tables,
 	setTables,
+	getUserTables,
 }) {
 	let navigate = useNavigate();
 	// useEffect(() => {
@@ -76,6 +77,7 @@ export default function AddTable({
 								setTableIds={setTableIds}
 								tables={tables}
 								setTables={setTables}
+								getUserTables={getUserTables}
 								// fetchTables={fetchTables}
 							/>
 							<div className="modal" id="create-app-modal">

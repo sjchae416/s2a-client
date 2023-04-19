@@ -6,6 +6,7 @@ import { createBrowserHistory } from 'history';
 import { LoginPage, DashboardPage, ManageAppPage } from './pages';
 import { AddTable, TableView } from './components';
 import RunnableAppPage from './pages/RunnableAppPage';
+import { readTable } from './api/tableApi';
 
 export const customHistory = createBrowserHistory();
 
@@ -19,6 +20,8 @@ const App = () => {
 	const [app, setApp] = useState(null);
 	const [tables, setTables] = useState([]);
 	const [views, setViews] = useState([]);
+
+
 
 	const getUser = async () => {
 		try {
@@ -35,9 +38,39 @@ const App = () => {
 			const data = await response.json();
 
 			setGoogleUser(data.user._json);
+
 			// setGoogleUser(data.user);
 		} catch (error) {
 			console.error('Fetch Error:', error);
+		}
+	};
+
+	const getUserTables = async () => {
+		if (user) {
+			// Create an array to store readTable promises
+			const readTablePromises = [];
+	
+			// Iterate over user.tables and push each readTable promise to the array
+			for (let i = 0; i < user.tables.length; i++) {
+				readTablePromises.push(readTable(user.tables[i]));
+			}
+	
+			// Wait for all readTable promises to resolve
+			const resolvedTables = await Promise.all(readTablePromises);
+	
+			// Filter out duplicate table names
+			const uniqueTables = [];
+			const uniqueTableNames = new Set();
+	
+			for (const table of resolvedTables) {
+				if (!uniqueTableNames.has(table.name)) {
+					uniqueTables.push(table);
+					uniqueTableNames.add(table.name);
+				}
+			}
+	
+			// Update the tables state with uniqueTables
+			setTables(uniqueTables);
 		}
 	};
 
@@ -58,8 +91,14 @@ const App = () => {
 	}, []);
 
 	useEffect(() => {
+		console.log('tables', tables);
+	}, [tables]);
+
+	useEffect(() => {
+		
 		console.log('user', user);
 		if (user !== null) {
+			getUserTables();
 			loadAppIds(user);
 			loadTableIds(user);
 			// TODO uncomment when View interaction is done
@@ -120,6 +159,7 @@ const App = () => {
 							setTableIds={setTableIds}
 							tables={tables}
 							setTables={setTables}
+							getUserTables={getUserTables}
 						/>
 					}
 				/>
