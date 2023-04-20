@@ -3,11 +3,17 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { createBrowserHistory } from 'history';
-import { LoginPage, DashboardPage, ManageAppPage, AddTablePage, AdminPage } from './pages';
+import {
+	LoginPage,
+	DashboardPage,
+	ManageAppPage,
+	AddTablePage,
+	AdminPage,
+} from './pages';
 import { TableView } from './components';
 // FIXME import this together in line 6 || (from './pages' part)
 import RunnableAppPage from './pages/RunnableAppPage';
-import { getAppById, readTable } from './api';
+import { getAppById, readTable, readView } from './api';
 
 export const customHistory = createBrowserHistory();
 
@@ -20,9 +26,9 @@ const App = () => {
 	const [apps, setApps] = useState(null);
 	const [tables, setTables] = useState([]);
 	const [views, setViews] = useState([]);
-  const [developers, setDevelopers] = useState([]);
+	const [developers, setDevelopers] = useState([]);
 
-	// APPS
+	// NOTE APPS
 	const loadAppIds = (user) => {
 		setAppIds(user.apps);
 	};
@@ -61,49 +67,76 @@ const App = () => {
 		setTableIds(user.tables);
 	};
 
-	// VIEWS
-	const loadViewIds = (user) => {
-		setViewIds(user.views);
-	};
-
-	// ADMIN
-	const fetchDevelopers = async () => {
-    // TODO - Make an api for this
-    try {
-      const response = await fetch('http://localhost:3333/admin');
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setDevelopers(data.developers);
-    } catch (error) {
-      console.error('Fetch Error:', error);
-    }
-  };
-
-	// useEffect(() => {
-	// 	console.log('tables', tables);
-	// }, [tables]);
-
+	// REVIEW Michael can you check this out and see if it can be replaced?
+	// NOTE it allows to tables to be updated everytime the user is updated (user -> tableIds -> tablse)
 	useEffect(() => {
-		const loadApps = async () => {
+		const loadTables = async () => {
 			try {
-				const userApps = await Promise.all(
-					appIds.map(async (id) => {
-						return await getAppById(id);
+				const userTables = await Promise.all(
+					tableIds.map(async (id) => {
+						return await readTable(id);
 					})
 				);
 
-				setApps(userApps);
-				console.log('userApps', userApps);
+				// Filter out duplicate table names
+				const uniqueTables = [];
+				const uniqueTableNames = new Set();
+
+				for (const table of userTables) {
+					if (!uniqueTableNames.has(table.name)) {
+						uniqueTables.push(table);
+						uniqueTableNames.add(table.name);
+					}
+				}
+
+				setTables(userTables);
 			} catch (error) {
 				console.error('Error fetching App: ', error);
 			}
 		};
-		loadApps();
-	}, [appIds]);
+
+		// loadTables();
+	}, [tableIds]);
+
+	// NOTE VIEWS
+	const loadViewIds = (user) => {
+		setViewIds(user.views);
+	};
+
+	useEffect(() => {
+		const loadViews = async () => {
+			try {
+				const userViews = await Promise.all(
+					viewIds.map(async (id) => {
+						return await readView(id);
+					})
+				);
+
+				setTables(userViews);
+			} catch (error) {
+				console.error('Error fetching App: ', error);
+			}
+		};
+
+		loadViews();
+	}, [viewIds]);
+
+	// NOTE ADMIN
+	const fetchDevelopers = async () => {
+		// TODO - Make an api for this
+		try {
+			const response = await fetch('http://localhost:3333/admin');
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const data = await response.json();
+			setDevelopers(data.developers);
+		} catch (error) {
+			console.error('Fetch Error:', error);
+		}
+	};
 
 	useEffect(() => {
 		if (user !== null) {

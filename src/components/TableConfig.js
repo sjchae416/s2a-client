@@ -199,9 +199,7 @@ export default function TableConfig({
 			return updatedConfig;
 		});
 	};
-	const handleAddTable = () => {
-		if (name) setTables([...tables, name]);
-	};
+
 	return (
 		<div
 			className="card"
