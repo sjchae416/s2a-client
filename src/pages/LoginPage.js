@@ -1,17 +1,8 @@
 import React from 'react';
-import Box from '@mui/material/Box';
 
 export default function LoginPage() {
-	const logIn = async () => {
-		window.open(
-			`http://localhost:3333/auth/google`,
-			// `http://localhost:${process.env.SERVER_PORT}/auth/google/callback`,
-			'_self'
-		);
-	};
-
 	return (
-		<Box>
+		<div>
 			<br />
 			<br />
 			<div className="container">
@@ -29,12 +20,10 @@ export default function LoginPage() {
 								className="row"
 							>
 								<div className="col-6 text-center">
-									<button
-										onClick={logIn}
-										className="btn btn-success"
-										id="login-btn"
-									>
-										Continue with Google Account
+									<button className="btn btn-success" id="login-btn">
+										<a href="http://localhost:3333/auth/google">
+											Log in with Google
+										</a>
 									</button>
 								</div>
 							</div>
@@ -42,6 +31,6 @@ export default function LoginPage() {
 					</div>
 				</div>
 			</div>
-		</Box>
+		</div>
 	);
 }

@@ -319,7 +319,7 @@ export default function TableConfig({
 					</table>
 					<div className="text-right">
 						<button
-							// FIXME why create function in Cancel btn?
+							// FIXME why call create function in Cancel btn?
 							onClick={handleCreateClick}
 							className="btn btn-danger can_btn"
 						>

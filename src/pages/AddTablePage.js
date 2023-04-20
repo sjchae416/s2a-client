@@ -56,7 +56,7 @@ export default function AddTablePage({
 			<br />
 			{/* FIXME use NavigationBar Component! */}
 			<div className="container">
-				<NavigationBar googleUser={googleUser} />
+				<NavigationBar user={user} />
 				<br />
 
 				<div className="card p-0">

@@ -18,29 +18,30 @@ const Sidebar = ({
 
 	const navigate = useNavigate();
 
-	// FIXME initial app not saved
 	// FIXME prevent duplicate names being saved from server side and alert error
 	const saveApp = async (app) => {
+		console.log('🚀 ~ file: Sidebar.js:23 ~ saveApp ~ app:', app);
 		// const saveApp = async (app, appId) => {
 		try {
 			// FIXME if the App alreadly exits, update the field with passed id(appId), else creat and save
 			// if (appId) {
-			// 	const update = { app };
+			// const update = {
+			// 	app,
+			// 	lastModifiedDate: new Date().toLocaleString('en-US', {
+			// 		timeZone: 'America/New_York',
+			// 	}),
+			// };
 			// 	await updateApp(appId, update);
 			// } else {
 			const newApp = await createApp(app);
 			if (newApp) {
-				const now = new Date();
-				const nycTimeString = now.toLocaleString('en-US', {
-					timeZone: 'America/New_York',
-				});
 				var newAppIds = [];
 				if (appIds) {
 					newAppIds = [...appIds, newApp._id];
 				} else {
 					newAppIds = [newApp._id];
 				}
-				const update = { apps: newAppIds, lastModifiedDate: nycTimeString };
+				const update = { apps: newAppIds };
 				const updatedUser = await updateUser(user._id, update);
 
 				setApp(null);
@@ -63,7 +64,6 @@ const Sidebar = ({
 		// await saveApp(app, appId);
 
 		navigate('/');
-		// setIsModalOpen(false);
 	};
 
 	// save changes modal
@@ -118,9 +118,9 @@ const Sidebar = ({
 			<button onClick={myfun}>Publish</button>
 			<hr />
 
-			{/* save button added here */}
 			<button id="save-changes">Save</button>
 			<hr />
+			{/* FIXME move it into a new modal component file (SaveModal.js) and render it */}
 			<div className="modal" id="save-changes-modals">
 				<div className="modal-dialog-centered">
 					<div className="modal-content">
@@ -137,7 +137,6 @@ const Sidebar = ({
 								</button>
 								<button
 									onClick={handleSave}
-									// onClick={() => navigate('/')}
 									className="btn btn-success"
 									id="save-changes-btns"
 								>

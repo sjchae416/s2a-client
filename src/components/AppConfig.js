@@ -21,10 +21,8 @@ const AppConfig = ({ email, user, app, setApp }) => {
 		name: name,
 		creator: email,
 		roleMembershipSheet: roleMembershipSheet,
-		// tables: tables,
-		// view: views,
+		createdAt: nycTimeString,
 		lastModifiedDate: nycTimeString,
-		// lastModifiedDate: new Date().toISOString(),
 		// lastOpenedDate: new Date().toISOString(),
 	};
 
