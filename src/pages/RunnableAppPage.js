@@ -106,7 +106,7 @@ export default function RunnableAppPage({ user }) {
 		},
 		columns: ['Name', 'Email','Class', 'Grade'],
 		viewType: 'Detail',
-		allowedActions: ['Edit Record', 'Delete Record'],
+		allowedActions: ['Edit Record'],
 		roles: ['Developer'],
 		filter: '',
 		userFilter: '',
