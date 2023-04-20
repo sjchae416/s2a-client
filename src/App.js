@@ -142,6 +142,7 @@ const App = () => {
 								setTableIds={setTableIds}
 								tables={tables}
 								setTables={setTables}
+								getUserTables={getUserTables}
 							/>
 						}
 					/>
