@@ -202,6 +202,14 @@ export default function TableConfig({
 	const handleAddTable = () => {
 		if (name) setTables([...tables, name]);
 	};
+
+	const handleCancelClick = () => {
+		setName("");
+		setUrl("");
+		setSheetIndex("");
+		setShowTable(false);
+	};
+
 	return (
 		<div
 			className="card"
@@ -324,7 +332,7 @@ export default function TableConfig({
 					<div className="text-right">
 						<button
 							// FIXME why call create function in Cancel btn?
-							onClick={handleCreateClick}
+							onClick={handleCancelClick}
 							className="btn btn-danger can_btn"
 						>
 							Cancel
