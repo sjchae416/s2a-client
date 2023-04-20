@@ -8,6 +8,7 @@ import { TableView } from './components';
 // FIXME import this together in line 6 || (from './pages' part)
 import RunnableAppPage from './pages/RunnableAppPage';
 import { readTable } from './api/tableApi';
+import { getAppById } from './api';
 
 export const customHistory = createBrowserHistory();
 
@@ -17,6 +18,7 @@ const App = () => {
 	const [tableIds, setTableIds] = useState([]);
 	const [viewIds, setViewIds] = useState([]);
 	const [app, setApp] = useState(null);
+	const [apps, setApps] = useState(null);
 	const [tables, setTables] = useState([]);
 	const [views, setViews] = useState([]);
 
@@ -64,6 +66,23 @@ const App = () => {
 	// useEffect(() => {
 	// 	console.log('tables', tables);
 	// }, [tables]);
+
+	useEffect(() => {
+		const loadApps = async () => {
+			try {
+				const userApps = await Promise.all(
+					appIds.map(async (id) => {
+						return await getAppById(id);
+					})
+				);
+
+				setApps(userApps);
+			} catch (error) {
+				console.error('Error fetching App: ', error);
+			}
+		};
+		loadApps();
+	}, [appIds]);
 
 	useEffect(() => {
 		if (user !== null) {
