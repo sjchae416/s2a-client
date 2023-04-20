@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import { Link, useNavigate } from 'react-router-dom';
-// removed this - import TableList from "./TableList";
-import TableConfig from './TableConfig';
-// importing common list component
-import List from './List';
-import { readAllTables } from '../api/tableApi';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+// FIXME import them all in one from '../components' this is why we have index.js!
+import TableConfig from '../components/TableConfig';
+import List from '../components/List';
 import NavigationBar from '../components/NavigationBar.js';
 
-export default function AddTable({
-	googleUser,
+export default function AddTablePage({
 	user,
 	setUser,
 	tableIds,
@@ -45,19 +41,13 @@ export default function AddTable({
 	// 	};
 	// }, []);
 
-	// REVIEW commented since this reads 'all' Tables; we need user-specific Tables
-	// async function fetchTables() {
-	// 	const tables = await readAllTables();
-	// 	setTables(tables);
-	// }
-
 	return (
-		<Box>
+		<div>
 			<br />
 			<br />
 			{/* FIXME use NavigationBar Component! */}
 			<div className="container">
-				<NavigationBar googleUser={googleUser}/>
+				<NavigationBar user={user} />
 				<br />
 
 				<div className="card p-0">
@@ -117,6 +107,6 @@ export default function AddTable({
 				<br />
 				<br />
 			</div>
-		</Box>
+		</div>
 	);
 }

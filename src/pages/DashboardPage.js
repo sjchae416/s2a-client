@@ -1,29 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import DashboardApp from '../components/DashboardApp';
 import apps from '../testData/test-apps.json';
 import { fetchTokenAPI } from '../api/authApi';
-import { createUser, getUserByEmail } from '../api/userApi';
 
 export const name = '';
 
-export default function DashboardPage({
-	googleUser,
-	setUser,
-	setAppIds,
-	setTableIds,
-	setViewIds,
-}) {
+export default function DashboardPage({ googleUser, user, setUser }) {
+	const navigate = useNavigate();
+
 	const [section, setSection] = useState('all');
 	const [showMenu, setShowMenu] = useState(false);
 	const [token, setToken] = useState('');
 
-	const loggedInUser = googleUser;
-
+	// FIXME need a filter logic for 3 kinds
 	const publishedApps = apps.filter((app) => app.status === 'published');
 	const inDevelopmentApps = apps.filter((app) => app.inDevelopment);
 	const runnableApps = apps.filter((app) => app.runnable);
 
+	// REVIEW if we keep with User.accessToken, this function is no longer needed
 	const fetchToken = async () => {
 		try {
 			const token = await fetchTokenAPI();
@@ -33,70 +28,59 @@ export default function DashboardPage({
 		}
 	};
 
-	const loadUser = async (email) => {
-		try {
-			const user = await getUserByEmail(email);
-
-			if (user) {
-				console.log('IF');
-				setUser(user);
-				setAppIds(user.apps);
-				setTableIds(user.tables);
-				setViewIds(user.views);
-			} else {
-				console.log('ELSE');
-				try {
-					// REVIEW called 3 times so first create properly then next 2 cause duplicate email error
-					const newUser = await createUser(email);
-
-					setUser(newUser);
-					// setAppIds(newUser.apps);
-					// setTableIds(newUser.tables);
-					// setViewIds(newUser.views);
-				} catch (error) {
-					console.error('Error creating a new User', error);
-				}
-			}
-		} catch (error) {
-			console.error('Error getting the User', error);
-		}
-	};
-
-	const logOut = () => {
-		window.open(
-			// FIXME do not reveal SERVER_PORT
-			`http://localhost:3333/auth/logout`,
-			// `http://localhost:${process.env.SERVER_PORT}/auth/logout`,
-			'_self'
-		);
-	};
-
 	const toggleMenu = () => {
 		setShowMenu(!showMenu);
 	};
 
 	useEffect(() => {
-		fetchToken();
-		loadUser(loggedInUser.email);
-	}, [loggedInUser]);
+		const fetchCurrentUser = async () => {
+			try {
+				const response = await fetch(
+					'http://localhost:3333/auth/authenticated',
+					{
+						credentials: 'include',
+					}
+				);
+				if (response.ok) {
+					const data = await response.json();
+					setUser(data);
+					// setUserUser(data);
+
+					if (!data) {
+						navigate('/login');
+					}
+				} else {
+					console.error('Error fetching current user: ', response.status);
+				}
+			} catch (err) {
+				console.error(err);
+			}
+		};
+
+		fetchCurrentUser();
+	}, [navigate]);
+
+	if (!user) {
+		return <h1>Processing Authentication Please Wait ...</h1>;
+	}
 
 	return (
 		<div>
 			<br />
 			<br />
 			<div className="container">
-				{/* FIXME WHY NOT REUSE COMPONENT?! */}
+				{/* FIXME REPLACE WITH NAVIGATIONVAR COMPONENT! */}
 				<div className="card card_one">
 					<Link to="/">
-						<h3>S2A</h3>
+						<h3>{user.email}'s S2A</h3>
 					</Link>
 					<span className="profile-letter ml-auto" onClick={toggleMenu}>
-						{loggedInUser.name && loggedInUser.name.charAt(0).toUpperCase()}
+						{user.email && user.email.charAt(0).toUpperCase()}
 					</span>
 					{showMenu && (
 						<div className="dropdown-menu">
-							<button className="btn-logout-dropdown" onClick={logOut}>
-								Logout
+							<button className="btn-logout-dropdown">
+								<a href="http://localhost:3333/auth/logout">Log Out</a>
 							</button>
 						</div>
 					)}

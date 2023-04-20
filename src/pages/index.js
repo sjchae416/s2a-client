@@ -1,6 +1,7 @@
-// REVIEW keep up do date!
 import LoginPage from './LoginPage';
 import DashboardPage from './DashboardPage';
 import ManageAppPage from './ManageAppPage';
+import AddTablePage from './AddTablePage';
+// FIXME add RunnableAppPage here
 
-export { LoginPage, DashboardPage, ManageAppPage };
+export { LoginPage, DashboardPage, ManageAppPage, AddTablePage };

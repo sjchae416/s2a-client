@@ -10,19 +10,13 @@ import Sidebar from '../components/Sidebar.js';
 import List from '../components/List.js';
 import { ViewConfig } from '../components/ViewConfig.js';
 
-import { createApp } from '../api/appApi';
-import { updateUser } from '../api/userApi';
-
 export default function ManageAppPage({
-	googleUser,
 	user,
 	setUser,
 	appIds,
-	setAppIds,
 	app,
 	setApp,
 	viewIds,
-	setViewIds,
 }) {
 	const [view, setView] = useState(1);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -123,7 +117,7 @@ export default function ManageAppPage({
 			<br />
 			<br />
 			<div className="container">
-				<NavigationBar googleUser={googleUser} />
+				<NavigationBar user={user} />
 				<br />
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
@@ -134,7 +128,6 @@ export default function ManageAppPage({
 							user={user}
 							setUser={setUser}
 							appIds={appIds}
-							setAppIds={setAppIds}
 							app={app}
 							setApp={setApp}
 						/>
@@ -157,14 +150,14 @@ export default function ManageAppPage({
 								<br />
 								{view === 1 ? (
 									<AppConfig
-										email={googleUser.email}
+										email={user.email}
 										user={user}
 										app={app}
 										setApp={setApp}
 									/>
 								) : view === 4 ? (
 									<ViewConfig
-										developer={user}
+										user={user}
 										role={role}
 										setRole={setRole}
 										allowedAction={allowedAction}
@@ -177,7 +170,6 @@ export default function ManageAppPage({
 										setViewName={setViewName}
 										setUser={setUser}
 										viewIds={viewIds}
-										setViewIds={setViewIds}
 									/>
 								) : (
 									''

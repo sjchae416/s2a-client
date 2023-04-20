@@ -6,7 +6,6 @@ export default function TableConfig({
 	user,
 	setUser,
 	tableIds,
-	setTableIds,
 	tables,
 	setTables,
 	getUserTables,
@@ -29,13 +28,11 @@ export default function TableConfig({
 		setTableDataArray([]);
 		setConfig([]);
 		setKeys([]);
-
-		
 	};
 
 	const isTypeColumnValid = () => {
 		for (let i = 0; i < config.length; i++) {
-			if(!config[i].type || config[i].type === ''){
+			if (!config[i].type || config[i].type === '') {
 				return false;
 			}
 		}
@@ -57,10 +54,6 @@ export default function TableConfig({
 		sheetIndex: sheetIndex,
 		config: config,
 	};
-
-	// useEffect(() => {
-	// 	fetchTables();
-	// }, []);
 
 	useEffect(() => {
 		console.log('user', user);
@@ -151,11 +144,14 @@ export default function TableConfig({
 			alert(errorMessage);
 			return;
 		}
-		const newTableIds = createdTable._id == null ? [...tableIds]: [...tableIds, createdTable._id];
+		const newTableIds =
+			createdTable._id == null
+				? [...tableIds]
+				: [...tableIds, createdTable._id];
 		const update = { tables: newTableIds };
 		const updatedUser = await updateUser(user._id, update);
+
 		setUser(updatedUser);
-		setTableIds(newTableIds);
 		clearForms();
 		getUserTables();
 		// fetchTables();
@@ -327,7 +323,7 @@ export default function TableConfig({
 					</table>
 					<div className="text-right">
 						<button
-							// FIXME why create function in Cancel btn?
+							// FIXME why call create function in Cancel btn?
 							onClick={handleCreateClick}
 							className="btn btn-danger can_btn"
 						>

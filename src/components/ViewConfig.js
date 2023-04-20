@@ -10,7 +10,7 @@ import { updateUser } from '../api/userApi';
 import { createView } from '../api/viewApi';
 
 const ViewConfig = ({
-	developer,
+	user,
 	role,
 	setRole,
 	allowedAction,
@@ -21,7 +21,6 @@ const ViewConfig = ({
 	setViewName,
 	setUser,
 	viewIds,
-	setViewIds,
 }) => {
 	const [showTable, setShowTable] = useState(false);
 	const [filter, setFilter] = useState('');
@@ -114,17 +113,17 @@ const ViewConfig = ({
 			const newView = await createView(viewData);
 			const newViewIds = [...viewIds, newView._id];
 			const update = { views: newViewIds };
-			const updatedUser = await updateUser(developer._id, update);
+			const updatedUser = await updateUser(user._id, update);
 			setUser(updatedUser);
-			setViewIds(newViewIds);
 		} catch (error) {
 			console.error('Error saving the View', error);
 		}
 	};
 
- 	const handleRoleChange = (e) => {
- 		setRole(e.target.value);
-	};
+	const handleRoleChange = (e) => {
+		setRole(e.target.value);
+  };
+  
 	const handleCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
 		if (checked) {
@@ -133,7 +132,8 @@ const ViewConfig = ({
 			setSelectedColumns(selectedColumns.filter((column) => column !== name));
 		}
 		// console.log(selectedColumns);
-	};
+  };
+  
 	const handleAllowedActionCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
 		if (checked) {
@@ -142,7 +142,8 @@ const ViewConfig = ({
 			setAllowAction(allowedAction.filter((column) => column !== name));
 		}
 		// console.log(allowedAction);
-	};
+  };
+  
 	const handleOnSubmit = (e) => {
 		e.preventDefault();
 		console.log(role);
@@ -157,7 +158,8 @@ const ViewConfig = ({
 		setViewType('Table');
 		setAllowAction([]);
 		setRole('');
-	};
+  };
+  
 	useEffect(() => {
 		setSelectedColumns([]);
 		setShowTable(false);
@@ -166,7 +168,8 @@ const ViewConfig = ({
 		setAllowAction([]);
 		setRole('');
 		dispatch(actionClearInput(false));
-	}, [clearInput]);
+  }, [clearInput]);
+  
 	const handleCancel = () => {
 		setSelectedColumns([]);
 		setShowTable(false);
@@ -174,7 +177,8 @@ const ViewConfig = ({
 		setViewType('Table');
 		setAllowAction([]);
 		setRole('');
-	};
+  };
+  
 	const updateViewList = (e) => {
 		e.preventDefault();
 		dispatch(actionUpdateView(selectedView.id, viewData));
@@ -184,8 +188,8 @@ const ViewConfig = ({
 		setViewName('');
 		setViewType('Table');
 		setAllowAction([]);
- 		setRole('');
- 	};
+		setRole('');
+	};
 
 	const deleteViewList = () => {
 		dispatch(actionDeleteView(selectedView.id));
@@ -201,8 +205,8 @@ const ViewConfig = ({
 	const handleUserFilterCheckboxChange = (e) => {
 		const { checked } = e.target;
 		if (checked) {
-			setUserFilter(developer.email);
-			console.log(developer.email);
+			setUserFilter(user.email);
+			console.log(user.email);
 		} else {
 			setUserFilter('');
 		}
@@ -420,7 +424,8 @@ const ViewConfig = ({
 						))}
 					</div>
 				)}
-			</div>
+      </div>
+      
 			<div className="form-group">
 				<label>Role</label>
 				<select
@@ -436,8 +441,8 @@ const ViewConfig = ({
 				</select>
 			</div>
 
- 			{!isViewSelected ? (
- 				<div className="text-right">
+			{!isViewSelected ? (
+				<div className="text-right">
 					<button
 						type="reset"
 						className="btn btn-danger can_btn"
