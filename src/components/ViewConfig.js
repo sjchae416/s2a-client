@@ -9,7 +9,7 @@ import {
 import { updateUser } from '../api/userApi';
 import { createView } from '../api/viewApi';
 
-const ViewConfig = ({
+export default function ViewConfig ({
 	user,
 	role,
 	setRole,
@@ -21,7 +21,7 @@ const ViewConfig = ({
 	setViewName,
 	setUser,
 	viewIds,
-}) => {
+}) {
 	const [showTable, setShowTable] = useState(false);
 	const [filter, setFilter] = useState('');
 	const [userFilter, setUserFilter] = useState('');
@@ -474,4 +474,3 @@ const ViewConfig = ({
 		</form>
 	);
 };
-export { ViewConfig };

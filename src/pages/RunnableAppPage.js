@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import NavigationBar from '../components/NavigationBar.js';
-// FIXME having index.js allows to skipp the '/NavigationBar.js part.' Please update and use it!!
+import {NavigationBar} from '../components';
 import { TableView } from '../components';
 
 export default function RunnableAppPage({ user }) {
@@ -51,7 +50,7 @@ export default function RunnableAppPage({ user }) {
 				},
 			],
 		},
-		columns: ['Name', 'Email', 'Class', 'Grade'],
+		columns: ['Name', 'Class', 'Grade'],
 		viewType: 'Table',
 		allowedActions: ['Add Record', 'Delete Record'],
 		roles: ['Developer'],
