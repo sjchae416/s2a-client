@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { createBrowserHistory } from 'history';
-import { LoginPage, DashboardPage, ManageAppPage, AddTablePage } from './pages';
+import { LoginPage, DashboardPage, ManageAppPage, AddTablePage, AdminPage } from './pages';
 import { TableView } from './components';
 // FIXME import this together in line 6 || (from './pages' part)
 import RunnableAppPage from './pages/RunnableAppPage';
@@ -20,7 +20,14 @@ const App = () => {
 	const [apps, setApps] = useState(null);
 	const [tables, setTables] = useState([]);
 	const [views, setViews] = useState([]);
+  const [developers, setDevelopers] = useState([]);
 
+	// APPS
+	const loadAppIds = (user) => {
+		setAppIds(user.apps);
+	};
+
+	// TABLES
 	const getUserTables = async () => {
 		if (user) {
 			// Create an array to store readTable promises
@@ -50,17 +57,31 @@ const App = () => {
 		}
 	};
 
-	const loadAppIds = (user) => {
-		setAppIds(user.apps);
-	};
-
 	const loadTableIds = (user) => {
 		setTableIds(user.tables);
 	};
 
+	// VIEWS
 	const loadViewIds = (user) => {
 		setViewIds(user.views);
 	};
+
+	// ADMIN
+	const fetchDevelopers = async () => {
+    // TODO - Make an api for this
+    try {
+      const response = await fetch('http://localhost:3333/admin');
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setDevelopers(data.developers);
+    } catch (error) {
+      console.error('Fetch Error:', error);
+    }
+  };
 
 	// useEffect(() => {
 	// 	console.log('tables', tables);
@@ -143,6 +164,16 @@ const App = () => {
 								tables={tables}
 								setTables={setTables}
 								getUserTables={getUserTables}
+							/>
+						}
+					/>
+					<Route
+						path="/admin"
+						element={
+							<AdminPage
+								developers={developers}
+								setDevelopers={setDevelopers}
+								fetchDevelopers={fetchDevelopers}
 							/>
 						}
 					/>
