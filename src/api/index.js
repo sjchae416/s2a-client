@@ -14,6 +14,22 @@ import {
 	deleteUser,
 } from './userApi';
 
+import {
+	createTable,
+	readAllTables,
+	readTable,
+	updateTable,
+	deleteTable,
+} from './tableApi';
+
+import {
+	createView,
+	readAllViews,
+	readView,
+	updateView,
+	deleteView,
+} from './viewApi';
+
 export {
 	fetchTokenAPI,
 	createApp,
@@ -26,4 +42,14 @@ export {
 	getUserByEmail,
 	updateUser,
 	deleteUser,
+	createTable,
+	readAllTables,
+	readTable,
+	updateTable,
+	deleteTable,
+	createView,
+	readAllViews,
+	readView,
+	updateView,
+	deleteView,
 };

@@ -7,8 +7,7 @@ import { LoginPage, DashboardPage, ManageAppPage, AddTablePage } from './pages';
 import { TableView } from './components';
 // FIXME import this together in line 6 || (from './pages' part)
 import RunnableAppPage from './pages/RunnableAppPage';
-import { readTable } from './api/tableApi';
-import { getAppById } from './api';
+import { getAppById, readTable } from './api';
 
 export const customHistory = createBrowserHistory();
 
@@ -77,6 +76,7 @@ const App = () => {
 				);
 
 				setApps(userApps);
+				console.log('userApps', userApps);
 			} catch (error) {
 				console.error('Error fetching App: ', error);
 			}
