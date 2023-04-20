@@ -3,6 +3,6 @@ import DashboardPage from './DashboardPage';
 import ManageAppPage from './ManageAppPage';
 import AddTablePage from './AddTablePage';
 import AdminPage from './AdminPage';
-// FIXME add RunnableAppPage here
+import RunnableAppPage from './RunnableAppPage';
 
-export { LoginPage, DashboardPage, ManageAppPage, AddTablePage, AdminPage };
+export { LoginPage, DashboardPage, ManageAppPage, AddTablePage, AdminPage, RunnableAppPage };

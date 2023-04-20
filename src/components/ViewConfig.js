@@ -9,7 +9,7 @@ import {
 import { updateUser } from '../api/userApi';
 import { createView } from '../api/viewApi';
 
-const ViewConfig = ({
+export default function ViewConfig ({
 	user,
 	role,
 	setRole,
@@ -21,18 +21,20 @@ const ViewConfig = ({
 	setViewName,
 	setUser,
 	viewIds,
-}) => {
+}) {
 	const [showTable, setShowTable] = useState(false);
 	const [filter, setFilter] = useState('');
 	const [userFilter, setUserFilter] = useState('');
 	const [editFilter, setEditFilter] = useState('');
 	const [editableCols, setEditableCols] = useState([]);
 	const [boolConfigs, setBoolConfigs] = useState([]);
+	const [textConfigs, setTextConfigs] = useState([]);
 	const { isViewSelected, selectedView, clearInput, viewrole } = useSelector(
 		(state) => state.app
 	);
 	const dispatch = useDispatch();
 	const [selectedColumns, setSelectedColumns] = useState([]);
+	const [selectedEditColumns, setSelectedEditColumns] = useState([]);
 	const formElement = useRef(null);
 
 	const testData = {
@@ -133,6 +135,16 @@ const ViewConfig = ({
 		}
 		// console.log(selectedColumns);
   };
+
+  	const handleEditCheckboxChange = (e, column) => {
+		const { name, checked } = e.target;
+		if (checked) {
+			setSelectedEditColumns([...selectedEditColumns, name]);
+		} else {
+			setSelectedEditColumns(selectedEditColumns.filter((column) => column !== name));
+		}
+		// console.log(selectedColumns);
+	};
   
 	const handleAllowedActionCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
@@ -203,14 +215,28 @@ const ViewConfig = ({
 	};
 
 	const handleUserFilterCheckboxChange = (e) => {
+		// const { checked } = e.target;
+		// if (checked) {
+		// 	setUserFilter(user.email);
+		// 	console.log(user.email);
+		// } else {
+		// 	setUserFilter('');
+		// }
+		// console.log(allowedAction);
 		const { checked } = e.target;
 		if (checked) {
-			setUserFilter(user.email);
-			console.log(user.email);
+			// Filter config objects where type is bool
+			const textConfigs = testData.config.filter(
+				(config) => config.type === 'string'
+			);
+			// Set the filtered bool configs to state
+			setTextConfigs(textConfigs);
 		} else {
+			// Clear the bool configs from state
+			setTextConfigs([]);
 			setUserFilter('');
+			console.log(viewData);
 		}
-		// console.log(allowedAction);
 	};
 
 	const handleFilterCheckboxChange = (e) => {
@@ -399,6 +425,18 @@ const ViewConfig = ({
 								onChange={(e) => handleUserFilterCheckboxChange(e)}
 							/>
 							<label htmlFor="checkbox-user-filter">User Filter</label>
+							{textConfigs.map((config) => (
+								<div key={config.name}>
+									<input
+										type="radio"
+										id={`radio-${config.name}`}
+										name="filterOption"
+										value={config.name}
+										onChange={(e) => handleFilterButtonChange(e, config.name)}
+									/>
+									<label htmlFor={`radio-${config.name}`}>{config.name}</label>
+								</div>
+							))}
 						</div>
 					</div>
 				) : (
@@ -422,6 +460,22 @@ const ViewConfig = ({
 								<label htmlFor={`radio-${config.name}`}>{config.name}</label>
 							</div>
 						))}
+						<div className="form-group">
+							<label>Editable Columns</label>
+							{columns.map((column) => (
+								<div key={column}>
+									<input
+										checked={selectedEditColumns.find((item) => item === column)}
+										type="checkbox"
+										id={`checkbox-${column}`}
+										name={column}
+										onChange={(e) => handleEditCheckboxChange(e, column)}
+									/>
+									<label htmlFor={`checkbox-${column}`}>{column}</label>
+								</div>
+							))}
+						</div>
+						<p>Selected Columns: {selectedEditColumns.join(', ')}</p>
 					</div>
 				)}
       </div>
@@ -474,4 +528,3 @@ const ViewConfig = ({
 		</form>
 	);
 };
-export { ViewConfig };

@@ -1,9 +1,12 @@
-// FIXME add the rest of the Components and keep up to date!
+import DashboardApp from './DashboardApp';
+import List from './List';
+import Sidebar from './Sidebar';
+import ViewConfig from './ViewConfig';
+import AppConfig from './AppConfig';
 import TableConfig from './TableConfig';
 import TableView from './TableView';
 import DetailView from './DetailView';
+import NavigationBar from './NavigationBar';
 
-// FIXME move this to /pages/index.js and change 'from'
-import RunnableAppPage from '../pages/RunnableAppPage';
 
-export { TableConfig, TableView, DetailView };
+export { TableConfig, TableView, DetailView, NavigationBar, DashboardApp, List, Sidebar, ViewConfig, AppConfig };
