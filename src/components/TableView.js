@@ -53,14 +53,14 @@ export default function TableView({app}) {
       "Passed": false
     },
     {
-      "Name": "George Chen",
-      "Email": "george@gmail.com",
+      "Name": "Henry Chen",
+      "Email": "henry@gmail.com",
       "Class": "CSE 312",
       "Grade": "A",
       "Passed": true
     },
     {
-      "Name": "Bob Ross",
+      "Name": "Bob Chen",
       "Email": "bob@gmail.com",
       "Class": "CSE 216",
       "Grade": "A",
