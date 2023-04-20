@@ -22,6 +22,7 @@ export default function TableView({app}) {
   const [openDelete, setDeleteOpen] = useState(false);
   const [newRowData, setNewRowData] = useState({});
   const [selectedRowData, setSelectedRowData] = useState(null);
+  const [showMinusButtons, setShowMinusButtons] = useState(false);
 
   const [test, setTest] = useState([
     {
@@ -100,10 +101,14 @@ export default function TableView({app}) {
     handleClose();
   };
 
-  const handleRowClick = (rowData) => {
+  const handleDeleteRow = (rowData) => {
     setSelectedRowData(rowData);
     setDeleteOpen(true);
   };
+
+  const handleDeleteClick = () => {
+    setShowMinusButtons(!showMinusButtons);
+  }
 
   const handleDelete = () => {
     const deletedRow = {};
@@ -120,7 +125,8 @@ export default function TableView({app}) {
 
   return (
     <div>
-      <Button variant="contained" onClick={handleOpen}>Add Row</Button>
+      <Button variant="contained" onClick={handleOpen} disabled={!allowedActions.includes('Add Record') ? true : false}>Add Row</Button>
+      <Button variant="contained" onClick={handleDeleteClick} disabled={!allowedActions.includes('Delete Record') ? true : false}>Delete Row</Button>
       <br/>
       <table>
         <thead>
@@ -128,16 +134,18 @@ export default function TableView({app}) {
             {col.map((column) => (
               <th key={column}>{column}</th>
             ))}
+            {showMinusButtons && <th></th>}
           </tr>
         </thead>
         <tbody>
-          {filteredTest.map((row) => (
-            <tr key={row.Name} onClick={() => handleRowClick(row)}>
-              {col.map((column) => (
-                <td key={column}>{row[column]}</td>
-              ))}
-            </tr>
-          ))}
+        {filteredTest.map((row) => (
+          <tr key={row.Name}>
+            {col.map((column) => (
+              <td key={column}>{row[column]}</td>
+            ))}
+            {showMinusButtons && <td><button onClick={() => handleDeleteRow(row)}>-</button></td>}
+          </tr>
+        ))}
         </tbody>
       </table>
       <Modal open={open} onClose={handleClose}>

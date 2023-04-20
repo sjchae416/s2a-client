@@ -50,7 +50,7 @@ export default function RunnableAppPage({ user }) {
 				},
 			],
 		},
-		columns: ['Name', 'Class', 'Grade'],
+		columns: ['Name', 'Email','Class', 'Grade'],
 		viewType: 'Table',
 		allowedActions: ['Add Record', 'Delete Record'],
 		roles: ['Developer'],
