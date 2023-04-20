@@ -3,6 +3,8 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
+import DetailView from "./DetailView";
+
 
 export default function TableView({app}) {
   const name = app.name;
@@ -22,6 +24,8 @@ export default function TableView({app}) {
   const [openDelete, setDeleteOpen] = useState(false);
   const [newRowData, setNewRowData] = useState({});
   const [selectedRowData, setSelectedRowData] = useState(null);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [openDetail, setOpenDetail] = useState(false);
   const [showMinusButtons, setShowMinusButtons] = useState(false);
 
   const [test, setTest] = useState([
@@ -121,12 +125,21 @@ export default function TableView({app}) {
     handleClose();
   };
 
-  const filteredTest = test.filter(row => row[filter]);
+  const handleRowClick = (row) => {
+    const foundRow = test.find((testRow) => testRow.Name === row.Name);
+    setSelectedRow(foundRow);
+    // console.log(foundRow);
+  }
+
+  let filteredTest = test;
+  if (app.filter !== "") {
+    filteredTest = test.filter((row) => row[app.filter]);
+  }
 
   return (
     <div>
-      <Button variant="contained" onClick={handleOpen} disabled={!allowedActions.includes('Add Record') ? true : false}>Add Row</Button>
-      <Button variant="contained" onClick={handleDeleteClick} disabled={!allowedActions.includes('Delete Record') ? true : false}>Delete Row</Button>
+      <Button variant="contained" onClick={handleOpen} disabled={!allowedActions.includes('Add Record') ? true : false}>Add Record</Button>
+      <Button variant="contained" onClick={handleDeleteClick} disabled={!allowedActions.includes('Delete Record') ? true : false}>Delete Record</Button>
       <br/>
       <table>
         <thead>
@@ -138,16 +151,21 @@ export default function TableView({app}) {
           </tr>
         </thead>
         <tbody>
-        {filteredTest.map((row) => (
-          <tr key={row.Name}>
-            {col.map((column) => (
-              <td key={column}>{row[column]}</td>
-            ))}
-            {showMinusButtons && <td><button onClick={() => handleDeleteRow(row)}>-</button></td>}
-          </tr>
-        ))}
+          {filteredTest.map((row) => (
+            <tr key={row.Name} onClick={() => type === 'Detail' && handleRowClick(row)}>
+              {col.map((column) => (
+                <td key={column}>{row[column]}</td>
+              ))}
+              {showMinusButtons && <td><button onClick={() => handleDeleteRow(row)}>-</button></td>}
+            </tr>
+          ))}
         </tbody>
       </table>
+      {type === 'Detail' && selectedRow && (
+        <Modal open={true} onClose={() => setSelectedRow(null)}>
+          <DetailView row={selectedRow} app={app} />
+        </Modal>
+      )}
       <Modal open={open} onClose={handleClose}>
         <div className="modal-content">
           <h2>ADD ROW</h2>
