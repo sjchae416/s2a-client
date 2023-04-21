@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { actionClearInput } from '../redux/action.js';
 import NavigationBar from '../components/NavigationBar.js';
 import AppConfig from '../components/AppConfig.js';
@@ -25,6 +25,9 @@ export default function ManageAppPage({
 	const [viewType, setViewType] = useState('Table');
 	const [allowedAction, setAllowAction] = useState([]);
 	const [role, setRole] = useState('');
+	const { selectedViewTable, isViewSelected } = useSelector(
+		(state) => state.app
+	  );
 
 	const dispatch = useDispatch();
 	let navigate = useNavigate();
@@ -191,6 +194,7 @@ export default function ManageAppPage({
 										Would you like to save your changes before proceeding?
 									</h5>
 									<button
+										onClick={() => navigate("/")}
 										className="btn btn-danger "
 										id="dismiss_create_app_modals"
 									>
