@@ -506,7 +506,7 @@ export default function ViewConfig ({
 					</button>
 					<button
 						// NOTE not implemented yet
-						onClick={handleCreateView}
+						// onClick={handleCreateView}
 						type="submit"
 						className="btn btn-info"
 					>
