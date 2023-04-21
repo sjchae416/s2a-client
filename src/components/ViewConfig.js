@@ -545,8 +545,8 @@ export default function ViewConfig ({
 						Cancel
 					</button>
 					<button
-					    // NOTE not implemented yet
-						onClick={handleCreateView}
+						// NOTE not implemented yet
+						// onClick={handleCreateView}
 						type="submit"
 						className="btn btn-info"
 					>
