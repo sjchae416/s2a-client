@@ -20,6 +20,13 @@ const INITIAL_STATE = {
   clearInput: false,
   // added the role membership sheet to the intial_state
   viewrole: [],
+  selectedViewTable: {
+    viewName: "",
+    selectedColumns: [],
+    viewType: "Table",
+    allowedAction: [],
+    role: [],
+  },
 };
 
 const appReducer = (state = INITIAL_STATE, action) => {
@@ -29,6 +36,14 @@ const appReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isViewSelected: true,
         selectedView: action.payload,
+        selectedViewTable: action.payload,
+      };
+
+    case types.SELECTED_VIEW_TABLE:
+      console.log(action.payload);
+      return {
+        ...state,
+        selectedViewTable: { ...state.selectedViewTable, ...action.payload },
       };
 
     case types.CLEAR_INPUT:
@@ -64,6 +79,7 @@ const appReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         viewList: state.viewList.filter((item) => item.id !== action.payload),
+        isViewSelected: false,
       };
 
     case types.ADD_TABLE:

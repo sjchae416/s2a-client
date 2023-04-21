@@ -70,3 +70,10 @@ export const actionSetRole = (data) => {
     payload: data,
   };
 };
+
+export const actionUpdateSelectedViewTable = (data) => {
+  return {
+    type: types.SELECTED_VIEW_TABLE,
+    payload: data,
+  };
+};

@@ -9,3 +9,4 @@ export const DELETE_TABLE = "DELETE_TABLE";
 export const CLEAR_INPUT = "CLEAR_INPUT";
 // added for the view page
 export const SET_ROLE = "SET_ROLE";
+export const SELECTED_VIEW_TABLE = "SELECTED_VIEW_TABLE";
