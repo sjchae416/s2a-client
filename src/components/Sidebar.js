@@ -20,7 +20,6 @@ const Sidebar = ({
 
 	// FIXME prevent duplicate names being saved from server side and alert error
 	const saveApp = async (app) => {
-		console.log('🚀 ~ file: Sidebar.js:23 ~ saveApp ~ app:', app);
 		// const saveApp = async (app, appId) => {
 		try {
 			// FIXME if the App alreadly exits, update the field with passed id(appId), else creat and save
@@ -34,36 +33,34 @@ const Sidebar = ({
 			// 	await updateApp(appId, update);
 			// } else {
 			const newApp = await createApp(app);
-			if (newApp) {
-				var newAppIds = [];
-				if (appIds) {
-					newAppIds = [...appIds, newApp._id];
-				} else {
-					newAppIds = [newApp._id];
-				}
-				const update = { apps: newAppIds };
-				const updatedUser = await updateUser(user._id, update);
-
-				setApp(null);
-				setUser(updatedUser);
+			// REVIEW newApp error handled in the createApp(); returns newApp or error
+			// if (newApp) {
+			var newAppIds = [];
+			if (appIds) {
+				newAppIds = [...appIds, newApp._id];
+			} else {
+				newAppIds = [newApp._id];
 			}
+			const update = { apps: newAppIds };
+			const updatedUser = await updateUser(user._id, update);
+
+			setApp(null);
+			setUser(updatedUser);
+			navigate('/');
+
+			// }
 			// }
 		} catch (error) {
-			if (error.code === 11000) {
-				window.alert(
-					'Tha app name alreadyl exists! Duplicate app names are not allowed!'
-				);
-			} else {
-				console.error('Error while creating the App', error);
-			}
+			window.alert(error);
+      // TODO RIYA
+			// FIXME close the save model when OK of the window.alert() is clicked
+			console.error('Error while creating the App', error);
 		}
 	};
 
 	const handleSave = async () => {
 		await saveApp(app);
 		// await saveApp(app, appId);
-
-		navigate('/');
 	};
 
 	// save changes modal

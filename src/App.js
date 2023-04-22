@@ -41,7 +41,6 @@ const App = () => {
 						return await getAppById(id);
 					})
 				);
-
 				setApps(userApps);
 			} catch (error) {
 				console.error('Error fetching App: ', error);
@@ -84,8 +83,6 @@ const App = () => {
 		setTableIds(user.tables);
 	};
 
-	// REVIEW Michael can you check this out and see if it can be replaced?
-	// NOTE it allows to tables to be updated everytime the user is updated (user -> tableIds -> tablse)
 	useEffect(() => {
 		const loadTables = async () => {
 			try {
@@ -94,18 +91,6 @@ const App = () => {
 						return await readTable(id);
 					})
 				);
-
-				// Filter out duplicate table names
-				const uniqueTables = [];
-				const uniqueTableNames = new Set();
-
-				for (const table of userTables) {
-					if (!uniqueTableNames.has(table.name)) {
-						uniqueTables.push(table);
-						uniqueTableNames.add(table.name);
-					}
-				}
-
 				setTables(userTables);
 			} catch (error) {
 				console.error('Error fetching App: ', error);
