@@ -33,7 +33,24 @@ const App = () => {
 		setAppIds(user.apps);
 	};
 
-	// TABLES
+	useEffect(() => {
+		const loadApps = async () => {
+			try {
+				const userApps = await Promise.all(
+					appIds.map(async (id) => {
+						return await getAppById(id);
+					})
+				);
+
+				setApps(userApps);
+			} catch (error) {
+				console.error('Error fetching App: ', error);
+			}
+		};
+		loadApps();
+	}, [appIds]);
+
+	// NOTE TABLES
 	const getUserTables = async () => {
 		if (user) {
 			// Create an array to store readTable promises
@@ -138,6 +155,7 @@ const App = () => {
 		}
 	};
 
+	// NOTE USERS
 	useEffect(() => {
 		if (user !== null) {
 			getUserTables();
