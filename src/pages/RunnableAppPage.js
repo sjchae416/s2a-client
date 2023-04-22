@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {NavigationBar} from '../components';
-import { TableView } from '../components';
+import {NavigationBar, TableView} from '../components';
 
 export default function RunnableAppPage({ user }) {
 	const { name } = useParams();

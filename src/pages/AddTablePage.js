@@ -1,9 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-// FIXME import them all in one from '../components' this is why we have index.js!
-import TableConfig from '../components/TableConfig';
-import List from '../components/List';
-import NavigationBar from '../components/NavigationBar.js';
+import { TableConfig, List, NavigationBar} from '../components';
 
 export default function AddTablePage({
 	user,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import DashboardApp from '../components/DashboardApp';
+import { DashboardApp } from '../components';
 import apps from '../testData/test-apps.json';
 import { fetchTokenAPI } from '../api/authApi';
 
