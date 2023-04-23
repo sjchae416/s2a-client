@@ -4,11 +4,7 @@ import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionClearInput } from '../redux/action.js';
-import NavigationBar from '../components/NavigationBar.js';
-import AppConfig from '../components/AppConfig.js';
-import Sidebar from '../components/Sidebar.js';
-import List from '../components/List.js';
-import ViewConfig from '../components/ViewConfig.js';
+import {NavigationBar, AppConfig, Sidebar, List, ViewConfig} from '../components';
 
 export default function ManageAppPage({
 	user,

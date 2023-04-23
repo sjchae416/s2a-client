@@ -9,10 +9,9 @@ import {
 	ManageAppPage,
 	AddTablePage,
 	AdminPage,
+	RunnableAppPage
 } from './pages';
 import { TableView } from './components';
-// FIXME import this together in line 6 || (from './pages' part)
-import RunnableAppPage from './pages/RunnableAppPage';
 import { getAppById, readTable, readView, loadTable } from './api';
 
 export const customHistory = createBrowserHistory();

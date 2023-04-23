@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {NavigationBar} from '../components';
-import { TableView } from '../components';
+import {NavigationBar, TableView} from '../components';
 
 export default function RunnableAppPage({ user }) {
 	const { name } = useParams();
@@ -130,7 +129,7 @@ export default function RunnableAppPage({ user }) {
 					<h2>{name}</h2>
 					{/* Render the component based on viewType */}
 					{/* {viewType === 'Table' ? <TableView app={app1}/> : <DetailView app={app1}/>} */}
-					<TableView app={view2} />
+					<TableView app={[view1, view2]} />
 				</div>
 			</div>
 		</div>
