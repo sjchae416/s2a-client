@@ -3,7 +3,8 @@ import { loadTable } from '../api/tableApi';
 import { useDispatch } from 'react-redux';
 import { actionSetRole } from '../redux/action';
 
-export default function AppConfig({ email, user, app, setApp }){
+// eslint-disable-next-line import/no-anonymous-default-export
+export default function ({ email, user, app, setApp }){
 	const [name, setName] = useState('');
 	// const [creator, setCreator] = useState(email);
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
@@ -164,5 +165,3 @@ export default function AppConfig({ email, user, app, setApp }){
 		</div>
 	);
 };
-
-//export { AppConfig };
