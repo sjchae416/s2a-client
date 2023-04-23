@@ -155,19 +155,7 @@ export default function ViewConfig({
 					role: [...role, name],
 				})
 			);
-			setRole([...role, name]);
-			dispatch(
-				actionUpdateSelectedViewTable({
-					role: [...role, name],
-				})
-			);
 		} else {
-			setRole(role.filter((item) => item !== name));
-			dispatch(
-				actionUpdateSelectedViewTable({
-					role: role.filter((column) => column !== name),
-				})
-			);
 			setRole(role.filter((item) => item !== name));
 			dispatch(
 				actionUpdateSelectedViewTable({
@@ -238,17 +226,17 @@ export default function ViewConfig({
 		formElement.current.reset();
 		setSelectedColumns([]);
 		setShowTable(false);
-		setViewName("");
-		setViewType("Table");
+		setViewName('');
+		setViewType('Table');
 		setAllowAction([]);
 		setRole([]);
-  };
-  
+	};
+
 	useEffect(() => {
 		setSelectedColumns([]);
 		setShowTable(false);
-		setViewName("");
-		setViewType("Table");
+		setViewName('');
+		setViewType('Table');
 		setAllowAction([]);
 		setRole([]);
 		dispatch(actionClearInput(false));
@@ -257,20 +245,20 @@ export default function ViewConfig({
 	const handleCancel = () => {
 		setSelectedColumns([]);
 		setShowTable(false);
-		setViewName("");
-		setViewType("Table");
+		setViewName('');
+		setViewType('Table');
 		setAllowAction([]);
 		setRole([]);
-  };
-  
+	};
+
 	const updateViewList = (e) => {
 		e.preventDefault();
 		dispatch(actionUpdateView(selectedView.id, viewData));
 		formElement.current.reset();
 		setSelectedColumns([]);
 		setShowTable(false);
-		setViewName("");
-		setViewType("Table");
+		setViewName('');
+		setViewType('Table');
 		setAllowAction([]);
 		setRole([]);
 	};
@@ -280,8 +268,8 @@ export default function ViewConfig({
 		formElement.current.reset();
 		setSelectedColumns([]);
 		setShowTable(false);
-		setViewName("");
-		setViewType("Table");
+		setViewName('');
+		setViewType('Table');
 		setAllowAction([]);
 		setRole([]);
 	};
