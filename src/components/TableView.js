@@ -159,7 +159,7 @@ export default function TableView({app}) {
               {col.map((column) => (
                 <td key={column}>{row[column]}</td>
               ))}
-              {showMinusButtons && <td><button onClick={() => handleDeleteRow(row)}>-</button></td>}
+              {showMinusButtons && <td><button onClick={(e) => {e.stopPropagation(); handleDeleteRow(row)}}>-</button></td>}
             </tr>
           ))}
         </tbody>

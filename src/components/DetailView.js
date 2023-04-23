@@ -4,16 +4,23 @@ import Button from '@mui/material/Button';
 
 
 const DetailView = ({row, app}) => {
-  const name = app.name;
-  const table = app.table;
-  const col = app.columns;
-  const type = app.viewType;
-  const allowedActions = app.allowedActions;
-  const role = app.roles;
-
+  let name, table, col, type, allowedActions, role;
   let editFilter = "", editableCols = [];
-  if(app.editFilter != "") editFilter = app.editFilter;
-  if(app.editableCols != []) editableCols = app.editableCols;
+  for(let i = 0; i < app.length; i++){
+    if(app[i].viewType == 'Detail'){
+      name = app[i].name;
+      table = app[i].table;
+      col = app[i].columns;
+      type = app[i].viewType;
+      allowedActions = app[i].allowedActions;
+      role = app[i].roles;
+
+      if(app[i].editFilter != "") editFilter = app[i].editFilter;
+      if(app[i].editableCols != []) editableCols = app[i].editableCols;
+
+      console.log(type);
+    }
+  }
 
   const disableEditButton = editFilter && !row[editFilter];
   const [isEditing, setIsEditing] = useState(false);
