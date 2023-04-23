@@ -10,7 +10,7 @@ import {
 import { updateUser } from '../api/userApi';
 import { createView } from '../api/viewApi';
 
-export default function ViewConfig ({
+export default function ViewConfig({
 	user,
 	role,
 	setRole,
@@ -109,12 +109,31 @@ export default function ViewConfig ({
 		editableCols: editableCols,
 	};
 
-	//
-	const handleCreateView = async () => {
+	const saveView = async (viewData) => {
 		// TODO create and save View
+		const viewToSave = {
+			viewName: viewData.viewName,
+			// FIXME hard coded TableId for testing, make it store onClick
+			table: '6440b526d0312e27648d3198',
+			colums: viewData.selectedColumns,
+			viewType: viewData.viewType,
+			allowedActions: viewData.allowedAction,
+			roles: viewData.role,
+			filter: viewData.filter,
+			userFilter: viewData.userFilter,
+			editFilter: viewData.editFilter,
+			editableCols: viewData.editableCols,
+		};
 		try {
-			const newView = await createView(viewData);
+			const newView = await createView(viewToSave);
 			const newViewIds = [...viewIds, newView._id];
+			// REVIEW necessary?
+			// var newViewIds = [];
+			// if (appIds) {
+			//   newViewIds = [...viewIds, newView._id];
+			// } else {
+			//   newViewIds = [newView._id];
+			// }
 			const update = { views: newViewIds };
 			const updatedUser = await updateUser(user._id, update);
 			setUser(updatedUser);
@@ -123,9 +142,19 @@ export default function ViewConfig ({
 		}
 	};
 
+	const handleCreateView = async () => {
+		await saveView(viewData);
+	};
+
 	const handleRoleChange = (e) => {
 		const { name, checked } = e.target;
 		if (checked) {
+			setRole([...role, name]);
+			dispatch(
+				actionUpdateSelectedViewTable({
+					role: [...role, name],
+				})
+			);
 			setRole([...role, name]);
 			dispatch(
 				actionUpdateSelectedViewTable({
@@ -139,11 +168,17 @@ export default function ViewConfig ({
 					role: role.filter((column) => column !== name),
 				})
 			);
+			setRole(role.filter((item) => item !== name));
+			dispatch(
+				actionUpdateSelectedViewTable({
+					role: role.filter((column) => column !== name),
+				})
+			);
 		}
-	  };
-  
+	};
+
 	const handleCheckboxChange = (e, column) => {
-	    const { name, checked } = e.target;
+		const { name, checked } = e.target;
 		if (checked) {
 			setSelectedColumns([...selectedColumns, name]);
 			dispatch(
@@ -161,16 +196,18 @@ export default function ViewConfig ({
 		}
 	};
 
-  	const handleEditCheckboxChange = (e, column) => {
+	const handleEditCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
 		if (checked) {
 			setSelectedEditColumns([...selectedEditColumns, name]);
 		} else {
-			setSelectedEditColumns(selectedEditColumns.filter((column) => column !== name));
+			setSelectedEditColumns(
+				selectedEditColumns.filter((column) => column !== name)
+			);
 		}
 		// console.log(selectedColumns);
 	};
-  
+
 	const handleAllowedActionCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
 		if (checked) {
@@ -189,14 +226,15 @@ export default function ViewConfig ({
 			);
 		}
 	};
-  
-	const handleOnSubmit = (e) => {
+
+	const handleOnSubmit = async (e) => {
 		e.preventDefault();
 		console.log(role);
 		if (!role) {
 			return window.alert('Add role membership sheet first!');
 		}
 		if (viewName) dispatch(actionAddView(viewData));
+		await saveView(viewData);
 		formElement.current.reset();
 		setSelectedColumns([]);
 		setShowTable(false);
@@ -214,8 +252,8 @@ export default function ViewConfig ({
 		setAllowAction([]);
 		setRole([]);
 		dispatch(actionClearInput(false));
-  }, [clearInput]);
-  
+	}, [clearInput]);
+
 	const handleCancel = () => {
 		setSelectedColumns([]);
 		setShowTable(false);
@@ -348,9 +386,9 @@ export default function ViewConfig ({
 					onChange={(e) => {
 						setViewName(e.target.value);
 						dispatch(
-						  actionUpdateSelectedViewTable({ viewName: e.target.value })
+							actionUpdateSelectedViewTable({ viewName: e.target.value })
 						);
-					  }}
+					}}
 					type="text"
 					className="form-control"
 				/>
@@ -404,7 +442,7 @@ export default function ViewConfig ({
 				<label>Allowed Action</label>
 
 				{viewType === 'Table'
-					?   ['Add Record', 'Delete Record'].map((record) => (
+					? ['Add Record', 'Delete Record'].map((record) => (
 							<div key={record}>
 								<input
 									checked={allowedAction.find((item) => item === record)}
@@ -417,8 +455,8 @@ export default function ViewConfig ({
 								/>
 								<label htmlFor={`checkbox-${record}`}>{record}</label>
 							</div>
-						))
-					:   ['Edit Record', 'Delete Record'].map((record) => (
+					  ))
+					: ['Edit Record', 'Delete Record'].map((record) => (
 							<div key={record}>
 								<input
 									checked={allowedAction.find((item) => item === record)}
@@ -431,7 +469,7 @@ export default function ViewConfig ({
 								/>
 								<label htmlFor={`checkbox-${record}`}>{record}</label>
 							</div>
-						))}
+					  ))}
 				<label>Filters</label>
 				{viewType === 'Table' ? (
 					<div>
@@ -504,7 +542,9 @@ export default function ViewConfig ({
 							{columns.map((column) => (
 								<div key={column}>
 									<input
-										checked={selectedEditColumns.find((item) => item === column)}
+										checked={selectedEditColumns.find(
+											(item) => item === column
+										)}
 										type="checkbox"
 										id={`checkbox-${column}`}
 										name={column}
@@ -518,13 +558,13 @@ export default function ViewConfig ({
 					</div>
 				)}
 			</div>
-      
-	        <div className="form-group">
+
+			<div className="form-group">
 				<label>Role</label>
 				{viewrole[0]?.map((roles, ind) => (
 					<div key={ind}>
 						<input
-						    checked={role.find((item) => item === roles)}
+							checked={role.find((item) => item === roles)}
 							type="checkbox"
 							id={`checkbox-${roles}`}
 							name={roles}
@@ -533,13 +573,13 @@ export default function ViewConfig ({
 						<label htmlFor={`checkbox-${roles}`}>{roles}</label>
 					</div>
 				))}
-				<p>Selected Role: {role.join(", ")}</p>
+				<p>Selected Role: {role.join(', ')}</p>
 			</div>
 
-    	    {!isViewSelected ? (
-			    <div className="text-right">
+			{!isViewSelected ? (
+				<div className="text-right">
 					<button
-					    type="reset"
+						type="reset"
 						className="btn btn-danger can_btn"
 						onClick={handleCancel}
 					>
@@ -555,19 +595,19 @@ export default function ViewConfig ({
 					</button>
 				</div>
 			) : (
-			    <div className="text-right">
-		    	    <button className="btn btn-danger can_btn" onClick={updateViewList}>
-					    Save
+				<div className="text-right">
+					<button className="btn btn-danger can_btn" onClick={updateViewList}>
+						Save
 					</button>
 					<button onClick={deleteViewList} className="btn btn-info">
-					    Delete
+						Delete
 					</button>
-			    </div>
-		    )}
+				</div>
+			)}
 			<br />
 			<br />
 		</form>
 	);
-};
+}
 
 export { ViewConfig };

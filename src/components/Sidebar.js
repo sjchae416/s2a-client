@@ -52,7 +52,7 @@ const Sidebar = ({
 			// }
 		} catch (error) {
 			window.alert(error);
-      // TODO RIYA
+			// TODO RIYA
 			// FIXME close the save model when OK of the window.alert() is clicked
 			console.error('Error while creating the App', error);
 		}
