@@ -7,18 +7,21 @@ import DetailView from "./DetailView";
 
 
 export default function TableView({app}) {
-  const name = app.name;
-  const table = app.table;
-  const col = app.columns;
-  const type = app.viewType;
-  const allowedActions = app.allowedActions;
-  const role = app.roles;
+  let name, table, col, type, allowedActions, role;
+  let viewFilter = "", userFilter = "";
+  for(let i = 0; i < app.length; i++){
+    if(app[i].viewType == 'Table'){
+      name = app[i].name;
+      table = app[i].table;
+      col = app[i].columns;
+      type = app[i].viewType;
+      allowedActions = app[i].allowedActions;
+      role = app[i].roles;
 
-  let filter = "", userFilter = "", editFilter = "", editableCols = [];
-  if(app.filter != "") filter = app.filter;
-  if(app.userFilter != "") userFilter = app.userFilter;
-  if(app.editFilter != "") editFilter = app.editFilter;
-  if(app.editableCols != []) editableCols = app.editableCols;
+      if(app[i].filter != "") viewFilter = app[i].filter;
+      if(app[i].userFilter != "") userFilter = app[i].userFilter;
+    }
+  }
 
   const [open, setOpen] = useState(false);
   const [openDelete, setDeleteOpen] = useState(false);
@@ -132,8 +135,8 @@ export default function TableView({app}) {
   }
 
   let filteredTest = test;
-  if (app.filter !== "") {
-    filteredTest = test.filter((row) => row[app.filter]);
+  if (viewFilter !== "") {
+    filteredTest = test.filter((row) => row[viewFilter]);
   }
 
   return (

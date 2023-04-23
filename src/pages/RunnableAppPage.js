@@ -129,7 +129,7 @@ export default function RunnableAppPage({ user }) {
 					<h2>{name}</h2>
 					{/* Render the component based on viewType */}
 					{/* {viewType === 'Table' ? <TableView app={app1}/> : <DetailView app={app1}/>} */}
-					<TableView app={view2} />
+					<TableView app={[view1, view2]} />
 				</div>
 			</div>
 		</div>
