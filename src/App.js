@@ -41,6 +41,7 @@ const App = () => {
 						return await getAppById(id);
 					})
 				);
+				console.log("🚀 ~ file: App.js:44 ~ loadApps ~ userApps:", userApps)
 				setApps(userApps);
 			} catch (error) {
 				console.error('Error fetching App: ', error);
@@ -73,6 +74,7 @@ const App = () => {
 					uniqueTableNames.add(table.name);
 				}
 			}
+      console.log("🚀 ~ file: App.js:77 ~ getUserTables ~ uniqueTables:", uniqueTables)
 
 			// Update the tables state with uniqueTables
 			setTables(uniqueTables);
@@ -91,6 +93,7 @@ const App = () => {
 						return await readTable(id);
 					})
 				);
+				// console.log("🚀 ~ file: App.js:96 ~ loadTables ~ userTables:", userTables)
 				setTables(userTables);
 			} catch (error) {
 				console.error('Error fetching App: ', error);
@@ -113,7 +116,7 @@ const App = () => {
 						return await readView(id);
 					})
 				);
-
+				console.log("🚀 ~ file: App.js:118 ~ loadViews ~ userViews:", userViews)
 				setTables(userViews);
 			} catch (error) {
 				console.error('Error fetching App: ', error);
