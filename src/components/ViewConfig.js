@@ -112,7 +112,7 @@ export default function ViewConfig({
 	const saveView = async (viewData) => {
 		// TODO create and save View
 		const viewToSave = {
-			viewName: viewData.viewName,
+			name: viewData.viewName,
 			// FIXME hard coded TableId for testing, make it store onClick
 			table: '6440b526d0312e27648d3198',
 			colums: viewData.selectedColumns,
@@ -137,6 +137,12 @@ export default function ViewConfig({
 			const update = { views: newViewIds };
 			const updatedUser = await updateUser(user._id, update);
 			setUser(updatedUser);
+			setSelectedColumns([]);
+			setShowTable(false);
+			setViewName('');
+			setViewType('Table');
+			setAllowAction([]);
+			setRole([]);
 		} catch (error) {
 			console.error('Error saving the View', error);
 		}
@@ -221,15 +227,17 @@ export default function ViewConfig({
 		if (!role) {
 			return window.alert('Add role membership sheet first!');
 		}
-		if (viewName) dispatch(actionAddView(viewData));
-		await saveView(viewData);
+		if (viewName) {
+			dispatch(actionAddView(viewData));
+			await saveView(viewData);
+		}
 		formElement.current.reset();
-		setSelectedColumns([]);
-		setShowTable(false);
-		setViewName('');
-		setViewType('Table');
-		setAllowAction([]);
-		setRole([]);
+		// setSelectedColumns([]);
+		// setShowTable(false);
+		// setViewName('');
+		// setViewType('Table');
+		// setAllowAction([]);
+		// setRole([]);
 	};
 
 	useEffect(() => {

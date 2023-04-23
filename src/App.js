@@ -29,28 +29,6 @@ const App = () => {
 	// const [developers, setDevelopers] = useState([]);
 	const [isDeveloper, setIsDeveloper] = useState(false);
 
-	// NOTE APPS
-	const loadAppIds = (user) => {
-		setAppIds(user.apps);
-	};
-
-	useEffect(() => {
-		const loadApps = async () => {
-			try {
-				const userApps = await Promise.all(
-					appIds.map(async (id) => {
-						return await getAppById(id);
-					})
-				);
-				console.log("🚀 ~ file: App.js:44 ~ loadApps ~ userApps:", userApps)
-				setApps(userApps);
-			} catch (error) {
-				console.error('Error fetching App: ', error);
-			}
-		};
-		loadApps();
-	}, [appIds]);
-
 	// NOTE TABLES
 	const loadTableIds = (user) => {
 		setTableIds(user.tables);
@@ -85,7 +63,10 @@ const App = () => {
 						return await readTable(id);
 					})
 				);
-				// console.log("🚀 ~ file: App.js:96 ~ loadTables ~ userTables:", userTables)
+				console.log(
+					'🚀 ~ file: App.js:96 ~ loadTables ~ userTables:',
+					userTables
+				);
 				setTables(userTables);
 			} catch (error) {
 				console.error('Error fetching App: ', error);
@@ -94,6 +75,28 @@ const App = () => {
 
 		loadTables();
 	}, [tableIds]);
+
+	// NOTE APPS
+	const loadAppIds = (user) => {
+		setAppIds(user.apps);
+	};
+
+	useEffect(() => {
+		const loadApps = async () => {
+			try {
+				const userApps = await Promise.all(
+					appIds.map(async (id) => {
+						return await getAppById(id);
+					})
+				);
+				console.log('🚀 ~ file: App.js:44 ~ loadApps ~ userApps:', userApps);
+				setApps(userApps);
+			} catch (error) {
+				console.error('Error fetching App: ', error);
+			}
+		};
+		loadApps();
+	}, [appIds]);
 
 	// NOTE VIEWS
 	const loadViewIds = (user) => {
@@ -108,8 +111,11 @@ const App = () => {
 						return await readView(id);
 					})
 				);
-				console.log("🚀 ~ file: App.js:118 ~ loadViews ~ userViews:", userViews)
-				setTables(userViews);
+				console.log(
+					'🚀 ~ file: App.js:118 ~ loadViews ~ userViews:',
+					userViews
+				);
+				setViews(userViews);
 			} catch (error) {
 				console.error('Error fetching App: ', error);
 			}
@@ -141,7 +147,7 @@ const App = () => {
 			checkGlobalTable();
 			loadAppIds(user);
 			loadTableIds(user);
-			// loadViewIds(user)
+			loadViewIds(user);
 		}
 	}, [user]);
 
@@ -155,7 +161,11 @@ const App = () => {
 						element={
 							// NOTE keep these comments for backup
 							// user ? (
-							<DashboardPage user={user} setUser={setUser} isDeveloper={isDeveloper}/>
+							<DashboardPage
+								user={user}
+								setUser={setUser}
+								isDeveloper={isDeveloper}
+							/>
 							// ) : (
 							// 	<Navigate to="/login" />
 							// )

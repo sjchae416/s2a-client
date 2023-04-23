@@ -92,10 +92,6 @@ export default function TableConfig({
 		}
 	}, [keys]);
 
-	useEffect(() => {
-		console.log(tables);
-	}, [tables]);
-
 	const handleLoad = async () => {
 		if (tableData.name && tableData.url && tableData.sheetIndex) {
 			if (!isNameUnique()) {
@@ -199,9 +195,9 @@ export default function TableConfig({
 	};
 
 	const handleCancelClick = () => {
-		setName("");
-		setUrl("");
-		setSheetIndex("");
+		setName('');
+		setUrl('');
+		setSheetIndex('');
 		setShowTable(false);
 	};
 
