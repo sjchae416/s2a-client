@@ -126,19 +126,19 @@ export default function ViewConfig ({
 	const handleRoleChange = (e) => {
 		const { name, checked } = e.target;
 		if (checked) {
-		  setRole([...role, name]);
-		  dispatch(
-			actionUpdateSelectedViewTable({
-			  role: [...role, name],
-			})
-		  );
+			setRole([...role, name]);
+			dispatch(
+				actionUpdateSelectedViewTable({
+					role: [...role, name],
+				})
+			);
 		} else {
-		  setRole(role.filter((item) => item !== name));
-		  dispatch(
-			actionUpdateSelectedViewTable({
-			  role: role.filter((column) => column !== name),
-			})
-		  );
+			setRole(role.filter((item) => item !== name));
+			dispatch(
+				actionUpdateSelectedViewTable({
+					role: role.filter((column) => column !== name),
+				})
+			);
 		}
 	  };
   
@@ -200,29 +200,29 @@ export default function ViewConfig ({
 		formElement.current.reset();
 		setSelectedColumns([]);
 		setShowTable(false);
-		setViewName('');
-		setViewType('Table');
+		setViewName("");
+		setViewType("Table");
 		setAllowAction([]);
-		setRole('');
+		setRole([]);
   };
   
 	useEffect(() => {
 		setSelectedColumns([]);
 		setShowTable(false);
-		setViewName('');
-		setViewType('Table');
+		setViewName("");
+		setViewType("Table");
 		setAllowAction([]);
-		setRole('');
+		setRole([]);
 		dispatch(actionClearInput(false));
   }, [clearInput]);
   
 	const handleCancel = () => {
 		setSelectedColumns([]);
 		setShowTable(false);
-		setViewName('');
-		setViewType('Table');
+		setViewName("");
+		setViewType("Table");
 		setAllowAction([]);
-		setRole('');
+		setRole([]);
   };
   
 	const updateViewList = (e) => {
@@ -231,10 +231,10 @@ export default function ViewConfig ({
 		formElement.current.reset();
 		setSelectedColumns([]);
 		setShowTable(false);
-		setViewName('');
-		setViewType('Table');
+		setViewName("");
+		setViewType("Table");
 		setAllowAction([]);
-		setRole('');
+		setRole([]);
 	};
 
 	const deleteViewList = () => {
@@ -242,10 +242,10 @@ export default function ViewConfig ({
 		formElement.current.reset();
 		setSelectedColumns([]);
 		setShowTable(false);
-		setViewName('');
-		setViewType('Table');
+		setViewName("");
+		setViewType("Table");
 		setAllowAction([]);
-		setRole('');
+		setRole([]);
 	};
 
 	const handleUserFilterCheckboxChange = (e) => {
@@ -522,11 +522,12 @@ export default function ViewConfig ({
 	        <div className="form-group">
 				<label>Role</label>
 				{viewrole[0]?.map((roles, ind) => (
-				    <div key={ind}>
+					<div key={ind}>
 						<input
 						    checked={role.find((item) => item === roles)}
 							type="checkbox"
-							id={`checkbox-${roles}`}name={roles}
+							id={`checkbox-${roles}`}
+							name={roles}
 							onChange={(e) => handleRoleChange(e)}
 						/>
 						<label htmlFor={`checkbox-${roles}`}>{roles}</label>

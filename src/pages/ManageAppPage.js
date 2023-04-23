@@ -24,7 +24,7 @@ export default function ManageAppPage({
 	const [selectedColumns, setSelectedColumns] = useState([]);
 	const [viewType, setViewType] = useState('Table');
 	const [allowedAction, setAllowAction] = useState([]);
-	const [role, setRole] = useState('');
+	const [role, setRole] = useState([]);
 	const { selectedViewTable, isViewSelected } = useSelector(
 		(state) => state.app
 	  );
