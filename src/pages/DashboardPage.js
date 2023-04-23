@@ -6,7 +6,7 @@ import { fetchTokenAPI } from '../api/authApi';
 
 export const name = '';
 
-export default function DashboardPage({ googleUser, user, setUser }) {
+export default function DashboardPage({ googleUser, user, setUser, isDeveloper }) {
 	const navigate = useNavigate();
 
 	const [section, setSection] = useState('all');
@@ -93,15 +93,15 @@ export default function DashboardPage({ googleUser, user, setUser }) {
 						<div className="box_three">
 							<div className="row">
 								<div className="col-auto">
-									<Link to="/manage-app">
+									{isDeveloper ? <Link to="/manage-app">
 										<button className="btn btn-info">Manage App</button>
-									</Link>
+									</Link> : <></>}
 									<br />
-									<Link to="/add-table">
+									{isDeveloper ? <Link to="/add-table">
 										<button className="btn btn-info create_table_btn">
 											Add Table
 										</button>
-									</Link>
+									</Link> : <></>}
 									<ul className="app_list">
 										<li
 											className={section === 'all' ? 'active' : ''}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 // FIXME import them all in one from '../components' this is why we have index.js!
 import TableConfig from '../components/TableConfig';
@@ -12,7 +12,6 @@ export default function AddTablePage({
 	setTableIds,
 	tables,
 	setTables,
-	getUserTables,
 }) {
 	let navigate = useNavigate();
 	// useEffect(() => {
@@ -41,6 +40,7 @@ export default function AddTablePage({
 	// 	};
 	// }, []);
 
+	
 	return (
 		<div>
 			<br />
@@ -67,7 +67,6 @@ export default function AddTablePage({
 								setTableIds={setTableIds}
 								tables={tables}
 								setTables={setTables}
-								getUserTables={getUserTables}
 								// fetchTables={fetchTables}
 							/>
 							<div className="modal" id="create-app-modal">

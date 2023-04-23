@@ -15,6 +15,7 @@ import {
 } from './userApi';
 
 import {
+	loadTable,
 	createTable,
 	readAllTables,
 	readTable,
@@ -42,6 +43,7 @@ export {
 	getUserByEmail,
 	updateUser,
 	deleteUser,
+	loadTable,
 	createTable,
 	readAllTables,
 	readTable,

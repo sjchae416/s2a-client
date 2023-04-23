@@ -13,7 +13,7 @@ import {
 import { TableView } from './components';
 // FIXME import this together in line 6 || (from './pages' part)
 import RunnableAppPage from './pages/RunnableAppPage';
-import { getAppById, readTable, readView } from './api';
+import { getAppById, readTable, readView, loadTable } from './api';
 
 export const customHistory = createBrowserHistory();
 
@@ -26,7 +26,8 @@ const App = () => {
 	const [apps, setApps] = useState(null);
 	const [tables, setTables] = useState([]);
 	const [views, setViews] = useState([]);
-	const [developers, setDevelopers] = useState([]);
+	// const [developers, setDevelopers] = useState([]);
+	const [isDeveloper, setIsDeveloper] = useState(false);
 
 	// NOTE APPS
 	const loadAppIds = (user) => {
@@ -50,37 +51,30 @@ const App = () => {
 	}, [appIds]);
 
 	// NOTE TABLES
-	const getUserTables = async () => {
-		if (user) {
-			// Create an array to store readTable promises
-			const readTablePromises = [];
-
-			// Iterate over user.tables and push each readTable promise to the array
-			for (let i = 0; i < user.tables.length; i++) {
-				readTablePromises.push(readTable(user.tables[i]));
-			}
-
-			// Wait for all readTable promises to resolve
-			const resolvedTables = await Promise.all(readTablePromises);
-
-			// Filter out duplicate table names
-			const uniqueTables = [];
-			const uniqueTableNames = new Set();
-
-			for (const table of resolvedTables) {
-				if (!uniqueTableNames.has(table.name)) {
-					uniqueTables.push(table);
-					uniqueTableNames.add(table.name);
-				}
-			}
-
-			// Update the tables state with uniqueTables
-			setTables(uniqueTables);
-		}
-	};
 
 	const loadTableIds = (user) => {
 		setTableIds(user.tables);
+	};
+
+	const checkGlobalTable = async () => {
+		try {
+			const tableData = {
+				name: 'Global Developer List',
+				url: 'https://docs.google.com/spreadsheets/d/1CC5H2MVbGg0tm8OyouoR7f2ARR0CK1kqHFNeKYyYtL4/edit#gid=0',
+				sheetIndex: 'Sheet1',
+			};
+			const developers = await loadTable(tableData);
+			let foundDeveloper = false;
+			for (let i = 1; i < developers.length; i++) {
+				if (developers[i][0] === user.email) {
+					foundDeveloper = true;
+					break;
+				}
+			}
+			setIsDeveloper(foundDeveloper);
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	useEffect(() => {
@@ -97,7 +91,7 @@ const App = () => {
 			}
 		};
 
-		// loadTables();
+		loadTables();
 	}, [tableIds]);
 
 	// NOTE VIEWS
@@ -124,26 +118,26 @@ const App = () => {
 	}, [viewIds]);
 
 	// NOTE ADMIN
-	const fetchDevelopers = async () => {
-		// TODO - Make an api for this
-		try {
-			const response = await fetch('http://localhost:3333/admin');
+	// const fetchDevelopers = async () => {
+	// 	// TODO - Make an api for this
+	// 	try {
+	// 		const response = await fetch('http://localhost:3333/admin');
 
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
+	// 		if (!response.ok) {
+	// 			throw new Error(`HTTP error! status: ${response.status}`);
+	// 		}
 
-			const data = await response.json();
-			setDevelopers(data.developers);
-		} catch (error) {
-			console.error('Fetch Error:', error);
-		}
-	};
+	// 		const data = await response.json();
+	// 		setDevelopers(data.developers);
+	// 	} catch (error) {
+	// 		console.error('Fetch Error:', error);
+	// 	}
+	// };
 
 	// NOTE USERS
 	useEffect(() => {
 		if (user !== null) {
-			getUserTables();
+			checkGlobalTable();
 			loadAppIds(user);
 			loadTableIds(user);
 			// loadViewIds(user)
@@ -160,7 +154,7 @@ const App = () => {
 						element={
 							// NOTE keep these comments for backup
 							// user ? (
-							<DashboardPage user={user} setUser={setUser} />
+							<DashboardPage user={user} setUser={setUser} isDeveloper={isDeveloper}/>
 							// ) : (
 							// 	<Navigate to="/login" />
 							// )
@@ -199,11 +193,10 @@ const App = () => {
 								setTableIds={setTableIds}
 								tables={tables}
 								setTables={setTables}
-								getUserTables={getUserTables}
 							/>
 						}
 					/>
-					<Route
+					{/* <Route
 						path="/admin"
 						element={
 							<AdminPage
@@ -212,7 +205,7 @@ const App = () => {
 								fetchDevelopers={fetchDevelopers}
 							/>
 						}
-					/>
+					/> */}
 					{/* FIXME use conditional rendering, not path routing, for TableView in RunnableAppPage */}
 					<Route path="/table-view" element={<TableView />} />
 					<Route

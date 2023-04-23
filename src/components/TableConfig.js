@@ -8,7 +8,6 @@ export default function TableConfig({
 	tableIds,
 	tables,
 	setTables,
-	getUserTables,
 	fetchTables,
 }) {
 	const [sheetIndex, setSheetIndex] = useState('');
@@ -153,7 +152,6 @@ export default function TableConfig({
 
 		setUser(updatedUser);
 		clearForms();
-		getUserTables();
 		// fetchTables();
 	};
 
