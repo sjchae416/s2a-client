@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createApp, updateApp } from '../api/appApi';
 import { updateUser } from '../api/userApi';
+import Modal from '@mui/material/Modal';
 
 const Sidebar = ({
 	setView,
@@ -15,6 +16,7 @@ const Sidebar = ({
 	setApp,
 }) => {
 	const { isViewSelected } = useSelector((state) => state.app);
+	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	const navigate = useNavigate();
 
@@ -32,6 +34,7 @@ const Sidebar = ({
 			// };
 			// 	await updateApp(appId, update);
 			// } else {
+
 			const newApp = await createApp(app);
 			// REVIEW newApp error handled in the createApp(); returns newApp or error
 			// if (newApp) {
@@ -63,32 +66,18 @@ const Sidebar = ({
 		// await saveApp(app, appId);
 	};
 
-	// save changes modal
-	useEffect(() => {
-		const create_app_modal_btn = document.querySelector('#save-changes');
-		const create_app_modal = document.querySelector('#save-changes-modals');
-		const dismiss_create_app_modal = document.querySelector(
-			'#dismiss_create_app_modals'
-		);
-		const create_app_btn = document.querySelector('#save-changes-btn');
-
-		create_app_modal_btn.onclick = () => {
-			create_app_modal.style.display = 'block';
-		};
-
-		window.onclick = (event) => {
-			if (event.target === create_app_modal) {
-				create_app_modal.style.display = 'none';
-			}
-		};
-
-		dismiss_create_app_modal.onclick = (event) => {
-			create_app_modal.style.display = 'none';
-		};
-		create_app_btn.onclick = (event) => {
-			create_app_modal.style.display = 'none';
-		};
-	}, []);
+	const handleSaveClick = () => {
+		setIsModalVisible(true);
+	  };
+	
+	  const handleModalClose = () => {
+		setIsModalVisible(false);
+	  };
+	
+	  const handleSaveChanges = async () => {
+		await saveApp(app);
+		setIsModalVisible(false);
+	  };
 
 	return (
 		<div className="col-1 border-right text-center">
@@ -115,38 +104,17 @@ const Sidebar = ({
 			<button onClick={myfun}>Publish</button>
 			<hr />
 
-			<button id="save-changes">Save</button>
+			<button id="save-changes" onClick={handleSaveClick}>Save</button>
 			<hr />
-			{/* FIXME move it into a new modal component file (SaveModal.js) and render it */}
-			<div className="modal" id="save-changes-modals">
-				<div className="modal-dialog-centered">
-					<div className="modal-content">
-						<div className="card">
-							<div className="form-group save_ur_chnage">
-								<h5>Save Changes</h5>
-								<h5>Would you like to save your changes before proceeding?</h5>
-								<button
-									onClick={() => navigate('/')}
-									className="btn btn-danger "
-									id="dismiss_create_app_modals"
-								>
-									Discard
-								</button>
-								<button
-									onClick={handleSave}
-									className="btn btn-success"
-									id="save-changes-btns"
-								>
-									Save
-								</button>
-								<button className="btn btn-danger " id="save-changes-btn">
-									Cancel
-								</button>
-							</div>
-						</div>
-					</div>
+			<Modal open={isModalVisible} onClose={handleModalClose}>
+				<div className="modal-content">
+				<h5>Save Changes</h5>
+				<h5>Would you like to save your changes before proceeding?</h5>
+				<button onClick={() => navigate('/')} className="btn btn-danger" id="dismiss_create_app_modals">Discard</button>
+				<button onClick={handleSaveChanges} className="btn btn-success" id="save-changes-btns">Save</button>
+				<button onClick={handleModalClose} className="btn btn-danger" id="save-changes-btn">Cancel</button>
 				</div>
-			</div>
+			</Modal>
 		</div>
 	);
 };
