@@ -1,12 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 export default function NavigationBar({ user }) {
 	const [showMenu, setShowMenu] = useState(false);
+  let navigate = useNavigate();
 
 	const toggleMenu = () => {
 		setShowMenu(!showMenu);
 	};
 
+  useEffect(() => {
+    const create_app_modal_btn = document.querySelector("#save-change");
+    const create_app_modal = document.querySelector("#create-app-modal");
+    const dismiss_create_app_modal = document.querySelector(
+      "#dismiss_create_app_modal"
+    );
+    const create_app_btn = document.querySelector("#create-app-btn");
+
+    create_app_modal_btn.onclick = () => {
+      create_app_modal.style.display = "block";
+    };
+
+    window.onclick = (event) => {
+      if (event.target === create_app_modal) {
+        create_app_modal.style.display = "none";
+      }
+    };
+
+    dismiss_create_app_modal.onclick = (event) => {
+      create_app_modal.style.display = "none";
+    };
+    create_app_btn.onclick = (event) => {
+      create_app_modal.style.display = "none";
+    };
+  }, []);
+  
 	return (
 		<div className="card text-right card_one">
 			<h3 id="save-change">S2A</h3>
@@ -38,6 +66,36 @@ export default function NavigationBar({ user }) {
 					</div>
 				)}
 			</span>
+
+      <div className="modal" id="create-app-modal">
+        <div className="modal-dialog-centered">
+          <div className="modal-content">
+            <div className="card">
+              <div className="form-group save_ur_chnage">
+                <h5>Save Changes</h5>
+                <h5>Would you like to save your changes before proceeding?</h5>
+                <button
+                  onClick={() => navigate("/")}
+                  className="btn btn-danger "
+                  id="dismiss_create_app_modal"
+                >
+                  Discard
+                </button>
+                <button
+                  onClick={() => navigate("/")}
+                  className="btn btn-success"
+                  id="create-app-btns"
+                >
+                  Save
+                </button>
+                <button className="btn btn-danger" id="create-app-btn">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 		</div>
 	);
 }

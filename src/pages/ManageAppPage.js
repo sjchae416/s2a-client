@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { actionClearInput } from '../redux/action.js';
 import {
 	NavigationBar,
 	AppConfig,
@@ -27,27 +25,29 @@ export default function ManageAppPage({
 	const [viewType, setViewType] = useState('Table');
 	const [allowedAction, setAllowAction] = useState([]);
 	const [role, setRole] = useState([]);
-	const { selectedViewTable, isViewSelected } = useSelector(
-		(state) => state.app
-	);
 
-	const dispatch = useDispatch();
 	let navigate = useNavigate();
 
-	// FIXME have an appropriate and descriptive function name
-	const myfun = () => {
+	//=============
+	// new state
+	const [viewRole, setViewRole] = useState([]);
+	const [viewDataList, setViewDataList] = useState([]);
+	const [selectedView, setSelectedView] = useState({});
+
+	// FIXME have an appropriate and descriptive function name --- fixed
+	const checkUnsavedData = () => {
 		if (viewName) {
-			if (
-				window.confirm(
-					'You have unsaved changes, Are you sure you want to leave!'
-				) == true
-			) {
-				const create_app_modal = document.querySelector('#create-app-modal');
-				create_app_modal.style.display = 'block';
-			}
+		  if (
+			window.confirm(
+			  "You have unsaved changes, Are you sure you want to leave!"
+			) == true
+		  ) {
+			const create_app_modal = document.querySelector("#create-app-modal");
+			create_app_modal.style.display = "block";
+		  }
 		} else {
-			const create_app_modal = document.querySelector('#create-app-modal');
-			create_app_modal.style.display = 'block';
+		  const create_app_modal = document.querySelector("#create-app-modal");
+		  create_app_modal.style.display = "block";
 		}
 	};
 
@@ -129,7 +129,7 @@ export default function ManageAppPage({
 						<Sidebar
 							setView={setView}
 							viewName={viewName}
-							myfun={myfun}
+							checkUnsavedData={checkUnsavedData} // replaces myfun
 							user={user}
 							setUser={setUser}
 							appIds={appIds}
@@ -140,10 +140,12 @@ export default function ManageAppPage({
 						<div className="col-1 border-right text-center">
 							{view === 4 && (
 								<>
-									<button onClick={() => dispatch(actionClearInput(true))}>
-										Add View
-									</button>
-									<List type="view" />
+                  <button onClick={() => setSelectedView({})}>Add View</button>
+                  <List
+                    type="view"
+                    viewDataList={viewDataList}
+                    setSelectedView={setSelectedView}
+                  />
 								</>
 							)}
 						</div>
@@ -153,6 +155,7 @@ export default function ManageAppPage({
 								<br />
 								{view === 1 ? (
 									<AppConfig
+                    setViewRole={setViewRole}
 										email={user.email}
 										user={user}
 										app={app}
@@ -173,6 +176,11 @@ export default function ManageAppPage({
 										setViewName={setViewName}
 										setUser={setUser}
 										viewIds={viewIds}
+                    // =================
+                    viewRole={viewRole}
+                    setViewDataList={setViewDataList}
+                    selectedView={selectedView}
+                    setSelectedView={setSelectedView}
 									/>
 								) : (
 									''

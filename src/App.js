@@ -67,6 +67,10 @@ const App = () => {
 					userTables
 				);
 				setTables(userTables);
+        
+        if (userTables.length > 0) {
+          window.localStorage.setItem("tables", JSON.stringify(userTables));
+        }
 			} catch (error) {
 				console.error('Error fetching App: ', error);
 			}

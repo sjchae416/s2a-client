@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createApp, updateApp } from '../api/appApi';
 import { updateUser } from '../api/userApi';
@@ -7,15 +6,13 @@ import { updateUser } from '../api/userApi';
 const Sidebar = ({
 	setView,
 	viewName,
-	myfun,
+	checkUnsavedData,
 	user,
 	setUser,
 	appIds,
 	app,
 	setApp,
 }) => {
-	const { isViewSelected } = useSelector((state) => state.app);
-
 	const navigate = useNavigate();
 
 	// FIXME prevent duplicate names being saved from server side and alert error
@@ -94,7 +91,7 @@ const Sidebar = ({
 		<div className="col-1 border-right text-center">
 			<button
 				onClick={() => {
-					if (!isViewSelected && viewName) {
+					if (viewName) {
 						if (
 							window.confirm(
 								'You have unsaved changes, Are you sure you want to leave!'
@@ -112,7 +109,7 @@ const Sidebar = ({
 			<hr />
 			<button onClick={() => setView(4)}>View</button>
 			<hr />
-			<button onClick={myfun}>Publish</button>
+			<button onClick={checkUnsavedData}>Publish</button>
 			<hr />
 
 			<button id="save-changes">Save</button>
