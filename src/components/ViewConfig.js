@@ -229,7 +229,9 @@ export default function ViewConfig({
 
 	async function checkUserEmail( ) {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regular expression for email format
-	  
+		let sheetUrl = testData.url;
+		let sheetIndex = testData.sheetIndex;
+
 		const params = {
 			spreadsheetId: sheetUrl.split('/d/')[1].split('/')[0],
 			range: `${sheetIndex}!${testData.config[1].reference}:${testData.config[1].reference}`,
