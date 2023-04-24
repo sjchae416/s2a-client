@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { DashboardApp } from '../components';
 import apps from '../testData/test-apps.json';
 import { fetchTokenAPI } from '../api/authApi';
+import UserContext from '../UserContext';
 
 export const name = '';
 
 export default function DashboardPage({ 
 	googleUser, 
-	user, 
-	setUser, 
 	isDeveloper,
  }) {
 	const navigate = useNavigate();
+	const { user, setUser } = useContext(UserContext);
+
 
 	const [section, setSection] = useState('all');
 	const [showMenu, setShowMenu] = useState(false);
@@ -37,33 +38,35 @@ export default function DashboardPage({
 		setShowMenu(!showMenu);
 	};
 
-	useEffect(() => {
-		const fetchCurrentUser = async () => {
-			try {
-				const response = await fetch(
-					'http://localhost:3333/auth/authenticated',
-					{
-						credentials: 'include',
-					}
-				);
-				if (response.ok) {
-					const data = await response.json();
-					setUser(data);
-					// setUserUser(data);
+	// const fetchCurrentUser = async () => {
+	// 	console.log("CALLED");
+	// 	try {
+	// 		const response = await fetch(
+	// 			'http://localhost:3333/auth/authenticated',
+	// 			{
+	// 				credentials: 'include',
+	// 			}
+	// 		);
+	// 		if (response.ok) {
+	// 			const data = await response.json();
+	// 			setUser(data);
+	// 			console.log('user', user);
+	// 			// setUserUser(data);
 
-					if (!data) {
-						navigate('/login');
-					}
-				} else {
-					console.error('Error fetching current user: ', response.status);
-				}
-			} catch (err) {
-				console.error(err);
-			}
-		};
+	// 			if (!data) {
+	// 				navigate('/login');
+	// 			}
+	// 		} else {
+	// 			console.error('Error fetching current user: ', response.status);
+	// 		}
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 	}
+	// };
 
-		fetchCurrentUser();
-	}, [navigate]);
+	// useEffect(() => {
+	// 	fetchCurrentUser();
+	// }, []);
 
 	if (!user) {
 		return <h1>Processing Authentication Please Wait ...</h1>;

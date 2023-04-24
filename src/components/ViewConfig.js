@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 // removed redux and installed shortID library for viewID
 import { updateUser } from '../api/userApi';
 import { createView } from '../api/viewApi';
-import shortid from "shortid";
+// import shortid from "shortid";
 
 const testData = {
   name: 'test',
@@ -74,7 +74,7 @@ export default function ViewConfig({
 	const tables = JSON.parse(window.localStorage.getItem("tables"));
 
 	const viewData = {
-	  id: shortid.generate(), //added the shortid library
+	  // id: shortid.generate(), //added the shortid library
 	  viewName: viewName,
 	  selectedColumns: selectedColumns,
 	  viewType: viewType,
