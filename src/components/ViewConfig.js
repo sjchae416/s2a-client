@@ -149,7 +149,16 @@ export default function ViewConfig({
 	};
 
 	const handleCreateView = async () => {
-		await saveView(viewData);
+		//await saveView(viewData);
+		try {
+			checkUserEmail();
+			console.log("here");
+		  } catch (error) {
+			// handle error
+			console.error(error);
+			console.log("here error");
+			return;
+		  }
 	};
 
 	const handleRoleChange = (e) => {
@@ -261,13 +270,6 @@ export default function ViewConfig({
 
 	const updateViewList = (e) => {
 		e.preventDefault();
-		try {
-			checkUserEmail();
-		  } catch (error) {
-			// handle error
-			console.error(error);
-			return;
-		  }
 		dispatch(actionUpdateView(selectedView.id, viewData));
 		formElement.current.reset();
 		setSelectedColumns([]);
@@ -278,32 +280,23 @@ export default function ViewConfig({
 		setRole([]);
 	};
 
-	function checkUserEmail(){
+	async function checkUserEmail( ) {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regular expression for email format
-		const sheetUrl = testData.url;
-		const sheetIndex = testData.sheetIndex;
-
+	  
 		const params = {
-			spreadsheetId: sheetUrl.split('/d/')[1].split('/')[0],
-			range: `${sheetIndex}!${testData.config[1].reference}:${testData.config[1].reference}`,
-			key: process.env.REACT_APP_GOOGLE_API_KEY,
-		  };
-		  const url = `https://sheets.googleapis.com/v4/spreadsheets/${params.spreadsheetId}/values/${encodeURIComponent(params.range)}?key=${params.key}`;
-		  
-		fetch(url)
-			.then(response => response.json())
-			.then(data => {
-			const values = data.values;
-			const emails = values.map(row => row[0]);
-			const invalidEmails = emails.filter(email => !emailRegex.test(email));
-			if (invalidEmails.length > 0) {
-				throw new Error(`Invalid email format in rows: ${invalidEmails.join(', ')}`);
-			}
-			})
-			.catch(error => {
-			console.error(error);
-			throw error;
-		});
+		  spreadsheetId: testData.url.split('/d/')[1].split('/')[0],
+		  range: `${testData.sheetIndex}!${userFilter}:${userFilter}`,
+		  key: process.env.REACT_APP_GOOGLE_API_KEY,
+		};
+
+		const url = `https://sheets.googleapis.com/v4/spreadsheets/${params.spreadsheetId}/values/${encodeURIComponent(params.range)}?key=${params.key}`;
+	  	console.log(url);
+		const response = await fetch(url);
+		const data = await response.json();
+		const values = data.values || [];
+	  
+		const columnValues = values.map(row => row[0]).filter(value => emailRegex.test(value));
+		console.log(columnValues);
 	}
 
 	const deleteViewList = () => {
@@ -319,14 +312,6 @@ export default function ViewConfig({
 
 
 	const handleUserFilterCheckboxChange = (e) => {
-		// const { checked } = e.target;
-		// if (checked) {
-		// 	setUserFilter(user.email);
-		// 	console.log(user.email);
-		// } else {
-		// 	setUserFilter('');
-		// }
-		// console.log(allowedAction);
 		const { checked } = e.target;
 		if (checked) {
 			// Filter config objects where type is bool
@@ -381,6 +366,10 @@ export default function ViewConfig({
 		console.log(name);
 		setFilter(name);
 		console.log(viewData);
+	};
+
+	const handleUserFilterButtonChange = (e, name) => {
+		setUserFilter(name);
 	};
 
 	const handleEditFilterButtonChange = (e, name) => {
@@ -541,7 +530,7 @@ export default function ViewConfig({
 										id={`radio-${config.name}`}
 										name="filterOption"
 										value={config.name}
-										onChange={(e) => handleFilterButtonChange(e, config.name)}
+										onChange={(e) => handleUserFilterButtonChange(e, config.name)}
 									/>
 									<label htmlFor={`radio-${config.name}`}>{config.name}</label>
 								</div>
@@ -619,7 +608,7 @@ export default function ViewConfig({
 					</button>
 					<button
 						// NOTE not implemented yet
-						// onClick={handleCreateView}
+						onClick={handleCreateView}
 						type="submit"
 						className="btn btn-info"
 					>

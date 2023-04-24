@@ -6,22 +6,18 @@ import Button from '@mui/material/Button';
 import DetailView from "./DetailView";
 
 
-export default function TableView({app}) {
+export default function TableView({view}) {
   let name, table, col, type, allowedActions, role;
   let viewFilter = "", userFilter = "";
-  for(let i = 0; i < app.length; i++){
-    if(app[i].viewType == 'Table'){
-      name = app[i].name;
-      table = app[i].table;
-      col = app[i].columns;
-      type = app[i].viewType;
-      allowedActions = app[i].allowedActions;
-      role = app[i].roles;
+    name = view.name;
+    table = view.table;
+    col = view.columns;
+    type = view.viewType;
+    allowedActions = view.allowedActions;
+    role = view.roles;
 
-      if(app[i].filter != "") viewFilter = app[i].filter;
-      if(app[i].userFilter != "") userFilter = app[i].userFilter;
-    }
-  }
+    if(view.filter != "") viewFilter = view.filter;
+    if(view.userFilter != "") userFilter = view.userFilter;
 
   const [open, setOpen] = useState(false);
   const [openDelete, setDeleteOpen] = useState(false);
@@ -166,7 +162,7 @@ export default function TableView({app}) {
       </table>
       {type === 'Detail' && selectedRow && (
         <Modal open={true} onClose={() => setSelectedRow(null)}>
-          <DetailView row={selectedRow} app={app} />
+          <DetailView row={selectedRow} views={view} />
         </Modal>
       )}
       <Modal open={open} onClose={handleClose}>
