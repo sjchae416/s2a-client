@@ -4,7 +4,13 @@ import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionClearInput } from '../redux/action.js';
-import {NavigationBar, AppConfig, Sidebar, List, ViewConfig} from '../components';
+import {
+	NavigationBar,
+	AppConfig,
+	Sidebar,
+	List,
+	ViewConfig,
+} from '../components';
 
 export default function ManageAppPage({
 	user,
@@ -23,7 +29,7 @@ export default function ManageAppPage({
 	const [role, setRole] = useState([]);
 	const { selectedViewTable, isViewSelected } = useSelector(
 		(state) => state.app
-	  );
+	);
 
 	const dispatch = useDispatch();
 	let navigate = useNavigate();
@@ -132,15 +138,13 @@ export default function ManageAppPage({
 						/>
 
 						<div className="col-1 border-right text-center">
-							{view === 4 ? (
+							{view === 4 && (
 								<>
 									<button onClick={() => dispatch(actionClearInput(true))}>
 										Add View
 									</button>
 									<List type="view" />
 								</>
-							) : (
-								''
 							)}
 						</div>
 
@@ -190,7 +194,7 @@ export default function ManageAppPage({
 										Would you like to save your changes before proceeding?
 									</h5>
 									<button
-										onClick={() => navigate("/")}
+										onClick={() => navigate('/')}
 										className="btn btn-danger "
 										id="dismiss_create_app_modals"
 									>

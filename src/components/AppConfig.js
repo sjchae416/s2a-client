@@ -3,7 +3,7 @@ import { loadTable } from '../api/tableApi';
 import { useDispatch } from 'react-redux';
 import { actionSetRole } from '../redux/action';
 
-export default function AppConfig ({ email, user, app, setApp }){
+export default function AppConfig({ email, user, app, setApp }) {
 	const [name, setName] = useState('');
 	// const [creator, setCreator] = useState(email);
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
@@ -11,6 +11,15 @@ export default function AppConfig ({ email, user, app, setApp }){
 	const [roleData, setRoleData] = useState([]);
 	const roleKey = roleData.length > 0 ? roleData[0] : [];
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		appData.name = name;
+		appData.roleMembershipSheet = roleMembershipSheet;
+	}, [name, roleMembershipSheet]);
+
+	useEffect(() => {
+		console.log(app);
+	}, [app]);
 
 	const now = new Date();
 	const nycTimeString = now.toLocaleString('en-US', {
@@ -32,10 +41,6 @@ export default function AppConfig ({ email, user, app, setApp }){
 
 	const handleSaveURL = (url) => {
 		setRoleMembershipSheet(url);
-	};
-
-	const handleAddApp = () => {
-		setApp(appData);
 	};
 
 	// FN create and fill in App document & and load Table data
@@ -65,20 +70,10 @@ export default function AppConfig ({ email, user, app, setApp }){
 		setShowTable(true);
 	};
 
-	useEffect(() => {
-		appData.name = name;
-		appData.roleMembershipSheet = roleMembershipSheet;
-	}, [name, roleMembershipSheet]);
-
-	// useEffect(() => {
-	// 	if (user) {
-	// 		setCreator(user.email);
-	// 	}
-	// }, [user]);
-
-	useEffect(() => {
-		console.log(app);
-	}, [app]);
+	const handleLoad = () => {
+		loadRoleTable();
+		setApp(appData);
+	};
 
 	return (
 		<div
@@ -98,6 +93,7 @@ export default function AppConfig ({ email, user, app, setApp }){
 				<input
 					required
 					type="text"
+					value={name}
 					className="form-control"
 					onChange={(e) => handleSaveAppName(e.target.value)}
 				/>
@@ -113,15 +109,14 @@ export default function AppConfig ({ email, user, app, setApp }){
 				/>
 			</div>
 			<div className="text-right">
-				<button onClick={loadRoleTable} className="btn btn-info">
+				<button onClick={handleLoad} className="btn btn-info">
 					Load
 				</button>
-				<button onClick={handleAddApp}>Add App Test BTN</button>
 			</div>
 
 			<br />
 			<br />
-			{showTable ? (
+			{showTable && (
 				<table>
 					<thead>
 						<tr>
@@ -155,12 +150,10 @@ export default function AppConfig ({ email, user, app, setApp }){
 						)}
 					</tbody>
 				</table>
-			) : (
-				''
 			)}
 
 			<br />
 			<br />
 		</div>
 	);
-};
+}
