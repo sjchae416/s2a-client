@@ -219,7 +219,7 @@ export default function ManageAppPage({
 								<div className="form-group save_ur_chnage">
 									<h5>
 										Would you like to publish your app? <br /> If not, it will
-										be saved under in development and will not be availble to
+										be saved under in development and will not be available to
 										users.
 									</h5>
 									<button
