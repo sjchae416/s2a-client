@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { loadTable } from '../api/tableApi';
-import { useDispatch } from 'react-redux';
-import { actionSetRole } from '../redux/action';
 
-export default function AppConfig ({ email, user, app, setApp }){
+export default function AppConfig ({ email, user, app, setApp, setViewRole }){
 	const [name, setName] = useState('');
 	// const [creator, setCreator] = useState(email);
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
 	const [showTable, setShowTable] = useState(false);
 	const [roleData, setRoleData] = useState([]);
 	const roleKey = roleData.length > 0 ? roleData[0] : [];
-	const dispatch = useDispatch();
 
 	const now = new Date();
 	const nycTimeString = now.toLocaleString('en-US', {
@@ -48,9 +45,7 @@ export default function AppConfig ({ email, user, app, setApp }){
 			};
 			const dataArray = await loadTable(tableData);
 			if (dataArray) {
-				// console.log(dataArray);
-				dispatch(actionSetRole(dataArray));
-				console.log(dataArray);
+				setViewRole(dataArray);
 				setRoleData(dataArray);
 			} else {
 				alert(
@@ -116,7 +111,7 @@ export default function AppConfig ({ email, user, app, setApp }){
 				<button onClick={loadRoleTable} className="btn btn-info">
 					Load
 				</button>
-				<button onClick={handleAddApp}>Add App Test BTN</button>
+				<button onClick={handleAddApp}>Add App Test BTN</button>*
 			</div>
 
 			<br />
