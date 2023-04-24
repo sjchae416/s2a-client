@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 
-const DetailView = ({row, views}) => {
+const DetailView = ({row, views, onSelectedRowChange}) => {
   let name, table, col, type, allowedActions, role;
   let editFilter = "", editableCols = [];
   for(let i = 0; i < views.length; i++){
@@ -17,8 +17,6 @@ const DetailView = ({row, views}) => {
 
       if(views[i].editFilter != "") editFilter = views[i].editFilter;
       if(views[i].editableCols != []) editableCols = views[i].editableCols;
-
-      console.log(type);
     }
   }
 
@@ -40,6 +38,7 @@ const DetailView = ({row, views}) => {
     const updatedRow = { ...editingRow, ...editingFields };
     console.log(updatedRow); // TODO: send updated row to server
     setEditingRow(updatedRow);
+    onSelectedRowChange(updatedRow);
     setIsEditing(false);
   };
 
@@ -69,8 +68,13 @@ const DetailView = ({row, views}) => {
     // TODO: handle delete row
     console.log("Row to delete:", rowToDelete);
     setOpenDelete(false);
+    onSelectedRowChange(null);
 
   };
+
+  const handleClose = () =>{
+    onSelectedRowChange(null);
+  }
 
 
   return (
@@ -141,6 +145,7 @@ const DetailView = ({row, views}) => {
         <Button variant="contained" onClick={handleSaveClick}>Save</Button>
       </div>
     )}
+    <Button onClick={handleClose}>Close</Button>
   </div>
     
   );

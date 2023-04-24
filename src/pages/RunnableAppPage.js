@@ -102,7 +102,7 @@ const view2 = {
 	},
 	columns: ['Name', 'Email','Class', 'Grade'],
 	viewType: 'Detail',
-	allowedActions: ['Edit Record'],
+	allowedActions: ['Edit Record', 'Delete Record'],
 	roles: ['Developer'],
 	filter: '',
 	userFilter: '',
@@ -185,7 +185,7 @@ export default function RunnableAppPage({ user }) {
 					<TableViewSidebar views={views} onSelectView={handleSelectView} />
 				</div>
 				<div className="main-container">
-					{selectedView && <TableView view={selectedView} />}
+					{selectedView && <TableView view={selectedView} listViews = {views}/>}
 				</div>
 			</div>
 		</div>
