@@ -227,11 +227,9 @@ export default function ViewConfig({
 		  }
 	};
 
-	function checkUserEmail(){
+	async function checkUserEmail( ) {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regular expression for email format
-		const sheetUrl = testData.url;
-		const sheetIndex = testData.sheetIndex;
-
+	  
 		const params = {
 			spreadsheetId: sheetUrl.split('/d/')[1].split('/')[0],
 			range: `${sheetIndex}!${testData.config[1].reference}:${testData.config[1].reference}`,
@@ -270,14 +268,6 @@ export default function ViewConfig({
 		setSelectedTable(e.target.value);
 		const res = tables.find((item) => item?._id === e.target.value)?.columns;
 		setColumns(res);
-	};
-
-  const handleFilterButtonChange = (e, name) => {
-		setFilter(name);
-	};
-
-	const handleEditFilterButtonChange = (e, name) => {
-		setEditFilter(name);
 	};
 
   const handleEditCheckboxChange = (e, column) => {
@@ -339,6 +329,33 @@ export default function ViewConfig({
 			setEditFilter('');
 			//console.log(viewData);
 		}
+	};
+
+	const handleFilterButtonChange = (e, name) => {
+		console.log(name);
+		setFilter(name);
+		console.log(viewData);
+	};
+
+	const handleUserFilterButtonChange = (e, name) => {
+		setUserFilter(name);
+	};
+
+	const handleEditFilterButtonChange = (e, name) => {
+		console.log(name);
+		setEditFilter(name);
+		console.log(viewData);
+	};
+
+	const handleTableView = (e) => {
+		setViewType(e.target.value);
+		setEditFilter('');
+	};
+
+	const handleDetailView = (e) => {
+		setViewType(e.target.value);
+		setFilter('');
+		setUserFilter('');
 	};
 
   return (

@@ -3,22 +3,20 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 
-const DetailView = ({row, app}) => {
+const DetailView = ({row, views, onSelectedRowChange}) => {
   let name, table, col, type, allowedActions, role;
   let editFilter = "", editableCols = [];
-  for(let i = 0; i < app.length; i++){
-    if(app[i].viewType == 'Detail'){
-      name = app[i].name;
-      table = app[i].table;
-      col = app[i].columns;
-      type = app[i].viewType;
-      allowedActions = app[i].allowedActions;
-      role = app[i].roles;
+  for(let i = 0; i < views.length; i++){
+    if(views[i].viewType == 'Detail'){
+      name = views[i].name;
+      table = views[i].table;
+      col = views[i].columns;
+      type = views[i].viewType;
+      allowedActions = views[i].allowedActions;
+      role = views[i].roles;
 
-      if(app[i].editFilter != "") editFilter = app[i].editFilter;
-      if(app[i].editableCols != []) editableCols = app[i].editableCols;
-
-      console.log(type);
+      if(views[i].editFilter != "") editFilter = views[i].editFilter;
+      if(views[i].editableCols != []) editableCols = views[i].editableCols;
     }
   }
 
@@ -40,6 +38,7 @@ const DetailView = ({row, app}) => {
     const updatedRow = { ...editingRow, ...editingFields };
     console.log(updatedRow); // TODO: send updated row to server
     setEditingRow(updatedRow);
+    onSelectedRowChange(updatedRow);
     setIsEditing(false);
   };
 
@@ -69,13 +68,18 @@ const DetailView = ({row, app}) => {
     // TODO: handle delete row
     console.log("Row to delete:", rowToDelete);
     setOpenDelete(false);
+    onSelectedRowChange(null);
 
   };
+
+  const handleClose = () =>{
+    onSelectedRowChange(null);
+  }
 
 
   return (
     <div style={{ backgroundColor: "white", padding: "20px", position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-    {!openDelete && <h3>{app.name}</h3>}
+    {!openDelete && <h3>{views.name}</h3>}
     {!openDelete && !isEditing && <Button variant="contained" disabled={!allowedActions.includes('Edit Record') || disableEditButton} onClick={handleEditClick}>Edit Record</Button>}
     {!openDelete &&!isEditing && (
       <Button
@@ -141,6 +145,7 @@ const DetailView = ({row, app}) => {
         <Button variant="contained" onClick={handleSaveClick}>Save</Button>
       </div>
     )}
+    <Button onClick={handleClose}>Close</Button>
   </div>
     
   );

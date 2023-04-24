@@ -29,7 +29,6 @@ export default function AppConfig ({ email, user, app, setApp, setViewRole }){
 		roleMembershipSheet: roleMembershipSheet,
 		createdAt: nycTimeString,
 		lastModifiedDate: nycTimeString,
-		// lastOpenedDate: new Date().toISOString(),
 	};
 
 	const handleSaveAppName = (name) => {
@@ -111,45 +110,51 @@ export default function AppConfig ({ email, user, app, setApp, setViewRole }){
 				<button onClick={handleLoad} className="btn btn-info">
 					Load
 				</button>
-				<button onClick={handleAddApp}>Add App Test BTN</button>*
 			</div>
 
 			<br />
 			<br />
 			{showTable && (
-				<table>
-					<thead>
-						<tr>
-							{roleKey.map(
+				<div>
+					<table>
+						<thead>
+							<tr>
+								{roleKey.map(
+									(
+										header,
+										index // Loop through the roleKey array and get the header and index
+									) => (
+										<th key={index}>{header}</th> // Use the index as the key for the header
+									)
+								)}
+							</tr>
+						</thead>
+						<tbody>
+							{roleData.slice(1).map(
 								(
-									header,
-									index // Loop through the roleKey array and get the header and index
+									rowData,
+									rowIndex // Use slice(1) to exclude the first row (header)
 								) => (
-									<th key={index}>{header}</th> // Use the index as the key for the header
+									<tr key={rowIndex}>
+										{rowData.map(
+											(
+												value,
+												colIndex // Loop through each row and get the value and colIndex
+											) => (
+												<td key={colIndex}>{value}</td> // Use the colIndex as the key for the cell
+											)
+										)}
+									</tr>
 								)
 							)}
-						</tr>
-					</thead>
-					<tbody>
-						{roleData.slice(1).map(
-							(
-								rowData,
-								rowIndex // Use slice(1) to exclude the first row (header)
-							) => (
-								<tr key={rowIndex}>
-									{rowData.map(
-										(
-											value,
-											colIndex // Loop through each row and get the value and colIndex
-										) => (
-											<td key={colIndex}>{value}</td> // Use the colIndex as the key for the cell
-										)
-									)}
-								</tr>
-							)
-						)}
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+					<br/>
+					<div className = "text-right">
+						<button className="btn btn-info" onClick={handleAddApp}> Add App</button>
+					</div>
+					
+				</div>
 			)}
 
 			<br />

@@ -6,22 +6,18 @@ import Button from '@mui/material/Button';
 import DetailView from "./DetailView";
 
 
-export default function TableView({app}) {
+export default function TableView({view, listViews}) {
   let name, table, col, type, allowedActions, role;
   let viewFilter = "", userFilter = "";
-  for(let i = 0; i < app.length; i++){
-    if(app[i].viewType == 'Table'){
-      name = app[i].name;
-      table = app[i].table;
-      col = app[i].columns;
-      type = app[i].viewType;
-      allowedActions = app[i].allowedActions;
-      role = app[i].roles;
+  name = view.name;
+  table = view.table;
+  col = view.columns;
+  type = view.viewType;
+  allowedActions = view.allowedActions;
+  role = view.roles;
 
-      if(app[i].filter != "") viewFilter = app[i].filter;
-      if(app[i].userFilter != "") userFilter = app[i].userFilter;
-    }
-  }
+  if(view.filter != "") viewFilter = view.filter;
+  if(view.userFilter != "") userFilter = view.userFilter;
 
   const [open, setOpen] = useState(false);
   const [openDelete, setDeleteOpen] = useState(false);
@@ -144,6 +140,7 @@ export default function TableView({app}) {
       <Button variant="contained" onClick={handleOpen} disabled={!allowedActions.includes('Add Record') ? true : false}>Add Record</Button>
       <Button variant="contained" onClick={handleDeleteClick} disabled={!allowedActions.includes('Delete Record') ? true : false}>Delete Record</Button>
       <br/>
+      <br/>
       <table>
         <thead>
           <tr>
@@ -155,7 +152,7 @@ export default function TableView({app}) {
         </thead>
         <tbody>
           {filteredTest.map((row) => (
-            <tr key={row.Name} onClick={() => type === 'Detail' && handleRowClick(row)}>
+            <tr key={row.Name} onClick={() => handleRowClick(row)}>
               {col.map((column) => (
                 <td key={column}>{row[column]}</td>
               ))}
@@ -164,9 +161,9 @@ export default function TableView({app}) {
           ))}
         </tbody>
       </table>
-      {type === 'Detail' && selectedRow && (
+      {selectedRow && (
         <Modal open={true} onClose={() => setSelectedRow(null)}>
-          <DetailView row={selectedRow} app={app} />
+          <DetailView row={selectedRow} views={listViews} onSelectedRowChange={setSelectedRow}/>
         </Modal>
       )}
       <Modal open={open} onClose={handleClose}>
