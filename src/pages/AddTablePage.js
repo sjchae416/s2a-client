@@ -42,7 +42,6 @@ export default function AddTablePage({
 		<div>
 			<br />
 			<br />
-			{/* FIXME use NavigationBar Component! */}
 			<div className="container">
 				<NavigationBar user={user} />
 				<br />

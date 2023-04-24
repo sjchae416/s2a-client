@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { DashboardApp } from '../components';
+import { DashboardApp, NavigationBar } from '../components';
 import apps from '../testData/test-apps.json';
 import { fetchTokenAPI } from '../api/authApi';
 
@@ -69,23 +69,7 @@ export default function DashboardPage({ googleUser, user, setUser, isDeveloper }
 			<br />
 			<br />
 			<div className="container">
-				{/* FIXME REPLACE WITH NAVIGATIONVAR COMPONENT! */}
-				<div className="card card_one">
-					<Link to="/">
-						<h3>{user.email}'s S2A</h3>
-					</Link>
-					<span className="profile-letter ml-auto" onClick={toggleMenu}>
-						{user.email && user.email.charAt(0).toUpperCase()}
-					</span>
-					{showMenu && (
-						<div className="dropdown-menu">
-							<button className="btn-logout-dropdown">
-								<a href="http://localhost:3333/auth/logout">Log Out</a>
-							</button>
-						</div>
-					)}
-				</div>
-
+				<NavigationBar user = {user}/>
 				<br />
 
 				<div className="card">
