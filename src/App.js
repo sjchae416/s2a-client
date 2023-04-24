@@ -220,8 +220,6 @@ const App = () => {
 							/>
 						}
 					/> */}
-					{/* FIXME use conditional rendering, not path routing, for TableView in RunnableAppPage */}
-					<Route path="/table-view" element={<TableView />} />
 					<Route
 						path="/runnable-appIds/:name"
 						element={<RunnableAppPage user={user} />}
