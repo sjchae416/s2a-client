@@ -9,7 +9,7 @@ const testData = {
   name: "test",
   url: "https://docs.google.com/spreadsheets/d/1yHt-_Pbu52TJW3znWxo9VlHnHOQaFVvRMTpkrWYtM_s/edit#gid=1530492309",
   sheetIndex: "Sheet1",
-  config: [
+  columns: [
     {
       name: "Name",
       key: "true",
@@ -289,8 +289,8 @@ export default function ViewConfig({
     const { checked } = e.target;
     if (checked) {
       // Filter config objects where type is bool
-      const textConfigs = testData.config.filter(
-        (config) => config.type === "string"
+      const textConfigs = testData.columns.filter(
+        (columns) => columns.type === "string"
       );
       // Set the filtered bool configs to state
       setTextConfigs(textConfigs);
@@ -306,8 +306,8 @@ export default function ViewConfig({
     const { checked } = e.target;
     if (checked) {
       // Filter config objects where type is bool
-      const boolConfigs = testData.config.filter(
-        (config) => config.type === "bool"
+      const boolConfigs = testData.columns.filter(
+        (columns) => columns.type === "bool"
       );
       // Set the filtered bool configs to state
       setBoolConfigs(boolConfigs);
@@ -322,8 +322,8 @@ export default function ViewConfig({
     const { checked } = e.target;
     if (checked) {
       // Filter config objects where type is bool
-      const boolConfigs = testData.config.filter(
-        (config) => config.type === "bool"
+      const boolConfigs = testData.columns.filter(
+        (columns) => columns.type === "bool"
       );
       // Set the filtered bool configs to state
       setBoolConfigs(boolConfigs);
@@ -491,16 +491,16 @@ export default function ViewConfig({
                 onChange={(e) => handleFilterCheckboxChange(e)}
               />
               <label htmlFor="checkbox-filter">Filter</label>
-              {boolConfigs.map((config) => (
-                <div key={config.name}>
+              {boolConfigs.map((columns) => (
+                <div key={columns.name}>
                   <input
                     type="radio"
-                    id={`radio-${config.name}`}
+                    id={`radio-${columns.name}`}
                     name="filterOption"
-                    value={config.name}
-                    onChange={(e) => handleFilterButtonChange(e, config.name)}
+                    value={columns.name}
+                    onChange={(e) => handleFilterButtonChange(e, columns.name)}
                   />
-                  <label htmlFor={`radio-${config.name}`}>{config.name}</label>
+                  <label htmlFor={`radio-${columns.name}`}>{columns.name}</label>
                 </div>
               ))}
             </div>
@@ -512,16 +512,16 @@ export default function ViewConfig({
                 onChange={(e) => handleUserFilterCheckboxChange(e)}
               />
               <label htmlFor="checkbox-user-filter">User Filter</label>
-              {textConfigs.map((config) => (
-                <div key={config.name}>
+              {textConfigs.map((columns) => (
+                <div key={columns.name}>
                   <input
                     type="radio"
-                    id={`radio-${config.name}`}
+                    id={`radio-${columns.name}`}
                     name="filterOption"
-                    value={config.name}
-                    onChange={(e) => handleFilterButtonChange(e, config.name)}
+                    value={columns.name}
+                    onChange={(e) => handleFilterButtonChange(e, columns.name)}
                   />
-                  <label htmlFor={`radio-${config.name}`}>{config.name}</label>
+                  <label htmlFor={`radio-${columns.name}`}>{columns.name}</label>
                 </div>
               ))}
             </div>
@@ -535,16 +535,16 @@ export default function ViewConfig({
               onChange={(e) => handleEditFilterCheckboxChange(e)}
             />
             <label htmlFor="checkbox-edit-filter">Edit Filter</label>
-            {boolConfigs.map((config) => (
-              <div key={config.name}>
+            {boolConfigs.map((columns) => (
+              <div key={columns.name}>
                 <input
                   type="radio"
-                  id={`radio-${config.name}`}
+                  id={`radio-${columns.name}`}
                   name="filterOption"
-                  value={config.name}
-                  onChange={(e) => handleEditFilterButtonChange(e, config.name)}
+                  value={columns.name}
+                  onChange={(e) => handleEditFilterButtonChange(e, columns.name)}
                 />
-                <label htmlFor={`radio-${config.name}`}>{config.name}</label>
+                <label htmlFor={`radio-${columns.name}`}>{columns.name}</label>
               </div>
             ))}
             <div className="form-group">
