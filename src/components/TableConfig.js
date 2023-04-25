@@ -6,8 +6,8 @@ export default function TableConfig({
 	user,
 	setUser,
 	tableIds,
+	tables,
 	setTables,
-	fetchTables,
 	selectedTable,
 	addTable,
 }) {
@@ -20,16 +20,16 @@ export default function TableConfig({
 	const [config, setConfig] = useState([]);
 	const [keys, setKeys] = useState([]);
 
-	const tables = JSON.parse(window.localStorage.getItem("tables"));
+	// const tables = JSON.parse(window.localStorage.getItem("tables"));
 
 	useEffect(() => {
 		if (selectedTable.name) {
-		  setName(selectedTable.name);
-		  setUrl(selectedTable.url);
-		  setSheetIndex(selectedTable.sheetIndex);
+			setName(selectedTable.name);
+			setUrl(selectedTable.url);
+			setSheetIndex(selectedTable.sheetIndex);
 		}
 	}, [selectedTable.name]);
-	
+
 	const clearForms = () => {
 		setSheetIndex('');
 		setName('');
@@ -46,21 +46,21 @@ export default function TableConfig({
 
 	const isTypeColumnValid = () => {
 		for (let i = 0; i < config.length; i++) {
-      if (!config[i].type || config[i].type === "") {
-        return false;
-      }
-    }
-    return true;
-  };
+			if (!config[i].type || config[i].type === '') {
+				return false;
+			}
+		}
+		return true;
+	};
 
 	const isNameUnique = () => {
 		for (let i = 0; i < tables.length; i++) {
-      if (tables[i]?.name === name) {
-        return false;
-      }
-    }
-    return true;
-  };
+			if (tables[i]?.name === name) {
+				return false;
+			}
+		}
+		return true;
+	};
 
 	const tableData = {
 		name: name,
@@ -75,9 +75,9 @@ export default function TableConfig({
 
 	useEffect(() => {
 		if (tableDataArray.length > 0) {
-      setKeys(tableDataArray[0]);
-    }
-  }, [tableDataArray]);
+			setKeys(tableDataArray[0]);
+		}
+	}, [tableDataArray]);
 
 	useEffect(() => {
 		tableData.name = name;
@@ -88,24 +88,24 @@ export default function TableConfig({
 
 	// Comment this out for table to load on first click, but it will not check for config consistency on first click.
 	useEffect(() => {
-    if (config.length > 0) {
-      setShowTable(true);
-    }
-  }, [config]);
+		if (config.length > 0) {
+			setShowTable(true);
+		}
+	}, [config]);
 
-  useEffect(() => {
-    if (keys.length > 0) {
-      setConfig(
-        keys.map((key) => ({
-          name: key,
-          key: false,
-          label: false,
-          reference: "false",
-          type: "",
-        }))
-      );
-    }
-  }, [keys]);
+	useEffect(() => {
+		if (keys.length > 0) {
+			setConfig(
+				keys.map((key) => ({
+					name: key,
+					key: false,
+					label: false,
+					reference: 'false',
+					type: '',
+				}))
+			);
+		}
+	}, [keys]);
 
 	const handleLoad = async () => {
 		if (tableData.name && tableData.url && tableData.sheetIndex) {
@@ -162,51 +162,50 @@ export default function TableConfig({
 
 		setUser(updatedUser);
 		clearForms();
-		fetchTables();
 	};
 
 	const handleInputChange = (event, key, field) => {
-    const { value, type, checked } = event.target;
-    setConfig((prevConfig) => {
-      const updatedConfig = [...prevConfig];
-      const configIndex = updatedConfig.findIndex((item) => item.name === key); // Find index of config object with the same name as key
-      if (configIndex !== -1) {
-        // If config already exists, update the field value
-        if (type === "radio") {
-          // If radio button is clicked, update field value based on checked status
-          updatedConfig[configIndex][field] = checked;
+		const { value, type, checked } = event.target;
+		setConfig((prevConfig) => {
+			const updatedConfig = [...prevConfig];
+			const configIndex = updatedConfig.findIndex((item) => item.name === key); // Find index of config object with the same name as key
+			if (configIndex !== -1) {
+				// If config already exists, update the field value
+				if (type === 'radio') {
+					// If radio button is clicked, update field value based on checked status
+					updatedConfig[configIndex][field] = checked;
 
-          if (field === "label" || field === "key") {
-            updatedConfig.forEach((item) => {
-              if (item.name !== key) {
-                item[field] = false;
-              }
-            });
-          }
-        } else {
-          // If not a radio button, update field value directly
-          updatedConfig[configIndex][field] = value;
-        }
-      } else {
-        // If config does not exist, create a new config object
-        const newConfig = {
-          name: "",
-          key: false,
-          label: false,
-          reference: "false",
-          type: "",
-        };
-        newConfig.name = key;
-        if (field === "label" || field === "key") {
-          newConfig[field] = type === "radio" ? checked : value === "true";
-        } else {
-          newConfig[field] = value;
-        }
-        updatedConfig.push(newConfig);
-      }
-      return updatedConfig;
-    });
-  };
+					if (field === 'label' || field === 'key') {
+						updatedConfig.forEach((item) => {
+							if (item.name !== key) {
+								item[field] = false;
+							}
+						});
+					}
+				} else {
+					// If not a radio button, update field value directly
+					updatedConfig[configIndex][field] = value;
+				}
+			} else {
+				// If config does not exist, create a new config object
+				const newConfig = {
+					name: '',
+					key: false,
+					label: false,
+					reference: 'false',
+					type: '',
+				};
+				newConfig.name = key;
+				if (field === 'label' || field === 'key') {
+					newConfig[field] = type === 'radio' ? checked : value === 'true';
+				} else {
+					newConfig[field] = value;
+				}
+				updatedConfig.push(newConfig);
+			}
+			return updatedConfig;
+		});
+	};
 
 	const handleCancelClick = () => {
 		setName('');

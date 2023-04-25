@@ -18,7 +18,6 @@ const Sidebar = ({
 
 	const navigate = useNavigate();
 
-	// FIXME prevent duplicate names being saved from server side and alert error
 	const saveApp = async (app) => {
 		// const saveApp = async (app, appId) => {
 		try {
@@ -34,23 +33,20 @@ const Sidebar = ({
 			// } else {
 
 			const newApp = await createApp(app);
-			// REVIEW newApp error handled in the createApp(); returns newApp or error
-			// if (newApp) {
 			var newAppIds = [];
+
 			if (appIds) {
 				newAppIds = [...appIds, newApp._id];
 			} else {
 				newAppIds = [newApp._id];
 			}
+
 			const update = { apps: newAppIds };
 			const updatedUser = await updateUser(user._id, update);
 
 			setApp(null);
 			setUser(updatedUser);
 			navigate('/');
-
-			// }
-			// }
 		} catch (error) {
 			window.alert(error);
 			// TODO RIYA
@@ -59,23 +55,19 @@ const Sidebar = ({
 		}
 	};
 
-	const handleSave = async () => {
-		await saveApp(app);
-		// await saveApp(app, appId);
-	};
-
 	const handleSaveClick = () => {
 		setIsModalVisible(true);
-	  };
-	
-	  const handleModalClose = () => {
+	};
+
+	const handleModalClose = () => {
 		setIsModalVisible(false);
-	  };
-	
-	  const handleSaveChanges = async () => {
+	};
+
+	const handleSaveChanges = async () => {
 		await saveApp(app);
+		// await saveApp(app, appId);
 		setIsModalVisible(false);
-	  };
+	};
 
 	return (
 		<div className="col-1 border-right text-center">
@@ -102,15 +94,35 @@ const Sidebar = ({
 			<button onClick={checkUnsavedData}>Publish</button>
 			<hr />
 
-			<button id="save-changes" onClick={handleSaveClick}>Save</button>
+			<button id="save-changes" onClick={handleSaveClick}>
+				Save
+			</button>
 			<hr />
 			<Modal open={isModalVisible} onClose={handleModalClose}>
 				<div className="modal-content">
-				<h5>Save Changes</h5>
-				<h5>Would you like to save your changes before proceeding?</h5>
-				<button onClick={() => navigate('/')} className="btn btn-danger" id="dismiss_create_app_modals">Discard</button>
-				<button onClick={handleSaveChanges} className="btn btn-success" id="save-changes-btns">Save</button>
-				<button onClick={handleModalClose} className="btn btn-danger" id="save-changes-btn">Cancel</button>
+					<h5>Save Changes</h5>
+					<h5>Would you like to save your changes before proceeding?</h5>
+					<button
+						onClick={() => navigate('/')}
+						className="btn btn-danger"
+						id="dismiss_create_app_modals"
+					>
+						Discard
+					</button>
+					<button
+						onClick={handleSaveChanges}
+						className="btn btn-success"
+						id="save-changes-btns"
+					>
+						Save
+					</button>
+					<button
+						onClick={handleModalClose}
+						className="btn btn-danger"
+						id="save-changes-btn"
+					>
+						Cancel
+					</button>
 				</div>
 			</Modal>
 		</div>

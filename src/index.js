@@ -1,10 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import { UserProvider } from "./UserContext";
-
-
-// NOTE try not to modify or log in index.js other than the default codes
+import { UserProvider } from './UserContext';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
