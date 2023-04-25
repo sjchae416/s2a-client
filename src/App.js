@@ -12,13 +12,11 @@ import {
 	AdminPage,
 	RunnableAppPage,
 } from './pages';
-import { TableView } from './components';
 import { getAppById, readTable, readView, loadTable } from './api';
 
 export const customHistory = createBrowserHistory();
 
 const App = () => {
-	// const [user, setUser] = useState({});
 	const { user, setUser } = useContext(UserContext);
 	const [appIds, setAppIds] = useState([]);
 	const [tableIds, setTableIds] = useState([]);
@@ -152,7 +150,7 @@ const App = () => {
 
 	// NOTE USERS
 	const fetchCurrentUser = async () => {
-		console.log('CALLED');
+		// console.log('CALLED');
 		try {
 			const response = await fetch('http://localhost:3333/auth/authenticated', {
 				credentials: 'include',
@@ -175,11 +173,6 @@ const App = () => {
 	};
 
 	useEffect(() => {
-		fetchCurrentUser();
-	}, []);
-
-	
-	useEffect(() => {
 		if (user !== null) {
 			checkGlobalTable();
 			loadAppIds(user);
@@ -187,6 +180,10 @@ const App = () => {
 			loadViewIds(user);
 		}
 	}, [user]);
+
+	useEffect(() => {
+		fetchCurrentUser();
+	}, []);
 
 	return (
 		<div>
@@ -207,7 +204,6 @@ const App = () => {
 								// user={user}
 								// setUser={setUser}
 								appIds={appIds}
-								setAppIds={setAppIds}
 								app={app}
 								tables={tables}
 								setApp={setApp}

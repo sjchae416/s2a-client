@@ -28,16 +28,12 @@ export default function ManageAppPage({
 	const [viewType, setViewType] = useState('Table');
 	const [allowedAction, setAllowAction] = useState([]);
 	const [role, setRole] = useState([]);
-
-	let navigate = useNavigate();
-
-	//=============
-	// new state
 	const [viewRole, setViewRole] = useState([]);
 	const [viewDataList, setViewDataList] = useState([]);
 	const [selectedView, setSelectedView] = useState({});
 
-	// FIXME have an appropriate and descriptive function name --- fixed
+	let navigate = useNavigate();
+
 	const checkUnsavedData = () => {
 		if (viewName) {
 			if (
