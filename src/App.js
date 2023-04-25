@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 import { createBrowserHistory } from 'history';
 import UserContext from './UserContext';
@@ -193,13 +193,8 @@ const App = () => {
 					<Route
 						exact
 						path="/"
-						element={
-							<DashboardPage
-								// user={user}
-								// setUser={setUser}
-								isDeveloper={isDeveloper}
-							/>
-						}
+						element={ user ? <DashboardPage isDeveloper={isDeveloper}/> : <LoginPage /> }
+		
 					/>
 					<Route path="/login" element={<LoginPage />} />
 					<Route
