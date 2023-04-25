@@ -39,17 +39,17 @@ export default function ManageAppPage({
 	// FIXME have an appropriate and descriptive function name --- fixed
 	const checkUnsavedData = () => {
 		if (viewName) {
-		  if (
-			window.confirm(
-			  "You have unsaved changes, Are you sure you want to leave!"
-			) == true
-		  ) {
-			const create_app_modal = document.querySelector("#create-app-modal");
-			create_app_modal.style.display = "block";
-		  }
+			if (
+				window.confirm(
+					'You have unsaved changes, Are you sure you want to leave!'
+				) == true
+			) {
+				const create_app_modal = document.querySelector('#create-app-modal');
+				create_app_modal.style.display = 'block';
+			}
 		} else {
-		  const create_app_modal = document.querySelector("#create-app-modal");
-		  create_app_modal.style.display = "block";
+			const create_app_modal = document.querySelector('#create-app-modal');
+			create_app_modal.style.display = 'block';
 		}
 	};
 
@@ -140,14 +140,14 @@ export default function ManageAppPage({
 						/>
 
 						<div className="col-1 border-right text-center">
-							{view === 4 && (
+							{view === 4 && app && (
 								<>
-                  <button onClick={() => setSelectedView({})}>Add View</button>
-                  <List
-                    type="view"
-                    viewDataList={viewDataList}
-                    setSelectedView={setSelectedView}
-                  />
+									<button onClick={() => setSelectedView({})}>Add View</button>
+									<List
+										type="view"
+										viewDataList={viewDataList}
+										setSelectedView={setSelectedView}
+									/>
 								</>
 							)}
 						</div>
@@ -157,13 +157,13 @@ export default function ManageAppPage({
 								<br />
 								{view === 1 ? (
 									<AppConfig
-                    setViewRole={setViewRole}
+										setViewRole={setViewRole}
 										email={user.email}
 										user={user}
 										app={app}
 										setApp={setApp}
 									/>
-								) : view === 4 ? (
+								) : view === 4 && app ? (
 									<ViewConfig
 										user={user}
 										role={role}
@@ -178,14 +178,14 @@ export default function ManageAppPage({
 										setViewName={setViewName}
 										setUser={setUser}
 										viewIds={viewIds}
-                    // =================
-                    viewRole={viewRole}
-                    setViewDataList={setViewDataList}
-                    selectedView={selectedView}
-                    setSelectedView={setSelectedView}
+										// =================
+										viewRole={viewRole}
+										setViewDataList={setViewDataList}
+										selectedView={selectedView}
+										setSelectedView={setSelectedView}
 									/>
-								) : (
-									''
+                  ) : (
+									<div>Configure the app first</div>
 								)}
 
 								<br />
