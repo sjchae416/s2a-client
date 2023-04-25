@@ -193,8 +193,9 @@ const App = () => {
 					<Route
 						exact
 						path="/"
-						element={ user ? <DashboardPage isDeveloper={isDeveloper}/> : <LoginPage /> }
-		
+						element={
+							user ? <DashboardPage isDeveloper={isDeveloper} /> : <LoginPage />
+						}
 					/>
 					<Route path="/login" element={<LoginPage />} />
 					<Route
@@ -206,7 +207,8 @@ const App = () => {
 								appIds={appIds}
 								setAppIds={setAppIds}
 								app={app}
-                setApp={setApp}
+								tables={tables}
+								setApp={setApp}
 								viewIds={viewIds}
 								setViewIds={setViewIds}
 							/>

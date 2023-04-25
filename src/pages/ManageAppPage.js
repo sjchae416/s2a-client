@@ -17,6 +17,7 @@ export default function ManageAppPage({
 	appIds,
 	app,
 	setApp,
+	tables,
 	viewIds,
 }) {
 	const { user, setUser } = useContext(UserContext);
@@ -177,6 +178,7 @@ export default function ManageAppPage({
 										viewName={viewName}
 										setViewName={setViewName}
 										setUser={setUser}
+										tables={tables}
 										viewIds={viewIds}
 										// =================
 										viewRole={viewRole}
@@ -184,7 +186,7 @@ export default function ManageAppPage({
 										selectedView={selectedView}
 										setSelectedView={setSelectedView}
 									/>
-                  ) : (
+								) : (
 									<div>Configure the app first</div>
 								)}
 
