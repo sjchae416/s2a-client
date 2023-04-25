@@ -99,8 +99,10 @@ export default function TableView({view, listViews}) {
     col.forEach((column) => {
       newRow[column] = newRowData[column] || '';
     });
-    setTest([...test, newRow]); // Add the new row to the table data
+    const updatedTest = [...test, newRow];
+    setTest(updatedTest);
     console.log(newRow);
+    console.log(updatedTest);
     handleClose();
   };
 
@@ -131,9 +133,7 @@ export default function TableView({view, listViews}) {
   }
 
   let filteredTest = test;
-  if (viewFilter !== "") {
-    filteredTest = test.filter((row) => row[viewFilter]);
-  }
+  filteredTest = test.filter((row) => row[viewFilter]);
 
   return (
     <div>
@@ -142,54 +142,53 @@ export default function TableView({view, listViews}) {
       <br/>
       <br/>
       <table>
-        <thead>
-          <tr>
+      <thead>
+        <tr>
+          {col.map((column) => (
+            <th key={column}>{column}</th>
+          ))}
+          {showMinusButtons && <th></th>}
+        </tr>
+      </thead>
+      <tbody>
+        {filteredTest.map((row) => (
+          <tr key={row.Name} onClick={() => handleRowClick(row)}>
             {col.map((column) => (
-              <th key={column}>{column}</th>
+              <td key={column}>{row[column]}</td>
             ))}
-            {showMinusButtons && <th></th>}
+            {showMinusButtons && <td><button onClick={(e) => {e.stopPropagation(); handleDeleteRow(row)}}>-</button></td>}
           </tr>
-        </thead>
-        <tbody>
-          {filteredTest.map((row) => (
-            <tr key={row.Name} onClick={() => handleRowClick(row)}>
-              {col.map((column) => (
-                <td key={column}>{row[column]}</td>
-              ))}
-              {showMinusButtons && <td><button onClick={(e) => {e.stopPropagation(); handleDeleteRow(row)}}>-</button></td>}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {selectedRow && (
-        <Modal open={true} onClose={() => setSelectedRow(null)}>
-          <DetailView row={selectedRow} views={listViews} onSelectedRowChange={setSelectedRow}/>
-        </Modal>
-      )}
-      <Modal open={open} onClose={handleClose}>
-        <div className="modal-content">
-          <h2>ADD ROW</h2>
-          {col.map((columnName) => (
-            <div>
-              <TextField
-                key={columnName}
-                name={columnName}
-                label={columnName}
-                value={newRowData[columnName] || ''}
-                onChange={handleModalInputChange}
-              />
-              <br/>
-              <br/>
-            </div>
-          ))}
-          <br/>
-          <div>
-           <Button variant="contained" onClick={handleClose}>Cancel</Button>
-            <Button className="btn btn-danger " variant="contained" onClick={handleAddRow}>Add</Button>
-          </div>
-          
-        </div>
+        ))}
+      </tbody>
+    </table>
+    {selectedRow && (
+      <Modal open={true} onClose={() => setSelectedRow(null)}>
+        <DetailView row={selectedRow} views={listViews} onSelectedRowChange={setSelectedRow}/>
       </Modal>
+    )}
+    <Modal open={open} onClose={handleClose}>
+      <div className="modal-content">
+        <h2>ADD ROW</h2>
+        {col.map((columnName) => (
+          <div>
+            <TextField
+              key={columnName}
+              name={columnName}
+              label={columnName}
+              value={newRowData[columnName] || ''}
+              onChange={handleModalInputChange}
+            />
+            <br/>
+            <br/>
+          </div>
+        ))}
+        <br/>
+        <div>
+         <Button variant="contained" onClick={handleClose}>Cancel</Button>
+          <Button className="btn btn-danger " variant="contained" onClick={handleAddRow}>Add</Button>
+        </div>
+      </div>
+    </Modal>
       <Modal open={openDelete} onClose={handleClose}>
         <div className="modal-content">
           <h2>Delete Row</h2>
