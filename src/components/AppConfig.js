@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { loadTable } from '../api/tableApi';
 
-export default function AppConfig ({ email, user, app, setApp, setViewRole }){
+export default function AppConfig({ email, user, app, setApp, setViewRole }) {
 	const [name, setName] = useState('');
 	// const [creator, setCreator] = useState(email);
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
@@ -37,10 +37,6 @@ export default function AppConfig ({ email, user, app, setApp, setViewRole }){
 
 	const handleSaveURL = (url) => {
 		setRoleMembershipSheet(url);
-	};
-
-	const handleAddApp = () => {
-		setApp(appData);
 	};
 
 	// FN create and fill in App document & and load Table data
@@ -149,11 +145,7 @@ export default function AppConfig ({ email, user, app, setApp, setViewRole }){
 							)}
 						</tbody>
 					</table>
-					<br/>
-					<div className = "text-right">
-						<button className="btn btn-info" onClick={handleAddApp}> Add App</button>
-					</div>
-					
+					<br />
 				</div>
 			)}
 
