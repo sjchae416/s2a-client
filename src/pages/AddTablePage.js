@@ -3,12 +3,9 @@ import { TableConfig, List, NavigationBar } from '../components';
 import UserContext from '../UserContext';
 
 export default function AddTablePage({
-	// user,
-	// setUser,
 	tableIds,
 	setTableIds,
 	tables,
-	setTables,
 }) {
 	const { user, setUser } = useContext(UserContext);
 	const [selectedTable, setSelectedTable] = useState({});
@@ -42,7 +39,6 @@ export default function AddTablePage({
 								tableIds={tableIds}
 								setTableIds={setTableIds}
 								tables={tables}
-								setTables={setTables}
 								selectedTable={selectedTable}
 								addTable={addTable}
 							/>

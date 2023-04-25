@@ -7,8 +7,6 @@ const List = ({
 	setSelectedView,
 	setSelectedTable,
 }) => {
-	// const tables = JSON.parse(window.localStorage.getItem("tables"));
-
 	return (
 		<div>
 			{type === 'view'

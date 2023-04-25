@@ -7,7 +7,6 @@ export default function TableConfig({
 	setUser,
 	tableIds,
 	tables,
-	setTables,
 	selectedTable,
 	addTable,
 }) {
@@ -19,8 +18,6 @@ export default function TableConfig({
 	const dummyRef = ['test1', 'test2', 'false'];
 	const [config, setConfig] = useState([]);
 	const [keys, setKeys] = useState([]);
-
-	// const tables = JSON.parse(window.localStorage.getItem("tables"));
 
 	useEffect(() => {
 		if (selectedTable.name) {

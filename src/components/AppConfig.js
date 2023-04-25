@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { loadTable } from '../api/tableApi';
 
-export default function AppConfig({ email, user, app, setApp, setViewRole }) {
+export default function AppConfig({ user, app, setApp, setViewRole }) {
 	const [name, setName] = useState('');
-	// const [creator, setCreator] = useState(email);
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
 	const [showTable, setShowTable] = useState(false);
 	const [roleData, setRoleData] = useState([]);
@@ -15,7 +14,7 @@ export default function AppConfig({ email, user, app, setApp, setViewRole }) {
 	}, [name, roleMembershipSheet]);
 
 	useEffect(() => {
-		console.log(app);
+		console.log("🚀 ~ file: AppConfig.js:18 ~ useEffect ~ app:", app)
 	}, [app]);
 
 	const now = new Date();
@@ -25,7 +24,7 @@ export default function AppConfig({ email, user, app, setApp, setViewRole }) {
 
 	const appData = {
 		name: name,
-		creator: email,
+		creator: user.email,
 		roleMembershipSheet: roleMembershipSheet,
 		createdAt: nycTimeString,
 		lastModifiedDate: nycTimeString,
@@ -80,7 +79,7 @@ export default function AppConfig({ email, user, app, setApp, setViewRole }) {
 		>
 			<div className="form-group">
 				<label>Creator's Email</label>
-				<div>{email}</div>
+				<div>{user.email}</div>
 			</div>
 			<div className="form-group">
 				<label>App Name</label>

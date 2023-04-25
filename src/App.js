@@ -12,13 +12,11 @@ import {
 	AdminPage,
 	RunnableAppPage,
 } from './pages';
-import { TableView } from './components';
 import { getAppById, readTable, readView, loadTable } from './api';
 
 export const customHistory = createBrowserHistory();
 
 const App = () => {
-	// const [user, setUser] = useState({});
 	const { user, setUser } = useContext(UserContext);
 	const [appIds, setAppIds] = useState([]);
 	const [tableIds, setTableIds] = useState([]);
@@ -29,8 +27,6 @@ const App = () => {
 	const [views, setViews] = useState([]);
 	// const [developers, setDevelopers] = useState([]);
 	const [isDeveloper, setIsDeveloper] = useState(false);
-
-	// console.log("user", user);
 
 	// NOTE TABLES
 	const loadTableIds = (user) => {
@@ -54,6 +50,10 @@ const App = () => {
 					break;
 				}
 			}
+			console.log(
+				'🚀 ~ file: App.js:53 ~ checkGlobalTable ~ foundDeveloper:',
+				foundDeveloper
+			);
 			setIsDeveloper(foundDeveloper);
 		} catch (error) {
 			console.error(error);
@@ -73,10 +73,6 @@ const App = () => {
 					userTables
 				);
 				setTables(userTables);
-
-				// if (userTables.length > 0) {
-				//   window.localStorage.setItem("tables", JSON.stringify(userTables));
-				// }
 			} catch (error) {
 				console.error('Error fetching App: ', error);
 			}
@@ -152,20 +148,18 @@ const App = () => {
 
 	// NOTE USERS
 	const fetchCurrentUser = async () => {
-		console.log('CALLED');
 		try {
 			const response = await fetch('http://localhost:3333/auth/authenticated', {
 				credentials: 'include',
 			});
-			if (response.ok) {
-				const data = await response.json();
-				setUser(data);
-				// console.log('user', user);
-				// setUserUser(data);
+			const data = await response.json();
 
+			if (response.ok) {
 				if (!data) {
+					setUser(null);
 					// navigate('/login');
 				}
+				setUser(data);
 			} else {
 				console.error('Error fetching current user: ', response.status);
 			}
@@ -175,11 +169,6 @@ const App = () => {
 	};
 
 	useEffect(() => {
-		fetchCurrentUser();
-	}, []);
-
-	
-	useEffect(() => {
 		if (user !== null) {
 			checkGlobalTable();
 			loadAppIds(user);
@@ -187,6 +176,10 @@ const App = () => {
 			loadViewIds(user);
 		}
 	}, [user]);
+
+	useEffect(() => {
+		fetchCurrentUser();
+	}, []);
 
 	return (
 		<div>
@@ -204,10 +197,7 @@ const App = () => {
 						path="/manage-app"
 						element={
 							<ManageAppPage
-								// user={user}
-								// setUser={setUser}
 								appIds={appIds}
-								setAppIds={setAppIds}
 								app={app}
 								tables={tables}
 								setApp={setApp}
@@ -220,12 +210,9 @@ const App = () => {
 						path="/add-table"
 						element={
 							<AddTablePage
-								// user={user}
-								// setUser={setUser}
 								tableIds={tableIds}
 								setTableIds={setTableIds}
 								tables={tables}
-								setTables={setTables}
 							/>
 						}
 					/>
@@ -239,14 +226,7 @@ const App = () => {
 							/>
 						}
 					/> */}
-					<Route
-						path="/runnable-appIds/:name"
-						element={
-							<RunnableAppPage
-							// user={user}
-							/>
-						}
-					/>
+					<Route path="/runnable-appIds/:name" element={<RunnableAppPage />} />
 				</Routes>
 			</BrowserRouter>
 		</div>
