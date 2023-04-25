@@ -223,6 +223,7 @@ export default function ViewConfig({
         preVal[index] = viewData;
         return preVal;
       });
+      console.log("Valid email!");
       handleCancel();
       setSelectedView({});
     }
@@ -241,7 +242,7 @@ export default function ViewConfig({
     let emailIndex = -1;
     const headerRow = data[0];
     for (let i = 0; i < headerRow.length; i++) {
-      if (headerRow[i].toLowerCase() === "email") {
+      if (headerRow[i] === userFilter) {
         emailIndex = i;
         break;
       }
@@ -254,6 +255,7 @@ export default function ViewConfig({
         emails.push(row[emailIndex]);
       }
     }
+    console.log("Emails", emails);
 
     const invalidEmails = emails.filter((email) => !emailRegex.test(email));
     return !(invalidEmails.length > 0);
@@ -342,13 +344,14 @@ export default function ViewConfig({
   };
 
   const handleUserFilterButtonChange = (e, name) => {
+    console.log(name);
     setUserFilter(name);
   };
 
   const handleEditFilterButtonChange = (e, name) => {
-    console.log(name);
+    // console.log(name);
     setEditFilter(name);
-    console.log(viewData);
+    // console.log(viewData);
   };
 
   const handleTableView = (e) => {
@@ -517,9 +520,9 @@ export default function ViewConfig({
                   <input
                     type="radio"
                     id={`radio-${columns.name}`}
-                    name="filterOption"
+                    name="userFilterOption"
                     value={columns.name}
-                    onChange={(e) => handleFilterButtonChange(e, columns.name)}
+                    onChange={(e) => handleUserFilterButtonChange(e, columns.name)}
                   />
                   <label htmlFor={`radio-${columns.name}`}>{columns.name}</label>
                 </div>
@@ -590,17 +593,17 @@ export default function ViewConfig({
         <div className="text-right">
           <button
             type="button"
+            onClick={deleteViewList}
             className="btn btn-danger can_btn"
-            onClick={updateViewList}
           >
-            Save
+            Delete
           </button>
           <button
             type="button"
-            onClick={deleteViewList}
             className="btn btn-info"
+            onClick={updateViewList}
           >
-            Delete
+            Save
           </button>
         </div>
       ) : (
