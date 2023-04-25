@@ -51,6 +51,7 @@ export default function ViewConfig({
 	viewRole,
 	user,
 	setUser,
+	tables,
 	viewIds,
 	setViewDataList,
 	selectedView,
@@ -71,7 +72,7 @@ export default function ViewConfig({
 	const [columns, setColumns] = useState([]);
 	const [selectedTable, setSelectedTable] = useState('');
 
-	const tables = JSON.parse(window.localStorage.getItem('tables'));
+	// const tables = JSON.parse(window.localStorage.getItem('tables'));
 
 	const viewData = {
 		id: shortid.generate(), //added the shortid library
