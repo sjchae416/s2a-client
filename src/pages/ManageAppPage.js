@@ -17,6 +17,8 @@ export default function ManageAppPage({
 	setApp,
 	tables,
 	viewIds,
+	viewData,
+	setViewData,
 }) {
 	const { user, setUser } = useContext(UserContext);
 	const [view, setView] = useState(1);
@@ -132,6 +134,7 @@ export default function ManageAppPage({
 							appIds={appIds}
 							app={app}
 							setApp={setApp}
+							viewData={viewData}
 						/>
 
 						<div className="col-1 border-right text-center">
@@ -172,6 +175,7 @@ export default function ManageAppPage({
 										setViewName={setViewName}
 										setUser={setUser}
 										tables={tables}
+										setViewData={setViewData}
 										viewIds={viewIds}
 										// =================
 										viewRole={viewRole}
