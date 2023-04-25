@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 // removed redux and installed shortID library for viewID
-import { updateUser } from '../api/userApi';
-import { createView } from '../api/viewApi';
 import shortid from 'shortid';
-import { loadTable } from '../api';
+import { loadTableAPI } from '../api';
 
 const testData = {
 	name: 'test',
@@ -50,11 +48,8 @@ const testData = {
 
 export default function ViewConfig({
 	viewRole,
-	user,
-	setUser,
 	tables,
-	viewIds,
-	setViewData,
+	setViewDatas,
 	setViewDataList,
 	selectedView,
 	setSelectedView,
@@ -87,42 +82,11 @@ export default function ViewConfig({
 		editableCols: editableCols,
 	};
 
-	const saveView = async (viewData) => {
-		// TODO create and save View
-		const viewToSave = {
-			name: viewData.viewName,
-			// FIXME hard coded TableId for testing, make it store onClick
-			table: '6440b526d0312e27648d3198',
-			colums: viewData.selectedColumns,
-			viewType: viewData.viewType,
-			allowedActions: viewData.allowedAction,
-			roles: viewData.role,
-			filter: viewData.filter,
-			userFilter: viewData.userFilter,
-			editFilter: viewData.editFilter,
-			editableCols: viewData.editableCols,
-		};
-		try {
-			const newView = await createView(viewToSave);
-			const newViewIds = [...viewIds, newView._id];
-			const update = { views: newViewIds };
-			const updatedUser = await updateUser(user._id, update);
-			setViewData(newView);
-			setUser(updatedUser);
-			setSelectedColumns([]);
-			setViewName('');
-			setViewType('Table');
-			setAllowAction([]);
-			setRole([]);
-		} catch (error) {
-			console.error('Error saving the View', error);
-		}
-	};
-
 	const handleCreateView = async (e) => {
 		e.preventDefault();
 
 		let bool = await checkUserEmail();
+
 		if (!bool) {
 			return window.alert('Invalid Email in Selected Table');
 		}
@@ -136,15 +100,24 @@ export default function ViewConfig({
 		} else if (role.length === 0) {
 			return window.alert('Choose role!');
 		} else {
-			try {
-				saveView(viewData);
-				setViewDataList((preVal) => {
-					return [...preVal, viewData];
-				});
-				handleCancel();
-			} catch (error) {
-				console.error('Error saving the View', error);
-			}
+			const viewToSave = {
+				name: viewData.viewName,
+				// FIXME hard coded TableId for testing, make it store onClick
+				table: '6440b526d0312e27648d3198',
+				colums: viewData.selectedColumns,
+				viewType: viewData.viewType,
+				allowedActions: viewData.allowedAction,
+				roles: viewData.role,
+				filter: viewData.filter,
+				userFilter: viewData.userFilter,
+				editFilter: viewData.editFilter,
+				editableCols: viewData.editableCols,
+			};
+			setViewDatas((prev) => [...prev, viewToSave]);
+			setViewDataList((preVal) => {
+				return [...preVal, viewData];
+			});
+			handleCancel();
 		}
 	};
 
@@ -227,8 +200,8 @@ export default function ViewConfig({
 			url: selectedTable.url,
 			sheetIndex: selectedTable.sheetIndex,
 		};
-		const data = await loadTable(tableData);
-		console.log('🚀 ~ file: ViewConfig.js:236 ~ checkUserEmail ~ data:', data);
+		const data = await loadTableAPI(tableData);
+
 		let emailIndex = -1;
 		const headerRow = data[0];
 		for (let i = 0; i < headerRow.length; i++) {
@@ -240,7 +213,7 @@ export default function ViewConfig({
 
 		const emails = [];
 		for (let i = 1; i < data.length; i++) {
-			const row = data[i];
+			let row = data[i];
 			if (row.length > emailIndex) {
 				emails.push(row[emailIndex]);
 			}
@@ -352,14 +325,9 @@ export default function ViewConfig({
 		setUserFilter('');
 	};
 
-	const handleOnSubmit = async (e) => {
-		handleCreateView(e);
-		await saveView(viewData);
-	};
-
 	return (
 		<form
-			onSubmit={handleOnSubmit}
+			onSubmit={handleCreateView}
 			className="card"
 			style={{
 				margin: '10px auto',

@@ -14,11 +14,10 @@ import {
 export default function ManageAppPage({
 	appIds,
 	app,
-	setApp,
+	setAppData,
 	tables,
-	viewIds,
-	viewData,
-	setViewData,
+	viewDatas,
+	setViewDatas,
 }) {
 	const { user, setUser } = useContext(UserContext);
 	const [view, setView] = useState(1);
@@ -126,15 +125,16 @@ export default function ManageAppPage({
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
 						<Sidebar
-							setView={setView}
-							viewName={viewName}
-							checkUnsavedData={checkUnsavedData} // replaces myfun
-							user={user}
-							setUser={setUser}
-							appIds={appIds}
-							app={app}
-							setApp={setApp}
-							viewData={viewData}
+              setView={setView}
+              viewName={viewName}
+              checkUnsavedData={checkUnsavedData} // replaces myfun
+              user={user}
+              setUser={setUser}
+              appIds={appIds}
+              app={app}
+              setAppData={setAppData}
+              viewDatas={viewDatas}
+              setViewDatas={setViewDatas}
 						/>
 
 						<div className="col-1 border-right text-center">
@@ -158,27 +158,13 @@ export default function ManageAppPage({
 										setViewRole={setViewRole}
 										user={user}
 										app={app}
-										setApp={setApp}
+										setAppData={setAppData}
 									/>
 								) : view === 4 && app ? (
 									<ViewConfig
-										user={user}
-										role={role}
-										setRole={setRole}
-										allowedAction={allowedAction}
-										setAllowAction={setAllowAction}
-										viewType={viewType}
-										setViewType={setViewType}
-										selectedColumns={selectedColumns}
-										setSelectedColumns={setSelectedColumns}
-										viewName={viewName}
-										setViewName={setViewName}
-										setUser={setUser}
-										tables={tables}
-										setViewData={setViewData}
-										viewIds={viewIds}
-										// =================
 										viewRole={viewRole}
+										tables={tables}
+										setViewDatas={setViewDatas}
 										setViewDataList={setViewDataList}
 										selectedView={selectedView}
 										setSelectedView={setSelectedView}

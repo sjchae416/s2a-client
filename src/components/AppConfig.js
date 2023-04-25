@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { loadTable } from '../api/tableApi';
+import { loadTableAPI } from '../api';
 
-export default function AppConfig({ user, app, setApp, setViewRole }) {
+export default function AppConfig({ user, app, setAppData, setViewRole }) {
 	const [name, setName] = useState('');
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
 	const [showTable, setShowTable] = useState(false);
@@ -14,7 +14,7 @@ export default function AppConfig({ user, app, setApp, setViewRole }) {
 	}, [name, roleMembershipSheet]);
 
 	useEffect(() => {
-		console.log("🚀 ~ file: AppConfig.js:18 ~ useEffect ~ app:", app)
+		console.log('🚀 ~ file: AppConfig.js:18 ~ useEffect ~ app:', app);
 	}, [app]);
 
 	const now = new Date();
@@ -25,6 +25,7 @@ export default function AppConfig({ user, app, setApp, setViewRole }) {
 	const appData = {
 		name: name,
 		creator: user.email,
+		views: [],
 		roleMembershipSheet: roleMembershipSheet,
 		createdAt: nycTimeString,
 		lastModifiedDate: nycTimeString,
@@ -46,7 +47,7 @@ export default function AppConfig({ user, app, setApp, setViewRole }) {
 				//NOTE - In order for sheetIndex to always choose the first sheet index, the metadata must be used. May add it later.
 				sheetIndex: 'Sheet1',
 			};
-			const dataArray = await loadTable(tableData);
+			const dataArray = await loadTableAPI(tableData);
 			if (dataArray) {
 				setViewRole(dataArray);
 				setRoleData(dataArray);
@@ -65,7 +66,7 @@ export default function AppConfig({ user, app, setApp, setViewRole }) {
 
 	const handleLoad = () => {
 		loadRoleTable();
-		setApp(appData);
+		setAppData(appData);
 	};
 
 	return (

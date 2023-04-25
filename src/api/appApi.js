@@ -2,7 +2,7 @@ const defaultHeader = {
 	'Content-Type': 'application/json',
 };
 
-export const createApp = async (app) => {
+export const createAppAPI = async (app) => {
 	try {
 		const response = await fetch(`http://localhost:3333/apps/`, {
 			method: 'POST',
@@ -24,7 +24,7 @@ export const createApp = async (app) => {
 	}
 };
 
-export const getAllApps = async () => {
+export const getAllAppsAPI = async () => {
 	try {
 		const response = await fetch(`http://localhost:3333/apps/`);
 		return response.json();
@@ -33,7 +33,7 @@ export const getAllApps = async () => {
 	}
 };
 
-export const getAppById = async (id) => {
+export const getAppByIdAPI = async (id) => {
 	try {
 		const response = await fetch(`http://localhost:3333/apps/${id}`);
 		return response.json();
@@ -42,7 +42,7 @@ export const getAppById = async (id) => {
 	}
 };
 
-export const updateApp = async (id, update) => {
+export const updateAppAPI = async (id, update) => {
 	try {
 		const response = await fetch(`http://localhost:3333/apps/${id}`, {
 			method: 'PUT',
@@ -55,7 +55,7 @@ export const updateApp = async (id, update) => {
 	}
 };
 
-export const deleteApp = async (id) => {
+export const deleteAppAPI = async (id) => {
 	try {
 		const response = await fetch(`http://localhost:3333/apps/${id}`, {
 			method: 'DELETE',

@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 import { createBrowserHistory } from 'history';
 import UserContext from './UserContext';
@@ -12,7 +12,7 @@ import {
 	AdminPage,
 	RunnableAppPage,
 } from './pages';
-import { getAppById, readTable, readView, loadTable } from './api';
+import { getAppByIdAPI, readTableAPI, loadTableAPI } from './api';
 
 export const customHistory = createBrowserHistory();
 
@@ -20,11 +20,12 @@ const App = () => {
 	const { user, setUser } = useContext(UserContext);
 	const [appIds, setAppIds] = useState([]);
 	const [tableIds, setTableIds] = useState([]);
-	const [viewIds, setViewIds] = useState([]);
-	const [app, setApp] = useState(null);
+	// REVIEW app stores appData in AppConfig
+	const [app, setAppData] = useState(null);
 	const [apps, setApps] = useState(null);
 	const [tables, setTables] = useState([]);
-	const [viewData, setViewData] = useState(null);
+	const [viewDatas, setViewDatas] = useState([]);
+	// REVIEW no more user.views!
 	const [views, setViews] = useState([]);
 	// const [developers, setDevelopers] = useState([]);
 	const [isDeveloper, setIsDeveloper] = useState(false);
@@ -41,7 +42,7 @@ const App = () => {
 				url: 'https://docs.google.com/spreadsheets/d/1CC5H2MVbGg0tm8OyouoR7f2ARR0CK1kqHFNeKYyYtL4/edit#gid=0',
 				sheetIndex: 'Sheet1',
 			};
-			const developers = await loadTable(tableData);
+			const developers = await loadTableAPI(tableData);
 			let foundDeveloper = false;
 			for (let i = 1; i < developers.length; i++) {
 				// console.log('developers[i][0]', developers[i][0]);
@@ -66,7 +67,7 @@ const App = () => {
 			try {
 				const userTables = await Promise.all(
 					tableIds.map(async (id) => {
-						return await readTable(id);
+						return await readTableAPI(id);
 					})
 				);
 				console.log(
@@ -92,7 +93,7 @@ const App = () => {
 			try {
 				const userApps = await Promise.all(
 					appIds.map(async (id) => {
-						return await getAppById(id);
+						return await getAppByIdAPI(id);
 					})
 				);
 				console.log('🚀 ~ file: App.js:44 ~ loadApps ~ userApps:', userApps);
@@ -103,32 +104,6 @@ const App = () => {
 		};
 		loadApps();
 	}, [appIds]);
-
-	// NOTE VIEWS
-	const loadViewIds = (user) => {
-		setViewIds(user.views);
-	};
-
-	useEffect(() => {
-		const loadViews = async () => {
-			try {
-				const userViews = await Promise.all(
-					viewIds.map(async (id) => {
-						return await readView(id);
-					})
-				);
-				console.log(
-					'🚀 ~ file: App.js:118 ~ loadViews ~ userViews:',
-					userViews
-				);
-				setViews(userViews);
-			} catch (error) {
-				console.error('Error fetching App: ', error);
-			}
-		};
-
-		loadViews();
-	}, [viewIds]);
 
 	// NOTE ADMIN
 	// const fetchDevelopers = async () => {
@@ -174,7 +149,6 @@ const App = () => {
 			checkGlobalTable();
 			loadAppIds(user);
 			loadTableIds(user);
-			loadViewIds(user);
 		}
 	}, [user]);
 
@@ -200,12 +174,10 @@ const App = () => {
 							<ManageAppPage
 								appIds={appIds}
 								app={app}
+								setAppData={setAppData}
 								tables={tables}
-								setApp={setApp}
-								viewData={viewData}
-								setViewData={setViewData}
-								viewIds={viewIds}
-								setViewIds={setViewIds}
+								viewDatas={viewDatas}
+								setViewDatas={setViewDatas}
 							/>
 						}
 					/>

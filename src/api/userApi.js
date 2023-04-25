@@ -2,7 +2,7 @@ const defaultHeader = {
 	'Content-Type': 'application/json',
 };
 
-export const createUser = async (email) => {
+export const createUserAPI = async (email) => {
 	try {
 		const response = await fetch(`http://localhost:3333/users/`, {
 			method: 'POST',
@@ -15,7 +15,7 @@ export const createUser = async (email) => {
 	}
 };
 
-export const getAllUsers = async () => {
+export const getAllUsersAPI = async () => {
 	try {
 		const response = await fetch(`http://localhost:3333/users/`);
 		return response.json();
@@ -24,7 +24,7 @@ export const getAllUsers = async () => {
 	}
 };
 
-export const getUserByEmail = async (email) => {
+export const getUserByEmailAPI = async (email) => {
 	try {
 		const response = await fetch(`http://localhost:3333/users/${email}`);
 		return response.json();
@@ -33,7 +33,7 @@ export const getUserByEmail = async (email) => {
 	}
 };
 
-export const updateUser = async (id, update) => {
+export const updateUserAPI = async (id, update) => {
 	try {
 		const response = await fetch(`http://localhost:3333/users/${id}`, {
 			method: 'PUT',
@@ -46,7 +46,7 @@ export const updateUser = async (id, update) => {
 	}
 };
 
-export const deleteUser = async (id) => {
+export const deleteUserAPI = async (id) => {
 	try {
 		const response = await fetch(`http://localhost:3333/users/${id}`, {
 			method: 'DELETE',
