@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-
 import DetailView from "./DetailView";
-
 
 export default function TableView({view, listViews}) {
   let name, table, col, type, allowedActions, role;
-  let viewFilter = "", userFilter = "";
+  let viewFilter = "", 
+    userFilter = "";
   name = view.name;
   table = view.table;
   col = view.columns;
@@ -29,48 +28,50 @@ export default function TableView({view, listViews}) {
 
   const [test, setTest] = useState([
     {
-      "Name": "George Chen",
-      "Email": "george@gmail.com",
-      "Class": "CSE 314",
-      "Grade": "B",
-      "Passed": true
+      Name: "George Chen",
+      Email: "george@gmail.com",
+      Class: "CSE 314",
+      Grade: "B",
+      Passed: true
     },
     {
-      "Name": "Bob Ross",
-      "Email": "bob@gmail.com",
-      "Class": "CSE 215",
-      "Grade": "A",
-      "Passed": true
+      Name: "Bob Ross",
+      Email: "bob@gmail.com",
+      Class: "CSE 215",
+      Grade: "A",
+      Passed: true
     },
     {
-      "Name": "John Smith",
-      "Email": "john@gmail.com",
-      "Class": "CSE 220",
-      "Grade": "B-",
-      "Passed": true
+      Name: "John Smith",
+      Email: "john@gmail.com",
+      Class: "CSE 220",
+      Grade: "B-",
+      Passed: true
     },
     {
-      "Name": "Kevin Lin",
-      "Email": "kevin@gmail.com",
-      "Class": "CSE 214",
-      "Grade": "C-",
-      "Passed": false
+      Name: "Kevin Lin",
+      Email: "kevin@gmail.com",
+      Class: "CSE 214",
+      Grade: "C-",
+      Passed: false
     },
     {
-      "Name": "Henry Chen",
-      "Email": "henry@gmail.com",
-      "Class": "CSE 312",
-      "Grade": "A",
-      "Passed": true
+      Name: "Henry Chen",
+      Email: "henry@gmail.com",
+      Class: "CSE 312",
+      Grade: "A",
+      Passed: true
     },
     {
-      "Name": "Bob Chen",
-      "Email": "bob@gmail.com",
-      "Class": "CSE 216",
-      "Grade": "A",
-      "Passed": true
+      Name: "Bob Chen",
+      Email: "bob@gmail.com",
+      Class: "CSE 216",
+      Grade: "A",
+      Passed: true
     }
   ]);
+
+  const [filteredTest, setFilteredTest] = useState([...test]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -95,11 +96,27 @@ export default function TableView({view, listViews}) {
       }
     }
 
+    if (!newRowData.Name.match(/^[A-Za-z]+$/)) {
+      return window.alert("Name must be alphabets only!");
+    }
+    if (
+      !newRowData.Email.match(
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+      )
+    ) {
+      return window.alert("Email must be valid!");
+    }
+    if (!newRowData.Class.match(/^[a-zA-Z]{3}\s\d{3}$/)) {
+      return window.alert("Class must be valid eg. AAA 111");
+    }
+
     const newRow = {};
     col.forEach((column) => {
       newRow[column] = newRowData[column] || '';
     });
     setTest([...test, newRow]); // Add the new row to the table data
+    setFilteredTest([...filteredTest, newRow]);
+    setNewRowData({});
     console.log(newRow);
     handleClose();
   };
@@ -129,16 +146,34 @@ export default function TableView({view, listViews}) {
     setSelectedRow(foundRow);
     // console.log(foundRow);
   }
+  useEffect(() => {
+    if (viewFilter !== "") {
+      const result = test.filter((row) => row[viewFilter]);
+      setFilteredTest(result);
+    }
+  }, []);
 
-  let filteredTest = test;
-  if (viewFilter !== "") {
-    filteredTest = test.filter((row) => row[viewFilter]);
-  }
+  const updateRecord = (data) => {
+    const index = filteredTest.findIndex((item) => item.Email === data.Email);
+    filteredTest[index] = data;
+  };
 
   return (
     <div>
-      <Button variant="contained" onClick={handleOpen} disabled={!allowedActions.includes('Add Record') ? true : false}>Add Record</Button>
-      <Button variant="contained" onClick={handleDeleteClick} disabled={!allowedActions.includes('Delete Record') ? true : false}>Delete Record</Button>
+      <Button 
+        variant="contained" 
+        onClick={handleOpen} 
+        disabled={!allowedActions.includes('Add Record') ? true : false}
+        >
+          Add Record
+      </Button>
+      <Button 
+        variant="contained" 
+        onClick={handleDeleteClick} 
+        disabled={!allowedActions.includes('Delete Record') ? true : false}
+        >
+          Delete Record
+      </Button>
       <br/>
       <br/>
       <table>
@@ -156,23 +191,38 @@ export default function TableView({view, listViews}) {
               {col.map((column) => (
                 <td key={column}>{row[column]}</td>
               ))}
-              {showMinusButtons && <td><button onClick={(e) => {e.stopPropagation(); handleDeleteRow(row)}}>-</button></td>}
+              {showMinusButtons && (
+                <td>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteRow(row);
+                    }}
+                  >
+                    -
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
       {selectedRow && (
         <Modal open={true} onClose={() => setSelectedRow(null)}>
-          <DetailView row={selectedRow} views={listViews} onSelectedRowChange={setSelectedRow}/>
+          <DetailView
+            updateRecord={updateRecord}
+            row={selectedRow}
+            views={listViews}
+            onSelectedRowChange={setSelectedRow}
+          />
         </Modal>
       )}
       <Modal open={open} onClose={handleClose}>
         <div className="modal-content">
           <h2>ADD ROW</h2>
           {col.map((columnName) => (
-            <div>
+            <div key={columnName}>
               <TextField
-                key={columnName}
                 name={columnName}
                 label={columnName}
                 value={newRowData[columnName] || ''}
@@ -184,10 +234,17 @@ export default function TableView({view, listViews}) {
           ))}
           <br/>
           <div>
-           <Button variant="contained" onClick={handleClose}>Cancel</Button>
-            <Button className="btn btn-danger " variant="contained" onClick={handleAddRow}>Add</Button>
+          <Button variant="contained" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button
+              className="btn btn-danger "
+              variant="contained"
+              onClick={handleAddRow}
+            >
+              Add
+            </Button>
           </div>
-          
         </div>
       </Modal>
       <Modal open={openDelete} onClose={handleClose}>
