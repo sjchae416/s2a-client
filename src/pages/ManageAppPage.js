@@ -12,8 +12,6 @@ import {
 } from '../components';
 
 export default function ManageAppPage({
-	// user,
-	// setUser,
 	appIds,
 	app,
 	setApp,
@@ -155,7 +153,6 @@ export default function ManageAppPage({
 								{view === 1 ? (
 									<AppConfig
 										setViewRole={setViewRole}
-										email={user.email}
 										user={user}
 										app={app}
 										setApp={setApp}
