@@ -47,8 +47,8 @@ const App = () => {
 			const developers = await loadTable(tableData);
 			let foundDeveloper = false;
 			for (let i = 1; i < developers.length; i++) {
-				console.log('developers[i][0]', developers[i][0]);
-				console.log('user.email', user.email);
+				// console.log('developers[i][0]', developers[i][0]);
+				// console.log('user.email', user.email);
 				if (developers[i][0] === user.email) {
 					foundDeveloper = true;
 					break;
@@ -177,6 +177,8 @@ const App = () => {
 	useEffect(() => {
 		fetchCurrentUser();
 	}, []);
+
+	
 	useEffect(() => {
 		if (user !== null) {
 			checkGlobalTable();
