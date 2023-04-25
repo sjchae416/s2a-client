@@ -24,6 +24,7 @@ const App = () => {
 	const [app, setApp] = useState(null);
 	const [apps, setApps] = useState(null);
 	const [tables, setTables] = useState([]);
+	const [viewData, setViewData] = useState(null);
 	const [views, setViews] = useState([]);
 	// const [developers, setDevelopers] = useState([]);
 	const [isDeveloper, setIsDeveloper] = useState(false);
@@ -201,6 +202,8 @@ const App = () => {
 								app={app}
 								tables={tables}
 								setApp={setApp}
+								viewData={viewData}
+								setViewData={setViewData}
 								viewIds={viewIds}
 								setViewIds={setViewIds}
 							/>

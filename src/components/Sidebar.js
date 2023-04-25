@@ -13,6 +13,7 @@ const Sidebar = ({
 	appIds,
 	app,
 	setApp,
+	viewData,
 }) => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -32,6 +33,10 @@ const Sidebar = ({
 			// 	await updateApp(appId, update);
 			// } else {
 
+			if (viewData !== null) {
+				app.views = viewData._id;
+      }
+      
 			const newApp = await createApp(app);
 			var newAppIds = [];
 
