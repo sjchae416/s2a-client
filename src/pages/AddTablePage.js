@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext  } from 'react';
 import { TableConfig, List, NavigationBar} from '../components';
+import UserContext from '../UserContext';
 
 export default function AddTablePage({
-	user,
-	setUser,
+	// user,
+	// setUser,
 	tableIds,
 	setTableIds,
 	tables,
 	setTables,
 }) {
+  const { user, setUser } = useContext(UserContext);
   const [selectedTable, setSelectedTable] = useState({});
   const [addTable, setAddTable] = useState(false);
 

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import UserContext from '../UserContext';
 import Box from '@mui/material/Box';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
@@ -11,13 +12,14 @@ import {
 } from '../components';
 
 export default function ManageAppPage({
-	user,
-	setUser,
+	// user,
+	// setUser,
 	appIds,
 	app,
 	setApp,
 	viewIds,
 }) {
+	const { user, setUser } = useContext(UserContext);
 	const [view, setView] = useState(1);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [viewName, setViewName] = useState('');

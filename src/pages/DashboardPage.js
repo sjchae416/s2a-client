@@ -10,6 +10,8 @@ export const name = '';
 export default function DashboardPage({ 
 	googleUser, 
 	isDeveloper,
+  // user,
+  // setUser,
  }) {
 	const navigate = useNavigate();
 	const { user, setUser } = useContext(UserContext);

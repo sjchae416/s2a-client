@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import {NavigationBar, TableView, TableViewSidebar} from '../components';
+import UserContext from '../UserContext';
 
 const view1 = {
 	name: 'test1',
@@ -166,9 +167,11 @@ const view3 = {
 
 const views = [view1, view2, view3];
 
-export default function RunnableAppPage({ user }) {
+export default function RunnableAppPage() {
 	const { name } = useParams();
 	const [selectedView, setSelectedView] = useState(null);
+	const { user, setUser } = useContext(UserContext);
+
 
 	const handleSelectView = (view) => {
 		setSelectedView(view);

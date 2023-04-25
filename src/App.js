@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { createBrowserHistory } from "history";
 import UserContext from "./UserContext";
 import {
@@ -18,7 +18,8 @@ import { getAppById, readTable, readView, loadTable } from "./api";
 export const customHistory = createBrowserHistory();
 
 const App = () => {
-  const [user, setUser] = useState({});
+  // const [user, setUser] = useState({});
+	const { user, setUser } = useContext(UserContext);
   const [appIds, setAppIds] = useState([]);
   const [tableIds, setTableIds] = useState([]);
   const [viewIds, setViewIds] = useState([]);
@@ -29,7 +30,7 @@ const App = () => {
   // const [developers, setDevelopers] = useState([]);
   const [isDeveloper, setIsDeveloper] = useState(false);
 
-  console.log("user", user);
+  // console.log("user", user);
 
   // NOTE TABLES
   const loadTableIds = (user) => {
@@ -46,6 +47,8 @@ const App = () => {
       const developers = await loadTable(tableData);
       let foundDeveloper = false;
       for (let i = 1; i < developers.length; i++) {
+				console.log('developers[i][0]', developers[i][0]);
+				console.log('user.email', user.email);
         if (developers[i][0] === user.email) {
           foundDeveloper = true;
           break;
@@ -160,7 +163,7 @@ const App = () => {
 				if (response.ok) {
 					const data = await response.json();
 					setUser(data);
-					console.log('user', user);
+					// console.log('user', user);
 					// setUserUser(data);
 	
 					if (!data) {
@@ -197,8 +200,8 @@ const App = () => {
               // NOTE keep these comments for backup
               // user ? (
               <DashboardPage
-                user={user}
-                setUser={setUser}
+                // user={user}
+                // setUser={setUser}
                 isDeveloper={isDeveloper}
               />
               // ) : (
@@ -218,8 +221,8 @@ const App = () => {
             path="/manage-app"
             element={
               <ManageAppPage
-                user={user}
-                setUser={setUser}
+                // user={user}
+                // setUser={setUser}
                 appIds={appIds}
                 setAppIds={setAppIds}
                 app={app}
@@ -233,8 +236,8 @@ const App = () => {
             path="/add-table"
             element={
               <AddTablePage
-                user={user}
-                setUser={setUser}
+                // user={user}
+                // setUser={setUser}
                 tableIds={tableIds}
                 setTableIds={setTableIds}
                 tables={tables}
@@ -254,7 +257,9 @@ const App = () => {
 					/> */}
 					<Route
 						path="/runnable-appIds/:name"
-						element={<RunnableAppPage user={user} />}
+						element={<RunnableAppPage 
+							// user={user} 
+							/>}
 					/>
 				</Routes>
 			</BrowserRouter>

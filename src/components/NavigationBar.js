@@ -9,6 +9,11 @@ export default function NavigationBar({ user }) {
 		setShowMenu(!showMenu);
 	};
 
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.href = "http://localhost:3333/auth/logout";
+  };
+
   useEffect(() => {
     const create_app_modal_btn = document.querySelector("#save-change");
     const create_app_modal = document.querySelector("#create-app-modal");
@@ -60,8 +65,8 @@ export default function NavigationBar({ user }) {
 				</span>
 				{showMenu && (
 					<div className="dropdown-menu">
-						<button className="btn-logout-dropdown">
-							<a href="http://localhost:3333/auth/logout">Log Out</a>
+						<button className="btn-logout-dropdown" onClick={handleLogout}>
+							Log Out
 						</button>
 					</div>
 				)}

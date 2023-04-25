@@ -69,9 +69,9 @@ export default function TableConfig({
 		config: config,
 	};
 
-	useEffect(() => {
-		console.log('user', user);
-	}, []);
+	// useEffect(() => {
+	// 	console.log('user', user);
+	// }, []);
 
 	useEffect(() => {
 		if (tableDataArray.length > 0) {
