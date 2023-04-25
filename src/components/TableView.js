@@ -114,10 +114,12 @@ export default function TableView({view, listViews}) {
     col.forEach((column) => {
       newRow[column] = newRowData[column] || '';
     });
-    setTest([...test, newRow]); // Add the new row to the table data
+    const updatedTest = [...test, newRow];
+    setTest(updatedTest);
     setFilteredTest([...filteredTest, newRow]);
     setNewRowData({});
     console.log(newRow);
+    console.log(updatedTest);
     handleClose();
   };
 
@@ -147,11 +149,9 @@ export default function TableView({view, listViews}) {
     // console.log(foundRow);
   }
   useEffect(() => {
-    if (viewFilter !== "") {
       const result = test.filter((row) => row[viewFilter]);
       setFilteredTest(result);
-    }
-  }, []);
+    }, []);
 
   const updateRecord = (data) => {
     const index = filteredTest.findIndex((item) => item.Email === data.Email);

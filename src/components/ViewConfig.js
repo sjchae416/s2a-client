@@ -222,29 +222,30 @@ export default function ViewConfig({
 	async function checkUserEmail() {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regular expression for email format
 
-		const tableData = {
-			name: selectedTable.name,
-			url: selectedTable.url,
-			sheetIndex: selectedTable.sheetIndex,
-		};
-		const data = await loadTable(tableData);
-		console.log('🚀 ~ file: ViewConfig.js:236 ~ checkUserEmail ~ data:', data);
-		let emailIndex = -1;
-		const headerRow = data[0];
-		for (let i = 0; i < headerRow.length; i++) {
-			if (headerRow[i].toLowerCase() === 'email') {
-				emailIndex = i;
-				break;
-			}
-		}
+    const tableData = {
+      name: selectedTable.name,
+      url: selectedTable.url,
+      sheetIndex: selectedTable.sheetIndex,
+    };
+    const data = await loadTable(tableData);
+    console.log("data", data);
+    let emailIndex = -1;
+    const headerRow = data[0];
+    for (let i = 0; i < headerRow.length; i++) {
+      if (headerRow[i] === userFilter) {
+        emailIndex = i;
+        break;
+      }
+    }
 
-		const emails = [];
-		for (let i = 1; i < data.length; i++) {
-			const row = data[i];
-			if (row.length > emailIndex) {
-				emails.push(row[emailIndex]);
-			}
-		}
+    const emails = [];
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      if (row.length > emailIndex) {
+        emails.push(row[emailIndex]);
+      }
+    }
+    console.log("Emails", emails);
 
 		const invalidEmails = emails.filter((email) => !emailRegex.test(email));
 		return !(invalidEmails.length > 0);
@@ -275,55 +276,55 @@ export default function ViewConfig({
 		}
 	};
 
-	const handleUserFilterCheckboxChange = (e) => {
-		const { checked } = e.target;
-		if (checked) {
-			// Filter config objects where type is bool
-			const textConfigs = testData.config.filter(
-				(config) => config.type === 'string'
-			);
-			// Set the filtered bool configs to state
-			setTextConfigs(textConfigs);
-		} else {
-			// Clear the bool configs from state
-			setTextConfigs([]);
-			setUserFilter('');
-			console.log(viewData);
-		}
-	};
+  const handleUserFilterCheckboxChange = (e) => {
+    const { checked } = e.target;
+    if (checked) {
+      // Filter config objects where type is bool
+      const textConfigs = testData.columns.filter(
+        (columns) => columns.type === "string"
+      );
+      // Set the filtered bool configs to state
+      setTextConfigs(textConfigs);
+    } else {
+      // Clear the bool configs from state
+      setTextConfigs([]);
+      setUserFilter("");
+      console.log(viewData);
+    }
+  };
 
-	const handleFilterCheckboxChange = (e) => {
-		const { checked } = e.target;
-		if (checked) {
-			// Filter config objects where type is bool
-			const boolConfigs = testData.config.filter(
-				(config) => config.type === 'bool'
-			);
-			// Set the filtered bool configs to state
-			setBoolConfigs(boolConfigs);
-		} else {
-			// Clear the bool configs from state
-			setBoolConfigs([]);
-			setFilter('');
-		}
-	};
+  const handleFilterCheckboxChange = (e) => {
+    const { checked } = e.target;
+    if (checked) {
+      // Filter config objects where type is bool
+      const boolConfigs = testData.columns.filter(
+        (columns) => columns.type === "bool"
+      );
+      // Set the filtered bool configs to state
+      setBoolConfigs(boolConfigs);
+    } else {
+      // Clear the bool configs from state
+      setBoolConfigs([]);
+      setFilter("");
+    }
+  };
 
-	const handleEditFilterCheckboxChange = (e) => {
-		const { checked } = e.target;
-		if (checked) {
-			// Filter config objects where type is bool
-			const boolConfigs = testData.config.filter(
-				(config) => config.type === 'bool'
-			);
-			// Set the filtered bool configs to state
-			setBoolConfigs(boolConfigs);
-		} else {
-			// Clear the bool configs from state
-			setBoolConfigs([]);
-			setEditFilter('');
-			//console.log(viewData);
-		}
-	};
+  const handleEditFilterCheckboxChange = (e) => {
+    const { checked } = e.target;
+    if (checked) {
+      // Filter config objects where type is bool
+      const boolConfigs = testData.columns.filter(
+        (columns) => columns.type === "bool"
+      );
+      // Set the filtered bool configs to state
+      setBoolConfigs(boolConfigs);
+    } else {
+      // Clear the bool configs from state
+      setBoolConfigs([]);
+      setEditFilter("");
+      //console.log(viewData);
+    }
+  };
 
 	const handleFilterButtonChange = (e, name) => {
 		console.log(name);
@@ -331,15 +332,16 @@ export default function ViewConfig({
 		console.log(viewData);
 	};
 
-	const handleUserFilterButtonChange = (e, name) => {
-		setUserFilter(name);
-	};
+  const handleUserFilterButtonChange = (e, name) => {
+    console.log(name);
+    setUserFilter(name);
+  };
 
-	const handleEditFilterButtonChange = (e, name) => {
-		console.log(name);
-		setEditFilter(name);
-		console.log(viewData);
-	};
+  const handleEditFilterButtonChange = (e, name) => {
+    // console.log(name);
+    setEditFilter(name);
+    // console.log(viewData);
+  };
 
 	const handleTableView = (e) => {
 		setViewType(e.target.value);
@@ -580,39 +582,39 @@ export default function ViewConfig({
 				<p>Selected Roles: {role.join(', ')}</p>
 			</div>
 
-			{selectedView.viewName ? (
-				<div className="text-right">
-					<button
-						type="button"
-						className="btn btn-danger can_btn"
-						onClick={updateViewList}
-					>
-						Save
-					</button>
-					<button
-						type="button"
-						onClick={deleteViewList}
-						className="btn btn-info"
-					>
-						Delete
-					</button>
-				</div>
-			) : (
-				<div className="text-right">
-					<button
-						onClick={handleCancel}
-						type="reset"
-						className="btn btn-danger can_btn"
-					>
-						Cancel
-					</button>
-					<button type="submit" className="btn btn-info">
-						Create
-					</button>
-				</div>
-			)}
-		</form>
-	);
+      {selectedView.viewName ? (
+        <div className="text-right">
+          <button
+            type="button"
+            onClick={deleteViewList}
+            className="btn btn-danger can_btn"
+          >
+            Delete
+          </button>
+          <button
+            type="button"
+            className="btn btn-info"
+            onClick={updateViewList}
+          >
+            Save
+          </button>
+        </div>
+      ) : (
+        <div className="text-right">
+          <button
+            onClick={handleCancel}
+            type="reset"
+            className="btn btn-danger can_btn"
+          >
+            Cancel
+          </button>
+          <button type="submit" className="btn btn-info">
+            Create
+          </button>
+        </div>
+      )}
+    </form>
+  );
 }
 
 export { ViewConfig };
