@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createTable, loadTable } from '../api/tableApi';
-import { updateUser } from '../api/userApi';
+import { createTableAPI, loadTableAPI, updateUserAPI } from '../api';
 
 export default function TableConfig({
 	user,
@@ -112,13 +111,13 @@ export default function TableConfig({
 				);
 				return;
 			}
-			const dataArray = await loadTable(tableData);
-			if (dataArray && !dataArray.error) {
-				setTableDataArray(dataArray);
+			const tableRows = await loadTableAPI(tableData);
+			if (tableRows && !tableRows.error) {
+				setTableDataArray(tableRows);
 			} else {
 				const errorMessage =
-					dataArray && dataArray.message
-						? dataArray.message
+					tableRows && tableRows.message
+						? tableRows.message
 						: 'Error loading table. Please check your URL and sheet index.';
 				alert(errorMessage);
 				return;
@@ -138,7 +137,7 @@ export default function TableConfig({
 			return;
 		}
 
-		const createdTable = await createTable(tableData);
+		const createdTable = await createTableAPI(tableData);
 		if (createdTable && !createdTable.error) {
 			// console.log(createdTable);
 			alert('Table created successfully');
@@ -155,7 +154,7 @@ export default function TableConfig({
 				? [...tableIds]
 				: [...tableIds, createdTable._id];
 		const update = { tables: newTableIds };
-		const updatedUser = await updateUser(user._id, update);
+		const updatedUser = await updateUserAPI(user._id, update);
 
 		setUser(updatedUser);
 		clearForms();

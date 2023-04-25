@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createApp, updateApp } from '../api/appApi';
-import { updateUser } from '../api/userApi';
 import Modal from '@mui/material/Modal';
+import {
+	createAppAPI,
+	updateAppAPI,
+	createViewAPI,
+	updateUserAPI,
+} from '../api';
 
 const Sidebar = ({
 	setView,
@@ -12,53 +16,13 @@ const Sidebar = ({
 	setUser,
 	appIds,
 	app,
-	setApp,
-	viewData,
+	setAppData,
+	viewDatas,
+	setViewDatas,
 }) => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	const navigate = useNavigate();
-
-	const saveApp = async (app) => {
-		// const saveApp = async (app, appId) => {
-		try {
-			// FIXME if the App alreadly exits, update the field with passed id(appId), else creat and save
-			// if (appId) {
-			// const update = {
-			// 	app,
-			// 	lastModifiedDate: new Date().toLocaleString('en-US', {
-			// 		timeZone: 'America/New_York',
-			// 	}),
-			// };
-			// 	await updateApp(appId, update);
-			// } else {
-
-			if (viewData !== null) {
-				app.views = viewData._id;
-      }
-      
-			const newApp = await createApp(app);
-			var newAppIds = [];
-
-			if (appIds) {
-				newAppIds = [...appIds, newApp._id];
-			} else {
-				newAppIds = [newApp._id];
-			}
-
-			const update = { apps: newAppIds };
-			const updatedUser = await updateUser(user._id, update);
-
-			setApp(null);
-			setUser(updatedUser);
-			navigate('/');
-		} catch (error) {
-			window.alert(error);
-			// TODO RIYA
-			// FIXME close the save model when OK of the window.alert() is clicked
-			console.error('Error while creating the App', error);
-		}
-	};
 
 	const handleSaveClick = () => {
 		setIsModalVisible(true);
@@ -68,10 +32,79 @@ const Sidebar = ({
 		setIsModalVisible(false);
 	};
 
+	const saveViews = async (viewDatas) => {
+		try {
+			const newViews = await Promise.all(
+				viewDatas.map(async (viewData) => {
+					return await createViewAPI(viewData);
+				})
+			);
+
+			return newViews;
+		} catch (error) {
+			console.error('Error saving new View: ', error);
+			throw new Error(error);
+		}
+	};
+
+	const saveApp = async (
+		// appId,
+		appData,
+		savedViews
+	) => {
+		try {
+			// FIXME if the App alreadly exits, update the field with passed id(appId), else creat and save
+			// if (appId) {
+			// const update = {
+			// 	appData,
+			// 	lastModifiedDate: new Date().toLocaleString('en-US', {
+			// 		timeZone: 'America/New_York',
+			// 	}),
+			// };
+			// 	await updateAppAPI(appId, update);
+			// } else {
+			const newViewsIds = savedViews.map((savedView) => savedView._id);
+			appData.views = newViewsIds;
+
+			const newApp = await createAppAPI(appData);
+
+			return newApp;
+		} catch (error) {
+			console.error('Error saving new App', error);
+			throw new Error(error);
+		}
+	};
+
+	const updateUser = async (user, savedApp) => {
+		const newAppIds = [...appIds, savedApp._id];
+		const update = { apps: newAppIds };
+
+		try {
+			const updatedUser = await updateUserAPI(user._id, update);
+			setUser(updatedUser);
+		} catch (error) {
+			console.error('Error updating the User: ', error);
+			throw new Error(error);
+		}
+	};
+
 	const handleSaveChanges = async () => {
-		await saveApp(app);
-		// await saveApp(app, appId);
-		setIsModalVisible(false);
+		try {
+			const savedViews = await saveViews(viewDatas);
+			const savedApp = await saveApp(
+				// appId,
+				app,
+				savedViews
+			);
+			await updateUser(user, savedApp);
+			setAppData(null);
+			setViewDatas([]);
+			navigate('/');
+			setIsModalVisible(false);
+		} catch (error) {
+			window.alert(error);
+			console.error('Error while saving the App: ', error);
+		}
 	};
 
 	return (

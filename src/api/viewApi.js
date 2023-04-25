@@ -2,7 +2,7 @@ const defaultHeader = {
 	'Content-Type': 'application/json',
 };
 
-export const createView = async (viewData) => {
+export const createViewAPI = async (viewData) => {
 	try {
 		const response = await fetch('http://localhost:3333/views/', {
 			method: 'POST',
@@ -23,7 +23,7 @@ export const createView = async (viewData) => {
 	}
 };
 
-export const readAllViews = async () => {
+export const readAllViewsAPI = async () => {
 	try {
 		const response = await fetch('http://localhost:3333/views/', {
 			method: 'GET',
@@ -36,7 +36,7 @@ export const readAllViews = async () => {
 	}
 };
 
-export const readView = async (id) => {
+export const readViewAPI = async (id) => {
 	try {
 		const response = await fetch(`http://localhost:3333/views/${id}`, {
 			method: 'GET',
@@ -49,7 +49,7 @@ export const readView = async (id) => {
 	}
 };
 
-export const updateView = async (id, viewData) => {
+export const updateViewAPI = async (id, viewData) => {
 	try {
 		const response = await fetch(`http://localhost:3333/views/${id}`, {
 			method: 'PUT',
@@ -63,7 +63,7 @@ export const updateView = async (id, viewData) => {
 	}
 };
 
-export const deleteView = async (id) => {
+export const deleteViewAPI = async (id) => {
 	try {
 		const response = await fetch(`http://localhost:3333/views/${id}`, {
 			method: 'DELETE',

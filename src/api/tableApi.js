@@ -2,7 +2,7 @@ const defaultHeader = {
 	'Content-Type': 'application/json',
 };
 
-export const loadTable = async (tableData) => {
+export const loadTableAPI = async (tableData) => {
 	try {
 		const response = await fetch('http://localhost:3333/tables/loadtable', {
 			method: 'POST',
@@ -18,7 +18,7 @@ export const loadTable = async (tableData) => {
 	}
 };
 
-export const createTable = async (tableData) => {
+export const createTableAPI = async (tableData) => {
 	try {
 		const response = await fetch('http://localhost:3333/tables/', {
 			method: 'POST',
@@ -42,7 +42,7 @@ export const createTable = async (tableData) => {
 	}
 };
 
-export const readAllTables = async () => {
+export const readAllTablesAPI = async () => {
 	try {
 		const response = await fetch('http://localhost:3333/tables/', {
 			method: 'GET',
@@ -55,7 +55,7 @@ export const readAllTables = async () => {
 	}
 };
 
-export const readTable = async (id) => {
+export const readTableAPI = async (id) => {
 	try {
 		const response = await fetch(`http://localhost:3333/tables/${id}`, {
 			method: 'GET',
@@ -68,7 +68,7 @@ export const readTable = async (id) => {
 	}
 };
 
-export const updateTable = async (id, update) => {
+export const updateTableAPI = async (id, update) => {
 	try {
 		const response = await fetch(`http://localhost:3333/tables/${id}`, {
 			method: 'PUT',
@@ -82,7 +82,7 @@ export const updateTable = async (id, update) => {
 	}
 };
 
-export const deleteTable = async (id) => {
+export const deleteTableAPI = async (id) => {
 	try {
 		const response = await fetch(`http://localhost:3333/tables/${id}`, {
 			method: 'DELETE',

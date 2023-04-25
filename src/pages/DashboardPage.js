@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { DashboardApp, NavigationBar } from '../components';
-import apps from '../testData/test-apps.json';
+import dummyApps from '../testData/test-apps.json';
 import UserContext from '../UserContext';
 
 export const name = '';
@@ -12,9 +12,9 @@ export default function DashboardPage({ isDeveloper }) {
 	const [showMenu, setShowMenu] = useState(false);
 
 	// FIXME need a filter logic for 3 kinds
-	const publishedApps = apps.filter((app) => app.status === 'published');
-	const inDevelopmentApps = apps.filter((app) => app.inDevelopment);
-	const runnableApps = apps.filter((app) => app.runnable);
+	const publishedApps = dummyApps.filter((app) => app.status === 'published');
+	const inDevelopmentApps = dummyApps.filter((app) => app.inDevelopment);
+	const runnableApps = dummyApps.filter((app) => app.runnable);
 
 	const toggleMenu = () => {
 		setShowMenu(!showMenu);
@@ -96,7 +96,7 @@ export default function DashboardPage({ isDeveloper }) {
 								<ul>
 									<p>All Apps</p>
 									<div className="row">
-										{apps.map((app) => (
+										{dummyApps.map((app) => (
 											<DashboardApp
 												key={app.name}
 												name={app.name}
