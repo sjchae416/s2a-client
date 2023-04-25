@@ -39,7 +39,7 @@ export default function ManageAppPage({
 			if (
 				window.confirm(
 					'You have unsaved changes, Are you sure you want to leave!'
-				) == true
+				) === true
 			) {
 				const create_app_modal = document.querySelector('#create-app-modal');
 				create_app_modal.style.display = 'block';
