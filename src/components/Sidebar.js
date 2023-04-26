@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Modal from '@mui/material/Modal';
 import {
 	createAppAPI,
 	updateAppAPI,
 	createViewAPI,
 	updateUserAPI,
 } from '../api';
+import Modal from "@mui/material/Modal";
 
 const Sidebar = ({
 	setView,
@@ -21,16 +21,7 @@ const Sidebar = ({
 	setViewDatas,
 }) => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
-
 	const navigate = useNavigate();
-
-	const handleSaveClick = () => {
-		setIsModalVisible(true);
-	};
-
-	const handleModalClose = () => {
-		setIsModalVisible(false);
-	};
 
 	const saveViews = async (viewDatas) => {
 		try {
@@ -88,6 +79,14 @@ const Sidebar = ({
 		}
 	};
 
+	const handleSaveClick = () => {
+		setIsModalVisible(true);
+	};
+
+	const handleModalClose = () => {
+		setIsModalVisible(false);
+	};
+
 	const handleSaveChanges = async () => {
 		try {
 			const savedViews = await saveViews(viewDatas);
@@ -104,6 +103,7 @@ const Sidebar = ({
 		} catch (error) {
 			window.alert(error);
 			console.error('Error while saving the App: ', error);
+			setIsModalVisible(false);
 		}
 	};
 
@@ -137,36 +137,32 @@ const Sidebar = ({
 			</button>
 			<hr />
 			<Modal open={isModalVisible} onClose={handleModalClose}>
-				<div className="modal-content">
-					<h5>Save Changes</h5>
-					<h5>Would you like to save your changes before proceeding?</h5>
-					<button
-						onClick={() => {
-							setAppData(null);
-							setViewDatas([]);
-							navigate('/');
-						}}
-						className="btn btn-danger"
-						id="dismiss_create_app_modals"
-					>
-						Discard
-					</button>
-					<button
-						onClick={handleSaveChanges}
-						className="btn btn-success"
-						id="save-changes-btns"
-					>
-						Save
-					</button>
-					<button
-						onClick={handleModalClose}
-						className="btn btn-danger"
-						id="save-changes-btn"
-					>
-						Cancel
-					</button>
-				</div>
-			</Modal>
+        <div className="modal-content">
+          <h5>Save Changes</h5>
+          <h5>Would you like to save your changes before proceeding?</h5>
+          <button
+            onClick={() => navigate("/")}
+            className="btn btn-danger"
+            id="dismiss_create_app_modals"
+          >
+            Discard
+          </button>
+          <button
+            onClick={handleSaveChanges}
+            className="btn btn-success"
+            id="save-changes-btns"
+          >
+            Save
+          </button>
+          <button
+            onClick={handleModalClose}
+            className="btn btn-danger"
+            id="save-changes-btn"
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
 		</div>
 	);
 };

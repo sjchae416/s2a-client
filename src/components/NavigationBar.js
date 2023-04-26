@@ -16,15 +16,17 @@ export default function NavigationBar({ user }) {
 
   useEffect(() => {
     const create_app_modal_btn = document.querySelector("#save-change");
-    const create_app_modal = document.querySelector("#create-app-modal");
+    const create_app_modal = document.querySelector("#create-app-modals");
     const dismiss_create_app_modal = document.querySelector(
       "#dismiss_create_app_modal"
     );
     const create_app_btn = document.querySelector("#create-app-btn");
 
-    create_app_modal_btn.onclick = () => {
-      create_app_modal.style.display = "block";
-    };
+    if (create_app_modal_btn) {
+      create_app_modal_btn.onclick = () => {
+        create_app_modal.style.display = "block";
+      };
+    }
 
     window.onclick = (event) => {
       if (event.target === create_app_modal) {

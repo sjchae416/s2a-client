@@ -32,76 +32,78 @@ export default function ManageAppPage({
 	const [selectedView, setSelectedView] = useState({});
 
 	let navigate = useNavigate();
-
+ 
 	const checkUnsavedData = () => {
-		if (viewName) {
-			if (
-				window.confirm(
-					'You have unsaved changes, Are you sure you want to leave!'
-				) === true
-			) {
-				const create_app_modal = document.querySelector('#create-app-modal');
-				create_app_modal.style.display = 'block';
-			}
-		} else {
-			const create_app_modal = document.querySelector('#create-app-modal');
-			create_app_modal.style.display = 'block';
-		}
-	};
+    if (viewName) {
+      if (
+        window.confirm(
+          "You have unsaved changes, Are you sure you want to leave!"
+        ) === true
+      ) {
+        const create_app_modal = document.querySelector("#create-app-modal");
+        create_app_modal.style.display = "block";
+      }
+    } else {
+      const create_app_modal = document.querySelector("#create-app-modal");
+      create_app_modal.style.display = "block";
+    }
+  };
 
 	useEffect(() => {
-		const create_app_modal_btn = document.querySelector('#create-app');
-		const create_app_modal = document.querySelector('#create-app-modal');
-		const dismiss_create_app_modal = document.querySelector(
-			'#dismiss_create_app_modal'
-		);
-		const create_app_btn = document.querySelector('#create-app-btn');
+    const create_app_modal_btn = document.querySelector("#create-app");
+    const create_app_modal = document.querySelector("#create-app-modal");
+    const dismiss_create_app_modal = document.querySelector(
+      "#dismiss_create_app_modal_publish"
+    );
 
-		if (create_app_modal_btn) {
-			create_app_modal_btn.onclick = () => {
-				create_app_modal.style.display = 'block';
-			};
-		}
+    dismiss_create_app_modal.onclick = (event) => {
+      create_app_modal.style.display = "none";
+    };
 
-		window.onclick = (event) => {
-			if (event.target === create_app_modal) {
-				create_app_modal.style.display = 'none';
-			}
-		};
+    const create_app_btn = document.querySelector("#create-app-btn");
 
-		dismiss_create_app_modal.onclick = (event) => {
-			create_app_modal.style.display = 'none';
-		};
-		create_app_btn.onclick = (event) => {
-			create_app_modal.style.display = 'none';
-		};
-	}, []);
+    if (create_app_modal_btn) {
+      create_app_modal_btn.onclick = () => {
+        create_app_modal.style.display = "block";
+      };
+    }
+
+    window.onclick = (event) => {
+      if (event.target === create_app_modal) {
+        create_app_modal.style.display = "none";
+      }
+    };
+
+    create_app_btn.onclick = (event) => {
+      create_app_modal.style.display = "none";
+    };
+  }, []);
 
 	useEffect(() => {
-		const create_app_modal_btn = document.querySelector('#save-change');
-		const create_app_modal = document.querySelector('#save-change-modal');
-		const dismiss_create_app_modal = document.querySelector(
-			'#dismiss_create_app_modals'
-		);
-		const create_app_btn = document.querySelector('#save-change-btn');
+    const create_app_modal_btn = document.querySelector("#save-change");
+    const create_app_modal = document.querySelector("#save-change-modal");
+    const dismiss_create_app_modal = document.querySelector(
+      "#dismiss_create_app_modals"
+    );
+    const create_app_btn = document.querySelector("#save-change-btn");
 
-		create_app_modal_btn.onclick = () => {
-			create_app_modal.style.display = 'block';
-		};
+    create_app_modal_btn.onclick = () => {
+      create_app_modal.style.display = "block";
+    };
 
-		window.onclick = (event) => {
-			if (event.target === create_app_modal) {
-				create_app_modal.style.display = 'none';
-			}
-		};
+    window.onclick = (event) => {
+      if (event.target === create_app_modal) {
+        create_app_modal.style.display = "none";
+      }
+    };
 
-		dismiss_create_app_modal.onclick = (event) => {
-			create_app_modal.style.display = 'none';
-		};
-		create_app_btn.onclick = (event) => {
-			create_app_modal.style.display = 'none';
-		};
-	}, []);
+    dismiss_create_app_modal.onclick = (event) => {
+      create_app_modal.style.display = "none";
+    };
+    create_app_btn.onclick = (event) => {
+      create_app_modal.style.display = "none";
+    };
+  }, []);
 
 	const handleSaveClick = () => {
 		setIsModalOpen(true);
@@ -180,61 +182,61 @@ export default function ManageAppPage({
 					</div>
 				</div>
 				<div className="modal" id="save-change-modal">
-					<div className="modal-dialog-centered">
-						<div className="modal-content">
-							<div className="card">
-								<div className="form-group save_ur_chnage">
-									<h5>Save Changes</h5>
-									<h5>
-										Would you like to save your changes before proceeding?
-									</h5>
-									<button
-										onClick={() => navigate('/')}
-										className="btn btn-danger "
-										id="dismiss_create_app_modals"
-									>
-										Discard
-									</button>
-									<button
-										onClick={() => navigate('/')}
-										className="btn btn-success"
-										id="save-change-btns"
-									>
-										Save
-									</button>
-									<button className="btn btn-danger " id="save-change-btn">
-										Cancel
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+          <div className="modal-dialog-centered">
+            <div className="modal-content">
+              <div className="card">
+                <div className="form-group save_ur_chnage">
+                  <h5>Save Changes</h5>
+                  <h5>
+                    Would you like to save your changes before proceeding?
+                  </h5>
+                  <button
+                    onClick={() => navigate("/")}
+                    className="btn btn-danger "
+                    id="dismiss_create_app_modals"
+                  >
+                    Discard
+                  </button>
+                  <button
+                    onClick={() => navigate("/")}
+                    className="btn btn-success"
+                    id="save-change-btns"
+                  >
+                    Save
+                  </button>
+                  <button className="btn btn-danger " id="save-change-btn">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
 				<div className="modal" id="create-app-modal">
-					<div className="modal-dialog-centered">
-						<div className="modal-content">
-							<div className="card">
-								<div className="form-group save_ur_chnage">
-									<h5>
-										Would you like to publish your app? <br /> If not, it will
-										be saved under in development and will not be available to
-										users.
-									</h5>
-									<button
-										className="btn btn-danger"
-										id="dismiss_create_app_modal"
-									>
-										No
-									</button>
-									<button className="btn btn-success" id="create-app-btn">
-										Yes
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+          <div className="modal-dialog-centered">
+            <div className="modal-content">
+              <div className="card">
+                <div className="form-group save_ur_chnage">
+                  <h5>
+                    Would you like to publish your app? <br /> If not, it will
+                    be saved under in development and will not be available to
+                    users.
+                  </h5>
+                  <button
+                    className="btn btn-danger"
+                    id="dismiss_create_app_modal_publish"
+                  >
+                    No
+                  </button>
+                  <button className="btn btn-success" id="create-app-btn">
+                    Yes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 				<br />
 				<br />
 				<br />
