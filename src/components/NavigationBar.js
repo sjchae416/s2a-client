@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function NavigationBar({ user }) {
-	const [showMenu, setShowMenu] = useState(false);
+export default function NavigationBar({ user, isDashboard }) {
+  const [showMenu, setShowMenu] = useState(false);
   let navigate = useNavigate();
 
-	const toggleMenu = () => {
-		setShowMenu(!showMenu);
-	};
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -41,12 +41,12 @@ export default function NavigationBar({ user }) {
       create_app_modal.style.display = "none";
     };
   }, []);
-  
-	return (
-		<div className="card text-right card_one">
-			<h3 id="save-change">S2A</h3>
-			<span className=" ml-auto">
-				{/* Here are the Undo-Redo and Save buttons
+
+  return (
+    <div className="card text-right card_one">
+      {isDashboard ? <h3>S2A</h3> : <h3 id="save-change">S2A</h3>}
+      <span className=" ml-auto">
+        {/* Here are the Undo-Redo and Save buttons
 				<button className="btn btn-info"> {'<'} </button>&nbsp;
 				<span className=" ml-auto" />
 				<button className="btn btn-info"> {'>'} </button>&nbsp;
@@ -62,19 +62,19 @@ export default function NavigationBar({ user }) {
 					<button onClick={handleConfirmClick}>Confirm</button>
 				</Modal>
 				*/}
-				<span className="profile-letter ml-auto" onClick={toggleMenu}>
-					{user.email && user.email.charAt(0).toUpperCase()}
-				</span>
-				{showMenu && (
-					<div className="dropdown-menu">
-						<button className="btn-logout-dropdown" onClick={handleLogout}>
-							Log Out
-						</button>
-					</div>
-				)}
-			</span>
+        <span className="profile-letter ml-auto" onClick={toggleMenu}>
+          {user.email && user.email.charAt(0).toUpperCase()}
+        </span>
+        {showMenu && (
+          <div className="dropdown-menu">
+            <button className="btn-logout-dropdown" onClick={handleLogout}>
+              Log Out
+            </button>
+          </div>
+        )}
+      </span>
 
-      <div className="modal" id="create-app-modal">
+      <div className="modal" id="create-app-modals">
         <div className="modal-dialog-centered">
           <div className="modal-content">
             <div className="card">
@@ -103,6 +103,6 @@ export default function NavigationBar({ user }) {
           </div>
         </div>
       </div>
-		</div>
-	);
+    </div>
+  );
 }
