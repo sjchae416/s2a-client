@@ -14,7 +14,7 @@ export const loadTableAPI = async (tableData) => {
 		const parsedData = JSON.parse(responseBody);
 		return parsedData;
 	} catch (error) {
-		console.error(error);
+		// console.error(error);
 	}
 };
 
