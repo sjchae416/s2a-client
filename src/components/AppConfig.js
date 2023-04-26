@@ -15,6 +15,10 @@ export default function AppConfig({ user, app, setAppData, setViewRole }) {
 
 	useEffect(() => {
 		console.log('🚀 ~ file: AppConfig.js:18 ~ useEffect ~ app:', app);
+		if (app !== null) {
+			setName(app.name);
+			setRoleMembershipSheet(app.roleMembershipSheet);
+		}
 	}, [app]);
 
 	const now = new Date();
@@ -96,7 +100,8 @@ export default function AppConfig({ user, app, setAppData, setViewRole }) {
 				<label>Role Membership Sheet URL</label>
 				<input
 					required
-					type="text"
+          type="text"
+          value={roleMembershipSheet}
 					className="form-control"
 					onChange={(e) => handleSaveURL(e.target.value)}
 					// onChange={(e) => setRoleMembershipSheet(e.target.value)}

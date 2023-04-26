@@ -141,7 +141,11 @@ const Sidebar = ({
 					<h5>Save Changes</h5>
 					<h5>Would you like to save your changes before proceeding?</h5>
 					<button
-						onClick={() => navigate('/')}
+						onClick={() => {
+							setAppData(null);
+							setViewDatas([]);
+							navigate('/');
+						}}
 						className="btn btn-danger"
 						id="dismiss_create_app_modals"
 					>
