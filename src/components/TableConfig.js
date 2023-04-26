@@ -178,7 +178,15 @@ export default function TableConfig({
 							}
 						});
 					}
-				} else {
+				}else if(field === 'reference'){
+					// if it is a reference, store the table
+					if(value === 'None') updatedConfig[configIndex][field] = value;
+					else{
+						const table = tables.find((item) => item?._id === event.target.value);
+						updatedConfig[configIndex][field] = table;
+					}
+				} 
+				else {
 					// If not a radio button, update field value directly
 					updatedConfig[configIndex][field] = value;
 				}
@@ -301,12 +309,12 @@ export default function TableConfig({
 											onChange={(event) =>
 												handleInputChange(event, key, 'reference')
 											}
-											defaultValue="false"
+											defaultValue="None"
 										>
 											<option></option>
-											{dummyRef.map((ref) => (
-												<option key={ref} value={ref}>
-													{ref}
+											{tables.map((table) => (
+												<option key={table._id} value={table._id}>
+													{table.name}
 												</option>
 											))}
 										</select>
