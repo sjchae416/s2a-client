@@ -204,7 +204,7 @@ export default function ViewConfig({
 			url: selectedTable.url,
 			sheetIndex: selectedTable.sheetIndex,
 		};
-		const data = await loadTable(tableData);
+		const data = await loadTableAPI(tableData);
 
 		let emailIndex = -1;
 		const headerRow = data[0];

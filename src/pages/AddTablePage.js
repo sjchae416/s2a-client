@@ -18,12 +18,12 @@ export default function AddTablePage({
 			<div className="container">
 				<NavigationBar user={user} />
 				<br />
-
+				<h3>Create New Table</h3>
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
-						<div className="col-1 border-right text-center">
+						{/* <div className="col-1 border-right text-center">
 							<button>Table</button>
-						</div>
+						</div> */}
 						<div className="col-1 border-right text-center">
 							<button onClick={() => setAddTable(!addTable)}>Add Table</button>
 							<List
