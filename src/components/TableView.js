@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import DetailView from "./DetailView";
 
-export default function TableView({view, listViews}) {
+export default function TableView({ view, listViews }) {
   let name, table, col, type, allowedActions, role;
-  let viewFilter = "", 
+  let viewFilter = "",
     userFilter = "";
   name = view.name;
   table = view.table;
@@ -15,8 +15,8 @@ export default function TableView({view, listViews}) {
   allowedActions = view.allowedActions;
   role = view.roles;
 
-  if(view.filter != "") viewFilter = view.filter;
-  if(view.userFilter != "") userFilter = view.userFilter;
+  if (view.filter != "") viewFilter = view.filter;
+  if (view.userFilter != "") userFilter = view.userFilter;
 
   const [open, setOpen] = useState(false);
   const [openDelete, setDeleteOpen] = useState(false);
@@ -32,43 +32,43 @@ export default function TableView({view, listViews}) {
       Email: "george@gmail.com",
       Class: "CSE 314",
       Grade: "B",
-      Passed: true
+      Passed: true,
     },
     {
       Name: "Bob Ross",
       Email: "bob@gmail.com",
       Class: "CSE 215",
       Grade: "A",
-      Passed: true
+      Passed: true,
     },
     {
       Name: "John Smith",
       Email: "john@gmail.com",
       Class: "CSE 220",
       Grade: "B-",
-      Passed: true
+      Passed: true,
     },
     {
       Name: "Kevin Lin",
       Email: "kevin@gmail.com",
       Class: "CSE 214",
       Grade: "C-",
-      Passed: false
+      Passed: false,
     },
     {
       Name: "Henry Chen",
       Email: "henry@gmail.com",
       Class: "CSE 312",
       Grade: "A",
-      Passed: true
+      Passed: true,
     },
     {
       Name: "Bob Chen",
       Email: "bob@gmail.com",
       Class: "CSE 216",
       Grade: "A",
-      Passed: true
-    }
+      Passed: true,
+    },
   ]);
 
   const [filteredTest, setFilteredTest] = useState([...test]);
@@ -88,31 +88,20 @@ export default function TableView({view, listViews}) {
   };
 
   const handleAddRow = () => {
-    //check if the fields are empty
-    for(let i = 0; i < col.length; i++) {
-      if(!newRowData[col[i]]) {
+    //check if the fields are empty and type correctness
+    for (let i = 0; i < col.length; i++) {
+      if (!newRowData[col[i]]) {
         alert("Please fill in all fields");
         return;
       }
-    }
-
-    if (!newRowData.Name.match(/^[A-Za-z]+$/)) {
-      return window.alert("Name must be alphabets only!");
-    }
-    if (
-      !newRowData.Email.match(
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-      )
-    ) {
-      return window.alert("Email must be valid!");
-    }
-    if (!newRowData.Class.match(/^[a-zA-Z]{3}\s\d{3}$/)) {
-      return window.alert("Class must be valid eg. AAA 111");
+      if (typeof newRowData[col[i]] !== "string") {
+        return window.alert(`${newRowData[col[i]]} must be string only!`);
+      }
     }
 
     const newRow = {};
     col.forEach((column) => {
-      newRow[column] = newRowData[column] || '';
+      newRow[column] = newRowData[column] || "";
     });
     const updatedTest = [...test, newRow];
     setTest(updatedTest);
@@ -130,14 +119,14 @@ export default function TableView({view, listViews}) {
 
   const handleDeleteClick = () => {
     setShowMinusButtons(!showMinusButtons);
-  }
+  };
 
   const handleDelete = () => {
     const deletedRow = {};
     col.forEach((columnName) => {
       deletedRow[columnName] = selectedRowData[columnName];
     });
-    console.log('Deleted Row:', deletedRow);
+    console.log("Deleted Row:", deletedRow);
     // Call the delete function to remove the row from the data
     // ...
     handleClose();
@@ -147,11 +136,11 @@ export default function TableView({view, listViews}) {
     const foundRow = test.find((testRow) => testRow.Name === row.Name);
     setSelectedRow(foundRow);
     // console.log(foundRow);
-  }
+  };
   useEffect(() => {
-      const result = test.filter((row) => row[viewFilter]);
-      setFilteredTest(result);
-    }, []);
+    const result = test.filter((row) => row[viewFilter]);
+    setFilteredTest(result);
+  }, []);
 
   const updateRecord = (data) => {
     const index = filteredTest.findIndex((item) => item.Email === data.Email);
@@ -160,22 +149,22 @@ export default function TableView({view, listViews}) {
 
   return (
     <div>
-      <Button 
-        variant="contained" 
-        onClick={handleOpen} 
-        disabled={!allowedActions.includes('Add Record') ? true : false}
-        >
-          Add Record
+      <Button
+        variant="contained"
+        onClick={handleOpen}
+        disabled={!allowedActions.includes("Add Record") ? true : false}
+      >
+        Add Record
       </Button>
-      <Button 
-        variant="contained" 
-        onClick={handleDeleteClick} 
-        disabled={!allowedActions.includes('Delete Record') ? true : false}
-        >
-          Delete Record
+      <Button
+        variant="contained"
+        onClick={handleDeleteClick}
+        disabled={!allowedActions.includes("Delete Record") ? true : false}
+      >
+        Delete Record
       </Button>
-      <br/>
-      <br/>
+      <br />
+      <br />
       <table>
         <thead>
           <tr>
@@ -225,16 +214,16 @@ export default function TableView({view, listViews}) {
               <TextField
                 name={columnName}
                 label={columnName}
-                value={newRowData[columnName] || ''}
+                value={newRowData[columnName] || ""}
                 onChange={handleModalInputChange}
               />
-              <br/>
-              <br/>
+              <br />
+              <br />
             </div>
           ))}
-          <br/>
+          <br />
           <div>
-          <Button variant="contained" onClick={handleClose}>
+            <Button variant="contained" onClick={handleClose}>
               Cancel
             </Button>
             <Button
@@ -253,14 +242,14 @@ export default function TableView({view, listViews}) {
           <h4>Are you sure you want to delete this row?</h4>
           {selectedRowData && (
             <div>
-             {col.map((columnName) => (
-              <div key={columnName}>
-                <strong>{columnName}: </strong>
-                <span>{selectedRowData[columnName]}</span>
-                <br />
-                <br />
-              </div>
-            ))}
+              {col.map((columnName) => (
+                <div key={columnName}>
+                  <strong>{columnName}: </strong>
+                  <span>{selectedRowData[columnName]}</span>
+                  <br />
+                  <br />
+                </div>
+              ))}
             </div>
           )}
           <div>
