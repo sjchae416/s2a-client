@@ -18,15 +18,18 @@ export const customHistory = createBrowserHistory();
 
 const App = () => {
 	const { user, setUser } = useContext(UserContext);
+	// REVIEW appIds is an array of User.apps ids
 	const [appIds, setAppIds] = useState([]);
+	// REVIEW tableIds is an array of User.tables ids
 	const [tableIds, setTableIds] = useState([]);
-	// REVIEW app stores appData in AppConfig
+	// REVIEW app stores appData in AppConfig.js
 	const [app, setAppData] = useState(null);
-	const [apps, setApps] = useState(null);
-	const [tables, setTables] = useState([]);
-	const [viewDatas, setViewDatas] = useState([]);
-	// REVIEW no more user.views!
-	const [views, setViews] = useState([]);
+	// REVIEW userApps is an array of User.apps docs
+	const [userApps, setUserApps] = useState(null);
+	// REVIEW tables is an array of User.tables docs
+	const [userTables, setTables] = useState(null);
+	// REVIEW viewDatas is an arraly of viewData objects
+	const [viewDatas, setViewDatas] = useState(null);
 	// const [developers, setDevelopers] = useState([]);
 	const [isDeveloper, setIsDeveloper] = useState(false);
 
@@ -52,10 +55,6 @@ const App = () => {
 					break;
 				}
 			}
-			console.log(
-				'🚀 ~ file: App.js:53 ~ checkGlobalTable ~ foundDeveloper:',
-				foundDeveloper
-			);
 			setIsDeveloper(foundDeveloper);
 		} catch (error) {
 			console.error(error);
@@ -63,24 +62,23 @@ const App = () => {
 	};
 
 	useEffect(() => {
-		const loadTables = async () => {
+		const loadTables = async (tableIds) => {
 			try {
-				const userTables = await Promise.all(
-					tableIds.map(async (id) => {
-						return await readTableAPI(id);
+				const tables = await Promise.all(
+					tableIds.map(async (tableId) => {
+						return await readTableAPI(tableId);
 					})
 				);
-				console.log(
-					'🚀 ~ file: App.js:96 ~ loadTables ~ userTables:',
-					userTables
-				);
-				setTables(userTables);
+				console.log('🚀 ~ file: App.js:96 ~ loadTables ~ tables:', tables);
+				setTables(tables);
 			} catch (error) {
 				console.error('Error fetching App: ', error);
 			}
 		};
 
-		loadTables();
+		if (tableIds !== null) {
+			loadTables(tableIds);
+		}
 	}, [tableIds]);
 
 	// NOTE APPS
@@ -89,20 +87,23 @@ const App = () => {
 	};
 
 	useEffect(() => {
-		const loadApps = async () => {
+		const loadApps = async (appIds) => {
 			try {
-				const userApps = await Promise.all(
-					appIds.map(async (id) => {
-						return await getAppByIdAPI(id);
+				const apps = await Promise.all(
+					appIds.map(async (appId) => {
+						return await getAppByIdAPI(appId);
 					})
 				);
-				console.log('🚀 ~ file: App.js:44 ~ loadApps ~ userApps:', userApps);
-				setApps(userApps);
+				console.log('🚀 ~ file: App.js:44 ~ loadApps ~ apps:', apps);
+				setUserApps(apps);
 			} catch (error) {
 				console.error('Error fetching App: ', error);
 			}
 		};
-		loadApps();
+
+		if (appIds !== null) {
+			loadApps(appIds);
+		}
 	}, [appIds]);
 
 	// NOTE ADMIN
@@ -149,6 +150,9 @@ const App = () => {
 			checkGlobalTable();
 			loadAppIds(user);
 			loadTableIds(user);
+		} else {
+			setAppIds(null);
+			setTableIds(null);
 		}
 	}, [user]);
 
@@ -174,8 +178,9 @@ const App = () => {
 							<ManageAppPage
 								appIds={appIds}
 								app={app}
+								userApps={userApps}
 								setAppData={setAppData}
-								tables={tables}
+								userTables={userTables}
 								viewDatas={viewDatas}
 								setViewDatas={setViewDatas}
 							/>
@@ -183,7 +188,9 @@ const App = () => {
 					/>
 					<Route
 						path="/add-table"
-						element={<AddTablePage tableIds={tableIds} tables={tables} />}
+						element={
+							<AddTablePage tableIds={tableIds} userTables={userTables} />
+						}
 					/>
 					{/* <Route
 						path="/admin"

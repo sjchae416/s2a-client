@@ -10,7 +10,7 @@ export default function TableConfig({
   user,
   setUser,
   tableIds,
-  tables,
+  userTables,
   selectedTable,
   setSelectedTable,
   addTable,
@@ -60,8 +60,8 @@ export default function TableConfig({
   };
 
   const isNameUnique = () => {
-    for (let i = 0; i < tables.length; i++) {
-      if (tables[i]?.name === name) {
+    for (let i = 0; i < userTables.length; i++) {
+      if (userTables[i]?.name === name) {
         return false;
       }
     }

@@ -1,54 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-// removed redux and installed shortID library for viewID
 import shortid from 'shortid';
 import { loadTableAPI } from '../api';
 
-// const testData = {
-//   name: "test",
-//   url: "https://docs.google.com/spreadsheets/d/1yHt-_Pbu52TJW3znWxo9VlHnHOQaFVvRMTpkrWYtM_s/edit#gid=1530492309",
-//   sheetIndex: "Sheet1",
-//   columns: [
-//     {
-//       name: "Name",
-//       key: "true",
-//       label: "false",
-//       reference: "test2",
-//       type: "string",
-//     },
-//     {
-//       name: "Email",
-//       key: "false",
-//       label: "true",
-//       reference: "test1",
-//       type: "string",
-//     },
-//     {
-//       name: "Class",
-//       key: "false",
-//       label: "false",
-//       reference: "test1",
-//       type: "string",
-//     },
-//     {
-//       name: "Grade",
-//       key: "false",
-//       label: "false",
-//       reference: "test2",
-//       type: "string",
-//     },
-//     {
-//       name: "Passed",
-//       key: "false",
-//       label: "false",
-//       reference: "test2",
-//       type: "bool",
-//     },
-//   ],
-// };
-
 export default function ViewConfig({
 	viewRole,
-	tables,
+	userTables,
+	viewDatas,
 	setViewDatas,
 	setViewDataList,
 	selectedView,
@@ -74,17 +31,17 @@ export default function ViewConfig({
 	const formElement = useRef();
 
 	useEffect(() => {
-		console.log('🚀 ~ file: ViewConfig.js:73 ~ setViewDatas:', setViewDatas);
-	}, [setViewDatas]);
+		console.log('🚀 ~ file: ViewConfig.js:34 ~ viewDatas:', viewDatas);
+	}, [viewDatas]);
 
 	const viewData = {
-		id: shortid.generate(), //added the shortid library
-		name: viewName,
-		table: selectedTableId,
-		columns: selectedColumns,
+		id: shortid.generate(),
+		viewName: viewName,
+		selectedTableId: selectedTableId,
+		selectedColumns: selectedColumns,
 		viewType: viewType,
-		allowedActions: allowedAction,
-		roles: role,
+		allowedAction: allowedAction,
+		role: role,
 		filter: filter,
 		userFilter: userFilter,
 		editFilter: editFilter,
@@ -110,18 +67,21 @@ export default function ViewConfig({
 			return window.alert('Choose role!');
 		} else {
 			const viewToSave = {
-				name: viewData.name,
-				table: viewData.table,
-				colums: viewData.columns,
+				name: viewData.viewName,
+				table: viewData.selectedTableId,
+				colums: viewData.selectedColumns,
 				viewType: viewData.viewType,
-				allowedActions: viewData.allowedActions,
-				roles: viewData.roles,
+				allowedActions: viewData.allowedAction,
+				roles: viewData.role,
 				filter: viewData.filter,
 				userFilter: viewData.userFilter,
 				editFilter: viewData.editFilter,
 				editableCols: viewData.editableCols,
 			};
-			setViewDatas((prev) => [...prev, viewToSave]);
+			// setViewDatas((prev) => [...prev, viewToSave]);
+			setViewDatas((prev) =>
+				prev === null ? [viewToSave] : [...prev, viewToSave]
+			);
 			setViewDataList((preVal) => {
 				return [...preVal, viewData];
 			});
@@ -184,7 +144,7 @@ export default function ViewConfig({
 			setRole(selectedView.role);
 			setSelectedTableId(selectedView.selectedTableId);
 
-			const selectedTableColumns = tables.find(
+			const selectedTableColumns = userTables.find(
 				(table) => table?._id === selectedView.selectedTableId
 			)?.columns;
 
@@ -261,7 +221,7 @@ export default function ViewConfig({
 		setSelectedTableId(e.target.value);
 
 		if (e.target.value) {
-			const selectedTableColumns = tables.find(
+			const selectedTableColumns = userTables.find(
 				(table) => table?._id === e.target.value
 			)?.columns;
 			setColumns(selectedTableColumns);
@@ -379,9 +339,11 @@ export default function ViewConfig({
 				<label>Table</label>
 				<select onChange={(e) => handleSelectTable(e)} className="form-control">
 					<option value="">Select Table</option>
-					{tables.map((table) => (
+					{userTables.map((table) => (
 						<option
-							selected={selectedView.selectedTableId === table._id ? true : false}
+							selected={
+								selectedView.selectedTableId === table._id ? true : false
+							}
 							key={table._id}
 							value={table._id}
 						>

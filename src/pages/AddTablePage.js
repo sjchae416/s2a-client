@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { TableConfig, List, NavigationBar } from "../components";
 import UserContext from "../UserContext";
 
-export default function AddTablePage({ tableIds, tables }) {
+export default function AddTablePage({ tableIds, userTables }) {
   const { user, setUser } = useContext(UserContext);
   const [selectedTable, setSelectedTable] = useState(null);
   const [addTable, setAddTable] = useState(false);
@@ -31,7 +31,7 @@ export default function AddTablePage({ tableIds, tables }) {
               </button>
               <List
                 type="table"
-                tables={tables}
+                userTables={userTables}
                 setSelectedTable={setSelectedTable}
               />
             </div>
@@ -40,7 +40,7 @@ export default function AddTablePage({ tableIds, tables }) {
                 user={user}
                 setUser={setUser}
                 tableIds={tableIds}
-                tables={tables}
+                userTables={userTables}
                 selectedTable={selectedTable}
                 setSelectedTable={setSelectedTable}
                 addTable={addTable}
