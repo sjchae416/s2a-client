@@ -183,13 +183,7 @@ const App = () => {
 					/>
 					<Route
 						path="/add-table"
-						element={
-							<AddTablePage
-								tableIds={tableIds}
-								setTableIds={setTableIds}
-								tables={tables}
-							/>
-						}
+						element={<AddTablePage tableIds={tableIds} tables={tables} />}
 					/>
 					{/* <Route
 						path="/admin"

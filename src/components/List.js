@@ -7,21 +7,33 @@ const List = ({
 	setSelectedView,
 	setSelectedTable,
 }) => {
+	const handleSelectView = (view) => {
+		setSelectedView(view);
+	};
+
+	const handleSelectTable = (table) => {
+		setSelectedTable(table);
+	};
+
 	return (
 		<div>
 			{type === 'view'
-				? viewDataList.map((item) => (
-						<div key={item.id} onClick={() => setSelectedView(item)}>
+				? viewDataList.map((view) => (
+						<div key={view.id} onClick={() => handleSelectView(view)}>
 							<hr />
-							{item.viewName}
+							{view.viewName}
 						</div>
 				  ))
-				: tables.map((table) => (
-						<div key={table._id} onClick={() => setSelectedTable(table)}>
-							<hr />
-							{table.name}
-						</div>
-				  ))}
+				: tables.length > 0 &&
+				  tables.map(
+						(table) =>
+							table !== null && (
+								<div key={table._id} onClick={() => handleSelectTable(table)}>
+									<hr />
+									{table.name}
+								</div>
+							)
+				  )}
 		</div>
 	);
 };

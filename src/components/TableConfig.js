@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { createTableAPI, loadTableAPI, updateUserAPI } from '../api';
+import {
+	createTableAPI,
+	deleteTableAPI,
+	loadTableAPI,
+	updateUserAPI,
+} from '../api';
 
 export default function TableConfig({
 	user,
@@ -7,11 +12,12 @@ export default function TableConfig({
 	tableIds,
 	tables,
 	selectedTable,
+	setSelectedTable,
 	addTable,
 }) {
-	const [sheetIndex, setSheetIndex] = useState('');
 	const [name, setName] = useState('');
 	const [url, setUrl] = useState('');
+	const [sheetIndex, setSheetIndex] = useState('');
 	const [showTable, setShowTable] = useState(false);
 	const [tableDataArray, setTableDataArray] = useState([]);
 	const dummyRef = ['test1', 'test2', 'false'];
@@ -19,12 +25,16 @@ export default function TableConfig({
 	const [keys, setKeys] = useState([]);
 
 	useEffect(() => {
-		if (selectedTable.name) {
+		if (selectedTable !== null) {
 			setName(selectedTable.name);
 			setUrl(selectedTable.url);
 			setSheetIndex(selectedTable.sheetIndex);
+		} else {
+			setName('');
+			setUrl('');
+			setSheetIndex('');
 		}
-	}, [selectedTable.name]);
+	}, [selectedTable]);
 
 	const clearForms = () => {
 		setSheetIndex('');
@@ -160,6 +170,7 @@ export default function TableConfig({
 		clearForms();
 	};
 
+	// FIXME where is 'type' assigned?
 	const handleInputChange = (event, key, field) => {
 		const { value, type, checked } = event.target;
 		setConfig((prevConfig) => {
@@ -189,6 +200,7 @@ export default function TableConfig({
 					key: false,
 					label: false,
 					reference: 'false',
+					// FIXME have a default Type value either here or at the correct place
 					type: '',
 				};
 				newConfig.name = key;
@@ -208,6 +220,27 @@ export default function TableConfig({
 		setUrl('');
 		setSheetIndex('');
 		setShowTable(false);
+	};
+
+	const handleDeleteTable = async (user, selectedTableId) => {
+		try {
+			const result = await deleteTableAPI(selectedTableId);
+
+			if (result) {
+				const updatedTableIds = tableIds.filter(
+					(tableId) => tableId !== selectedTableId
+				);
+				const update = { tables: updatedTableIds };
+				const updatedUser = await updateUserAPI(user._id, update);
+				setUser(updatedUser);
+				setSelectedTable(null);
+			} else {
+				window.alert('Failed to delete the Table');
+			}
+		} catch (error) {
+			window.alert(error);
+			console.error('Error while deleting the Table: ', error);
+		}
 	};
 
 	return (
@@ -248,13 +281,17 @@ export default function TableConfig({
 					onChange={(e) => setSheetIndex(e.target.value)}
 				/>
 			</div>
-			<div className="text-right">
-				<button onClick={handleLoad} className="btn btn-info">
-					Load
-				</button>
-			</div>
+
+			{selectedTable === null && (
+				<div className="text-right">
+					<button onClick={handleLoad} className="btn btn-info">
+						Load
+					</button>
+				</div>
+			)}
 			<br />
 			<br />
+
 			{showTable && (
 				<div>
 					<table className="table table-bordered">
@@ -318,7 +355,7 @@ export default function TableConfig({
 												handleInputChange(event, key, 'type')
 											}
 										>
-											<option></option>
+											{/* FIXME use the ACTUAL type name in JS for value */}
 											<option value="int">Number</option>
 											<option value="bool">Boolean</option>
 											<option value="string">Text</option>
@@ -340,6 +377,14 @@ export default function TableConfig({
 							Create
 						</button>
 					</div>
+				</div>
+			)}
+
+			{selectedTable !== null && (
+				<div>
+					<button onClick={() => handleDeleteTable(user, selectedTable._id)}>
+						DELETE
+					</button>
 				</div>
 			)}
 			<br />

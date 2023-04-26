@@ -89,7 +89,12 @@ export const deleteTableAPI = async (id) => {
 			credentials: 'include',
 			headers: defaultHeader,
 		});
-		return response.status === 204;
+
+		if (response.ok) {
+			return response.status === 204;
+		} else {
+			return new Error(response.statusText);
+		}
 	} catch (error) {
 		console.error(error);
 	}
