@@ -14,7 +14,6 @@ export default function TableConfig({
 	const [url, setUrl] = useState('');
 	const [showTable, setShowTable] = useState(false);
 	const [tableDataArray, setTableDataArray] = useState([]);
-	const dummyRef = ['test1', 'test2', 'false'];
 	const [config, setConfig] = useState([]);
 	const [keys, setKeys] = useState([]);
 
