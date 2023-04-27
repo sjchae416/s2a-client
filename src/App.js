@@ -23,17 +23,12 @@ export const customHistory = createBrowserHistory();
 
 const App = () => {
 	const { user, setUser } = useContext(UserContext);
-	// REVIEW appIds is an array of User.apps ids
+	const [isAppSaved, setIsAppSaved] = useState(false);
 	const [appIds, setAppIds] = useState([]);
-	// REVIEW tableIds is an array of User.tables ids
 	const [tableIds, setTableIds] = useState([]);
-	// REVIEW app stores appData in AppConfig.js
 	const [app, setAppData] = useState(null);
-	// REVIEW userApps is an array of User.apps docs
 	const [userApps, setUserApps] = useState(null);
-	// REVIEW tables is an array of User.tables docs
 	const [userTables, setTables] = useState(null);
-	// REVIEW viewDatas is an arraly of viewData objects
 	const [viewDatas, setViewDatas] = useState(null);
 	// const [developers, setDevelopers] = useState([]);
 	const [isDeveloper, setIsDeveloper] = useState(false);
@@ -92,7 +87,6 @@ const App = () => {
 	}, [tableIds]);
 
 	// NOTE APPS
-
 	function findUserRoles(email, roleSheetData) {
 		if (roleSheetData.length === 0) {
 			return [];
@@ -160,25 +154,26 @@ const App = () => {
 		console.log('developerApps', developerApps);
 	}, [developerApps]);
 
-	useEffect(() => {
-		const loadApps = async (appIds) => {
-			try {
-				const apps = await Promise.all(
-					appIds.map(async (appId) => {
-						return await getAppByIdAPI(appId);
-					})
-				);
-				console.log('🚀 ~ file: App.js:44 ~ loadApps ~ apps:', apps);
-				setUserApps(apps);
-			} catch (error) {
-				console.error('Error fetching App: ', error);
-			}
-		};
+	// NOTE keep this for backup
+	// useEffect(() => {
+	// 	const loadApps = async (appIds) => {
+	// 		try {
+	// 			const apps = await Promise.all(
+	// 				appIds.map(async (appId) => {
+	// 					return await getAppByIdAPI(appId);
+	// 				})
+	// 			);
+	// 			console.log('🚀 ~ file: App.js:44 ~ loadApps ~ apps:', apps);
+	// 			setUserApps(apps);
+	// 		} catch (error) {
+	// 			console.error('Error fetching App: ', error);
+	// 		}
+	// 	};
 
-		if (appIds !== null) {
-			loadApps(appIds);
-		}
-	}, [appIds]);
+	// 	if (appIds !== null) {
+	// 		loadApps(appIds);
+	// 	}
+	// }, [appIds]);
 
 	// NOTE ADMIN
 	// const fetchDevelopers = async () => {
@@ -208,7 +203,6 @@ const App = () => {
 			if (response.ok) {
 				if (!data) {
 					setUser(null);
-					// navigate('/login');
 				}
 				setUser(data);
 			} else {
@@ -222,14 +216,22 @@ const App = () => {
 	useEffect(() => {
 		if (user !== null) {
 			checkGlobalTable();
-			loadTableIds(user);
+			// NOTE keep this for backup
+			// loadAppIds();
 			loadAllApps();
-			loadAppIds();
+			loadTableIds(user);
 		} else {
-			setAppIds(null);
+			// NOTE keep this for backup
+			// setAppIds(null);
 			setTableIds(null);
 		}
 	}, [user]);
+
+	useEffect(() => {
+		if (isAppSaved) {
+			loadAllApps();
+		}
+	}, [isAppSaved]);
 
 	useEffect(() => {
 		fetchCurrentUser();
@@ -243,7 +245,14 @@ const App = () => {
 						exact
 						path="/"
 						element={
-							user ? <DashboardPage isDeveloper={isDeveloper} /> : <LoginPage />
+							user ? (
+								<DashboardPage
+									setIsAppSaved={setIsAppSaved}
+									isDeveloper={isDeveloper}
+								/>
+							) : (
+								<LoginPage />
+							)
 						}
 					/>
 					<Route path="/login" element={<LoginPage />} />
@@ -251,7 +260,7 @@ const App = () => {
 						path="/manage-app"
 						element={
 							<ManageAppPage
-								appIds={appIds}
+								setIsAppSaved={setIsAppSaved}
 								app={app}
 								developerApps={developerApps}
 								setAppData={setAppData}

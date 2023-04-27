@@ -12,6 +12,7 @@ import {
 } from '../components';
 
 export default function ManageAppPage({
+	setIsAppSaved,
 	appIds,
 	app,
 	setAppData,
@@ -138,6 +139,7 @@ export default function ManageAppPage({
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
 						<Sidebar
+							setIsAppSaved={setIsAppSaved}
 							setView={setView}
 							viewName={viewName}
 							checkUnsavedData={checkUnsavedData} // replaces myfun
