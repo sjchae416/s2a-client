@@ -5,6 +5,7 @@ import {
 	loadTableAPI,
 	updateUserAPI,
 } from '../api';
+import SelectedTableConfig from "./SelectedTableConfig";
 
 export default function TableConfig({
 	user,
@@ -22,12 +23,15 @@ export default function TableConfig({
 	const [tableDataArray, setTableDataArray] = useState([]);
 	const [config, setConfig] = useState([]);
 	const [keys, setKeys] = useState([]);
+	const [showSelectedTable, setShowSelectedTable] = useState(false);
 
 	useEffect(() => {
 		if (selectedTable !== null) {
+			setShowSelectedTable(true);
 			setName(selectedTable.name);
 			setUrl(selectedTable.url);
 			setSheetIndex(selectedTable.sheetIndex);
+			setKeys(selectedTable.columns);
 		} else {
 			setName('');
 			setUrl('');
@@ -47,6 +51,7 @@ export default function TableConfig({
 
 	useEffect(() => {
 		clearForms();
+		setShowSelectedTable(false);
 	}, [addTable]);
 
 	const isTypeColumnValid = () => {
@@ -191,11 +196,12 @@ export default function TableConfig({
 					// if it is a reference, store the table
 					if(value === 'none') updatedConfig[configIndex][field] = value;
 					else{
-						const table = userTables?.find((item) => item?._id === event.target.value);
+						const table = userTables?.find(
+              (item) => item?._id === event.target.value
+            );
 						updatedConfig[configIndex][field] = table;
 					}
-				} 
-				else {
+				} else {
 					// If not a radio button, update field value directly
 					updatedConfig[configIndex][field] = value;
 				}
@@ -310,92 +316,103 @@ export default function TableConfig({
 							</tr>
 						</thead>
 						<tbody>
-							{keys.map((key) => (
-								<tr key={key}>
-									<td>{key}</td>
-									<td>
-										<label>
-											<input
-												type="radio"
-												name={`radio-col1`}
-												value={key}
-												onChange={(event) =>
-													handleInputChange(event, key, 'key')
-												}
-											/>
-										</label>
-									</td>
-									<td>
-										<label>
-											<input
-												type="radio"
-												name={`radio-col2`}
-												value={key}
-												onChange={(event) =>
-													handleInputChange(event, key, 'label')
-												}
-											/>
-										</label>
-									</td>
-									<td>
-										<select
-											name={`select-${key}`}
-											onChange={(event) =>
-												handleInputChange(event, key, 'reference')
-											}
-											defaultValue="none"
-										>
-											<option value = 'none'>None</option>
-											{userTables?.map((table) => (
-												<option key={table._id} value={table._id}>
-													{table.name}
-												</option>
-											))}
-										</select>
-									</td>
-									<td>
-										<select
-											name={`select-${key}`}
-											onChange={(event) =>
-												handleInputChange(event, key, 'type')
-											}
-										>
-											{/* FIXME remove the blank option and show Text as default and have the value stored default */}
-											<option></option>
-											{/* FIXME use the ACTUAL type name in JS for value */}
-											<option value="string">Text</option>
-											<option value="int">Number</option>
-											<option value="bool">Boolean</option>
-											<option value="url">URL</option>
-										</select>
-									</td>
-								</tr>
-							))}
-						</tbody>
+              {showSelectedTable ? (
+                <SelectedTableConfig keys={keys} userTables={userTables} />
+              ) : (
+                <>
+                  {keys.map((key) => (
+                    <tr key={key}>
+                      <td>{key}</td>
+                      <td>
+                        <label>
+                          <input
+                            type="radio"
+                            name={`radio-col1`}
+                            value={key}
+                            onChange={(event) =>
+                              handleInputChange(event, key, "key")
+                            }
+                          />
+                        </label>
+                      </td>
+                      <td>
+                        <label>
+                          <input
+                            type="radio"
+                            name={`radio-col2`}
+                            value={key}
+                            onChange={(event) =>
+                              handleInputChange(event, key, "label")
+                            }
+                          />
+                        </label>
+                      </td>
+                      <td>
+                        <select
+                          name={`select-${key}`}
+                          onChange={(event) =>
+                            handleInputChange(event, key, "reference")
+                          }
+                          defaultValue="none"
+                        >
+                          <option value="none">None</option>
+                          {userTables?.map((table) => (
+                            <option key={table._id} value={table._id}>
+                              {table.name}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <select
+                          name={`select-${key}`}
+                          onChange={(event) =>
+                            handleInputChange(event, key, "type")
+                          }
+                        >
+                          {/* FIXME remove the blank option and show Text as default and have the value stored default */}
+                          <option></option>
+                          {/* FIXME use the ACTUAL type name in JS for value */}
+                          <option value="string">Text</option>
+                          <option value="int">Number</option>
+                          <option value="bool">Boolean</option>
+                          <option value="url">URL</option>
+                        </select>
+                      </td>
+                    </tr>
+                  ))}
+                </>
+              )}
+            </tbody>
 					</table>
-					<div className="text-right">
-						<button
-							onClick={handleCancelClick}
-							className="btn btn-danger can_btn"
-						>
-							Cancel
-						</button>
-						<button onClick={handleCreateClick} className="btn btn-info">
-							Create
-						</button>
-					</div>
+					{!showSelectedTable && (
+            <div className="text-right">
+              <button
+                onClick={handleCancelClick}
+                className="btn btn-danger can_btn"
+              >
+                Cancel
+              </button>
+              <button onClick={handleCreateClick} className="btn btn-info">
+                Create
+              </button>
+            </div>
+          )}
 				</div>
 			)}
 
 			{selectedTable !== null && (
-				<div>
-					<button onClick={() => handleDeleteTable(user, selectedTable._id)}>
-						DELETE
-					</button>
-				</div>
-			)}
-			<br />
-			<br />
-		</div>
-	);
+        <div>
+          <button
+            className="btn btn-danger"
+            onClick={() => handleDeleteTable(user, selectedTable._id)}
+          >
+            DELETE
+          </button>
+        </div>
+      )}
+      <br />
+      <br />
+    </div>
+  );
 }
