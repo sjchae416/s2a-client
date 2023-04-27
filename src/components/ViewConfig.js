@@ -144,7 +144,7 @@ export default function ViewConfig({
 			setRole(selectedView.role);
 			setSelectedTableId(selectedView.selectedTableId);
 
-			const selectedTableColumns = userTables.find(
+			const selectedTableColumns = userTables?.find(
 				(table) => table?._id === selectedView.selectedTableId
 			)?.columns;
 
@@ -221,7 +221,7 @@ export default function ViewConfig({
 		setSelectedTableId(e.target.value);
 
 		if (e.target.value) {
-			const selectedTableColumns = userTables.find(
+			const selectedTableColumns = userTables?.find(
 				(table) => table?._id === e.target.value
 			)?.columns;
 			setColumns(selectedTableColumns);
@@ -346,7 +346,7 @@ export default function ViewConfig({
 				<label>Table</label>
 				<select onChange={(e) => handleSelectTable(e)} className="form-control">
 					<option value="">Select Table</option>
-					{userTables.map((table) => (
+					{userTables?.map((table) => (
 						<option
 							selected={
 								selectedView.selectedTableId === table._id ? true : false

@@ -59,7 +59,7 @@ export default function TableConfig({
 	};
 
 	const isNameUnique = () => {
-		for (let i = 0; i < userTables.length; i++) {
+		for (let i = 0; i < userTables?.length; i++) {
 			if (userTables[i]?.name === name) {
 				return false;
 			}
@@ -191,7 +191,7 @@ export default function TableConfig({
 					// if it is a reference, store the table
 					if(value === 'none') updatedConfig[configIndex][field] = value;
 					else{
-						const table = userTables.find((item) => item?._id === event.target.value);
+						const table = userTables?.find((item) => item?._id === event.target.value);
 						updatedConfig[configIndex][field] = table;
 					}
 				} 
@@ -346,7 +346,7 @@ export default function TableConfig({
 											defaultValue="none"
 										>
 											<option value = 'none'>None</option>
-											{userTables.map((table) => (
+											{userTables?.map((table) => (
 												<option key={table._id} value={table._id}>
 													{table.name}
 												</option>
