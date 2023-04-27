@@ -12,7 +12,12 @@ import {
 	AdminPage,
 	RunnableAppPage,
 } from './pages';
-import { getAppByIdAPI, readTableAPI, loadTableAPI, getAllAppsAPI } from './api';
+import {
+	getAppByIdAPI,
+	readTableAPI,
+	loadTableAPI,
+	getAllAppsAPI,
+} from './api';
 
 export const customHistory = createBrowserHistory();
 
@@ -36,9 +41,6 @@ const App = () => {
 	const [endUserApps, setEndUserApps] = useState([]);
 	const [developerApps, setDeveloperApps] = useState([]);
 
-
-
-
 	// NOTE TABLES
 	const loadTableIds = (user) => {
 		setTableIds(user.tables);
@@ -53,7 +55,7 @@ const App = () => {
 			};
 			const developers = await loadTableAPI(tableData);
 			let foundDeveloper = false;
-			if(developers !== undefined){
+			if (developers !== undefined) {
 				for (let i = 1; i < developers.length; i++) {
 					// console.log('developers[i][0]', developers[i][0]);
 					// console.log('user.email', user.email);
@@ -95,10 +97,10 @@ const App = () => {
 		if (roleSheetData.length === 0) {
 			return [];
 		}
-	
+
 		const roles = roleSheetData[0]; // Get the roles from the first row
 		const userRoles = [];
-	
+
 		for (let row = 1; row < roleSheetData.length; row++) {
 			for (let col = 0; col < roleSheetData[row].length; col++) {
 				if (roleSheetData[row][col] === email) {
@@ -106,16 +108,15 @@ const App = () => {
 				}
 			}
 		}
-	
+
 		return userRoles; // Return an array of roles
 	}
-
 
 	const loadAllApps = async () => {
 		const apps = await getAllAppsAPI();
 		const endUserAppList = [];
 		const developerAppList = [];
-	
+
 		for (let i = 0; i < apps.length; i++) {
 			const app = apps[i];
 			const roleUrl = app.roleMembershipSheet;
@@ -124,20 +125,23 @@ const App = () => {
 				url: roleUrl,
 				sheetIndex: 'Sheet1',
 			};
-	
+
 			try {
 				const roleSheetData = await loadTableAPI(roleTableData);
 				if (roleSheetData !== undefined) {
 					const userRoles = findUserRoles(user.email, roleSheetData);
 					if (userRoles.length > 0) {
-
-						if (userRoles.includes('Developer') || userRoles.includes('developer')){
+						if (
+							userRoles.includes('Developer') ||
+							userRoles.includes('developer')
+						) {
 							developerAppList.push(app);
 						}
-						endUserAppList.push({app, userRoles});
-
+						endUserAppList.push({ app, userRoles });
 					} else {
-						console.log(`The user with email ${user.email} was not found in the role sheet`);
+						console.log(
+							`The user with email ${user.email} was not found in the role sheet`
+						);
 					}
 				}
 			} catch (error) {
@@ -147,7 +151,6 @@ const App = () => {
 		setDeveloperApps(developerAppList);
 		setEndUserApps(endUserAppList);
 	};
-	
 
 	useEffect(() => {
 		console.log('endUserApps', endUserApps);
@@ -221,7 +224,7 @@ const App = () => {
 			checkGlobalTable();
 			loadTableIds(user);
 			loadAllApps();
-			// loadAppIds();
+			loadAppIds();
 		} else {
 			setAppIds(null);
 			setTableIds(null);
@@ -250,7 +253,7 @@ const App = () => {
 							<ManageAppPage
 								appIds={appIds}
 								app={app}
-								userApps={userApps}
+								developerApps={developerApps}
 								setAppData={setAppData}
 								userTables={userTables}
 								viewDatas={viewDatas}
@@ -261,7 +264,11 @@ const App = () => {
 					<Route
 						path="/add-table"
 						element={
-							<AddTablePage tableIds={tableIds} userTables={userTables} />
+							<AddTablePage
+								tableIds={tableIds}
+								userTables={userTables}
+								developerApps={developerApps}
+							/>
 						}
 					/>
 					{/* <Route

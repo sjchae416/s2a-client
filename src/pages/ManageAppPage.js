@@ -15,8 +15,8 @@ export default function ManageAppPage({
 	appIds,
 	app,
 	setAppData,
-	// FIXME pass userApps to the List when displaying apps
-	userApps,
+	// FIXME pass developerApps to the List when displaying apps
+	developerApps,
 	userTables,
 	viewDatas,
 	setViewDatas,

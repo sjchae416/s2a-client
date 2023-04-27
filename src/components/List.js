@@ -3,7 +3,7 @@ import { readViewAPI } from '../api';
 
 const List = ({
 	type,
-	userApps,
+	developerApps,
 	userTables,
 	viewDatas,
 	viewDataList,
@@ -47,20 +47,32 @@ const List = ({
 
 	return (
 		<div>
-			{type === 'app'
-				? userApps.map((userApp) => (
-						<div key={userApp._id} onClick={() => handleSelectApp(userApp)}>
-							<hr />
-							{userApp.name}
-						</div>
-				  ))
-				: type === 'view'
-				? viewDataList?.map((view) => (
-						<div key={view.id} onClick={() => handleSelectView(view)}>
-							<hr />
-							{view.viewName}
-						</div>
-				  ))
+			{type === 'app' && developerApps.length > 0
+				? developerApps.map(
+						(developerApp) =>
+							developerApp !== null && (
+								<div
+									key={developerApp._id}
+									onClick={() => handleSelectApp(developerApp)}
+								>
+									<hr />
+									{developerApp.name}
+								</div>
+							)
+				  )
+				: type === 'view' && viewDataList.length > 0
+				? viewDataList.map(
+						(viewData) =>
+							viewData !== null && (
+								<div
+									key={viewData.id}
+									onClick={() => handleSelectView(viewData)}
+								>
+									<hr />
+									{viewData.viewName}
+								</div>
+							)
+				  )
 				: userTables?.map(
 						(userTable) =>
 							userTable !== null && (
