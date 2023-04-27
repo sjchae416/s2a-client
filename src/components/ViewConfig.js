@@ -27,6 +27,7 @@ export default function ViewConfig({
 	const [selectedEditColumns, setSelectedEditColumns] = useState([]);
 	const [columns, setColumns] = useState([]);
 	const [selectedTableId, setSelectedTableId] = useState('');
+	const [viewTable, setViewTable] = useState(null);
 
 	const formElement = useRef();
 
@@ -125,6 +126,7 @@ export default function ViewConfig({
 		setRole([]);
 		setColumns([]);
 		setSelectedTableId('');
+		setViewTable(null);
 		formElement.current.reset();
 	};
 
@@ -145,7 +147,7 @@ export default function ViewConfig({
 			setSelectedTableId(selectedView.selectedTableId);
 
 			const selectedTableColumns = userTables?.find(
-				(table) => table?._id === selectedView.selectedTableId
+				(userTable) => userTable?._id === selectedView.selectedTableId
 			)?.columns;
 
 			setColumns(selectedTableColumns);
@@ -181,9 +183,9 @@ export default function ViewConfig({
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regular expression for email format
 
 		const tableData = {
-			name: selectedTableId.name,
-			url: selectedTableId.url,
-			sheetIndex: selectedTableId.sheetIndex,
+			name: viewTable.name,
+			url: viewTable.url,
+			sheetIndex: viewTable.sheetIndex,
 		};
 		const data = await loadTableAPI(tableData);
 
@@ -218,11 +220,13 @@ export default function ViewConfig({
 	};
 
 	const handleSelectTable = (e) => {
+		const table = userTables?.find((item) => item?._id === e.target.value);
+		setViewTable(table);
 		setSelectedTableId(e.target.value);
 
 		if (e.target.value) {
 			const selectedTableColumns = userTables?.find(
-				(table) => table?._id === e.target.value
+				(userTable) => userTable?._id === e.target.value
 			)?.columns;
 			setColumns(selectedTableColumns);
 		} else {
@@ -249,13 +253,12 @@ export default function ViewConfig({
 				(columns) => columns.type === 'string'
 			);
 			// go through columns if email then push to emailConfigs
-			for(let i = 0; i < textConfigs.length; i++){
-				if(checkUserEmail(textConfigs[i])) emailConfigs.push(textConfigs[i]);
+			for (let i = 0; i < textConfigs.length; i++) {
+				if (checkUserEmail(textConfigs[i])) emailConfigs.push(textConfigs[i]);
 			}
-			if(emailConfigs.length> 0)
-				setEmailConfigs(emailConfigs);
-			else{
-				return window.alert("There are no columns with emails");
+			if (emailConfigs.length > 0) setEmailConfigs(emailConfigs);
+			else {
+				return window.alert('There are no columns with emails');
 			}
 		} else {
 			// Clear the bool configs from state
