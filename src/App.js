@@ -132,8 +132,10 @@ const App = () => {
           const userRoles = findUserRoles(user.email, roleSheetData);
           if (userRoles.length > 0) {
             if (
-              userRoles.includes("Developer") ||
-              userRoles.includes("developer")
+              userRoles
+                .map((role) => role.toLowerCase())
+                .includes("developer") ||
+              userRoles.map((role) => role.toLowerCase()).includes("developers")
             ) {
               developerAppList.push(app);
             }
