@@ -36,6 +36,10 @@ const App = () => {
 	const [endUserApps, setEndUserApps] = useState([]);
 	const [developerApps, setDeveloperApps] = useState([]);
 
+	const [runnableApps, setRunnableApps] = useState([]);
+	const [inDevelopmentApps, setInDevelopmentApps] = useState([]);
+	const [publishedApps, setPublishedApps] = useState([]);
+
 
 
 
@@ -240,7 +244,7 @@ const App = () => {
 						exact
 						path="/"
 						element={
-							user ? <DashboardPage isDeveloper={isDeveloper} /> : <LoginPage />
+							user ? <DashboardPage isDeveloper={isDeveloper} runnableApps = {runnableApps} publishedApps = {publishedApps} inDevelopmentApps = {inDevelopmentApps}/> : <LoginPage />
 						}
 					/>
 					<Route path="/login" element={<LoginPage />} />
