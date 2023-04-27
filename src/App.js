@@ -1,9 +1,9 @@
-import React from 'react';
-import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useEffect, useState, useContext } from 'react';
-import { createBrowserHistory } from 'history';
-import UserContext from './UserContext';
+import React from "react";
+import "./App.css";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { createBrowserHistory } from "history";
+import UserContext from "./UserContext";
 import {
 	LoginPage,
 	DashboardPage,
@@ -66,93 +66,76 @@ const App = () => {
 		}
 	};
 
-	useEffect(() => {
-		const loadTables = async (tableIds) => {
-			try {
-				const tables = await Promise.all(
-					tableIds.map(async (tableId) => {
-						return await readTableAPI(tableId);
-					})
-				);
-				console.log('🚀 ~ file: App.js:96 ~ loadTables ~ tables:', tables);
-				setTables(tables);
-			} catch (error) {
-				console.error('Error fetching App: ', error);
-			}
-		};
+  // NOTE APPS
 
-		if (tableIds !== null) {
-			loadTables(tableIds);
-		}
-	}, [tableIds]);
+  function findUserRoles(email, roleSheetData) {
+    if (roleSheetData.length === 0) {
+      return [];
+    }
 
-	// NOTE APPS
-	function findUserRoles(email, roleSheetData) {
-		if (roleSheetData.length === 0) {
-			return [];
-		}
+    const roles = roleSheetData[0]; // Get the roles from the first row
+    const userRoles = [];
 
-		const roles = roleSheetData[0]; // Get the roles from the first row
-		const userRoles = [];
+    for (let row = 1; row < roleSheetData.length; row++) {
+      for (let col = 0; col < roleSheetData[row].length; col++) {
+        if (roleSheetData[row][col] === email) {
+          userRoles.push(roles[col]); // Add the role found at the column to userRoles array
+        }
+      }
+    }
 
-		for (let row = 1; row < roleSheetData.length; row++) {
-			for (let col = 0; col < roleSheetData[row].length; col++) {
-				if (roleSheetData[row][col] === email) {
-					userRoles.push(roles[col]); // Add the role found at the column to userRoles array
-				}
-			}
-		}
+    return userRoles; // Return an array of roles
+  }
 
-		return userRoles; // Return an array of roles
-	}
+  const loadAllApps = async () => {
+    const apps = await getAllAppsAPI();
+    const endUserAppList = [];
+    const developerAppList = [];
 
-	const loadAllApps = async () => {
-		const apps = await getAllAppsAPI();
-		const endUserAppList = [];
-		const developerAppList = [];
+    for (let i = 0; i < apps.length; i++) {
+      const app = apps[i];
+      const roleUrl = app.roleMembershipSheet;
+      const roleTableData = {
+        name: "Rolemembership Sheet",
+        url: roleUrl,
+        sheetIndex: "Sheet1",
+      };
 
-		for (let i = 0; i < apps.length; i++) {
-			const app = apps[i];
-			const roleUrl = app.roleMembershipSheet;
-			const roleTableData = {
-				name: 'Rolemembership Sheet',
-				url: roleUrl,
-				sheetIndex: 'Sheet1',
-			};
+      try {
+        const roleSheetData = await loadTableAPI(roleTableData);
+        if (roleSheetData !== undefined) {
+          const userRoles = findUserRoles(user.email, roleSheetData);
+          if (userRoles.length > 0) {
+            if (
+              userRoles
+                .map((role) => role.toLowerCase())
+                .includes("developer") ||
+              userRoles.map((role) => role.toLowerCase()).includes("developers")
+            ) {
+              developerAppList.push(app);
+            }
+            endUserAppList.push({ app, userRoles });
+          } else {
+            console.log(
+              `The user with email ${user.email} was not found in the role sheet`
+            );
+          }
+        }
+      } catch (error) {
+        // console.error(error);
+      }
+    }
+    setDeveloperApps(developerAppList);
+    setEndUserApps(endUserAppList);
+  };
 
-			try {
-				const roleSheetData = await loadTableAPI(roleTableData);
-				if (roleSheetData !== undefined) {
-					const userRoles = findUserRoles(user.email, roleSheetData);
-					if (userRoles.length > 0) {
-						if (
-							userRoles.includes('Developer') ||
-							userRoles.includes('developer')
-						) {
-							developerAppList.push(app);
-						}
-						endUserAppList.push({ app, userRoles });
-					} else {
-						console.log(
-							`The user with email ${user.email} was not found in the role sheet`
-						);
-					}
-				}
-			} catch (error) {
-				// console.error(error);
-			}
-		}
-		setDeveloperApps(developerAppList);
-		setEndUserApps(endUserAppList);
-	};
+  useEffect(() => {
+    console.log("endUserApps", endUserApps);
+  }, [endUserApps]);
 
-	useEffect(() => {
-		console.log('endUserApps', endUserApps);
-	}, [endUserApps]);
-
-	useEffect(() => {
-		console.log('developerApps', developerApps);
-	}, [developerApps]);
+  useEffect(() => {
+    console.log("developerApps", developerApps);
+  }, [developerApps]);
 
 	// NOTE keep this for backup
 	// useEffect(() => {
@@ -175,30 +158,30 @@ const App = () => {
 	// 	}
 	// }, [appIds]);
 
-	// NOTE ADMIN
-	// const fetchDevelopers = async () => {
-	// 	// TODO - Make an api for this
-	// 	try {
-	// 		const response = await fetch('http://localhost:3333/admin');
+  // NOTE ADMIN
+  // const fetchDevelopers = async () => {
+  // 	// TODO - Make an api for this
+  // 	try {
+  // 		const response = await fetch('http://localhost:3333/admin');
 
-	// 		if (!response.ok) {
-	// 			throw new Error(`HTTP error! status: ${response.status}`);
-	// 		}
+  // 		if (!response.ok) {
+  // 			throw new Error(`HTTP error! status: ${response.status}`);
+  // 		}
 
-	// 		const data = await response.json();
-	// 		setDevelopers(data.developers);
-	// 	} catch (error) {
-	// 		console.error('Fetch Error:', error);
-	// 	}
-	// };
+  // 		const data = await response.json();
+  // 		setDevelopers(data.developers);
+  // 	} catch (error) {
+  // 		console.error('Fetch Error:', error);
+  // 	}
+  // };
 
-	// NOTE USERS
-	const fetchCurrentUser = async () => {
-		try {
-			const response = await fetch('http://localhost:3333/auth/authenticated', {
-				credentials: 'include',
-			});
-			const data = await response.json();
+  // NOTE USERS
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await fetch("http://localhost:3333/auth/authenticated", {
+        credentials: "include",
+      });
+      const data = await response.json();
 
 			if (response.ok) {
 				if (!data) {
@@ -259,7 +242,7 @@ const App = () => {
 					<Route
 						path="/manage-app"
 						element={
-							<ManageAppPage
+							user ? <ManageAppPage
 								setIsAppSaved={setIsAppSaved}
 								app={app}
 								developerApps={developerApps}
@@ -267,17 +250,17 @@ const App = () => {
 								userTables={userTables}
 								viewDatas={viewDatas}
 								setViewDatas={setViewDatas}
-							/>
+							/> : <LoginPage />
 						}
 					/>
 					<Route
 						path="/add-table"
 						element={
-							<AddTablePage
+							user? <AddTablePage
 								tableIds={tableIds}
 								userTables={userTables}
 								developerApps={developerApps}
-							/>
+							/> : <LoginPage />
 						}
 					/>
 					{/* <Route
@@ -290,11 +273,14 @@ const App = () => {
 							/>
 						}
 					/> */}
-					<Route path="/runnable-appIds/:name" element={<RunnableAppPage />} />
-				</Routes>
-			</BrowserRouter>
-		</div>
-	);
+          <Route
+            path="/runnable-appIds/:name"
+            element={user ? <RunnableAppPage /> : <LoginPage />}
+          />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 };
 
 export default App;
