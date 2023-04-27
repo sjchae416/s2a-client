@@ -23,7 +23,7 @@ export default function ViewConfig({
 	const [editFilter, setEditFilter] = useState('');
 	const [editableCols, setEditableCols] = useState([]);
 	const [boolConfigs, setBoolConfigs] = useState([]);
-	const [textConfigs, setTextConfigs] = useState([]);
+	const [emailConfigs, setEmailConfigs] = useState([]);
 	const [selectedEditColumns, setSelectedEditColumns] = useState([]);
 	const [columns, setColumns] = useState([]);
 	const [selectedTableId, setSelectedTableId] = useState('');
@@ -177,7 +177,7 @@ export default function ViewConfig({
 		}
 	};
 
-	async function checkUserEmail() {
+	async function checkUserEmail(col) {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regular expression for email format
 
 		const tableData = {
@@ -187,10 +187,12 @@ export default function ViewConfig({
 		};
 		const data = await loadTableAPI(tableData);
 
+		// FIXME this is taking a while.. printing in console or even passing this point in the function takes a while
+		console.log(data);
 		let emailIndex = -1;
 		const headerRow = data[0];
 		for (let i = 0; i < headerRow.length; i++) {
-			if (headerRow[i] === userFilter) {
+			if (headerRow[i] === col.name) {
 				emailIndex = i;
 				break;
 			}
@@ -199,9 +201,7 @@ export default function ViewConfig({
 		const emails = [];
 		for (let i = 1; i < data.length; i++) {
 			const row = data[i];
-			if (row.length > emailIndex) {
-				emails.push(row[emailIndex]);
-			}
+			console.log(row);
 		}
 
 		const invalidEmails = emails.filter((email) => !emailRegex.test(email));
@@ -244,15 +244,22 @@ export default function ViewConfig({
 	const handleUserFilterCheckboxChange = (e) => {
 		const { checked } = e.target;
 		if (checked) {
-			// Filter config objects where type is bool
+			// Filter config objects where type is email
 			const textConfigs = columns.filter(
 				(columns) => columns.type === 'string'
 			);
-			// Set the filtered bool configs to state
-			setTextConfigs(textConfigs);
+			// go through columns if email then push to emailConfigs
+			for(let i = 0; i < textConfigs.length; i++){
+				if(checkUserEmail(textConfigs[i])) emailConfigs.push(textConfigs[i]);
+			}
+			if(emailConfigs.length> 0)
+				setEmailConfigs(emailConfigs);
+			else{
+				return window.alert("There are no columns with emails");
+			}
 		} else {
 			// Clear the bool configs from state
-			setTextConfigs([]);
+			setEmailConfigs([]);
 			setUserFilter('');
 			console.log(viewData);
 		}
@@ -468,7 +475,7 @@ export default function ViewConfig({
 								onChange={(e) => handleUserFilterCheckboxChange(e)}
 							/>
 							<label htmlFor="checkbox-user-filter">User Filter</label>
-							{textConfigs.map((config) => (
+							{emailConfigs.map((config) => (
 								<div key={config.name}>
 									<input
 										type="radio"
