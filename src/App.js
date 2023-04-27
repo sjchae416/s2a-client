@@ -36,6 +36,13 @@ const App = () => {
 	const [endUserApps, setEndUserApps] = useState([]);
 	const [developerApps, setDeveloperApps] = useState([]);
 
+	const [runnableApps, setRunnableApps] = useState([]);
+	const [inDevelopmentApps, setInDevelopmentApps] = useState([]);
+	const [publishedApps, setPublishedApps] = useState([]);
+
+
+
+
 	// NOTE TABLES
 	const loadTableIds = (user) => {
 		setTableIds(user.tables);
@@ -232,6 +239,7 @@ const App = () => {
 								<DashboardPage
 									setIsAppSaved={setIsAppSaved}
 									isDeveloper={isDeveloper}
+									runnableApps = {runnableApps} publishedApps = {publishedApps} inDevelopmentApps = {inDevelopmentApps}
 								/>
 							) : (
 								<LoginPage />
