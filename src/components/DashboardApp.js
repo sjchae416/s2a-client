@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const DashboardApp = ({ name, date }) => {
+const DashboardApp = ({ name, lastOpenedDate }) => {
 	return (
 		<div className="col-3">
 			<Link to={`/runnable-appIds/${name}`}>
@@ -9,7 +9,7 @@ const DashboardApp = ({ name, date }) => {
 					<h2 className="">{name}</h2>
 					<hr />
 					<div className="p-1">
-						<small>Last modified {date}</small>
+						<small>Last modified {lastOpenedDate}</small>
 					</div>
 				</div>
 			</Link>

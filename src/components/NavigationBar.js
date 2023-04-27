@@ -44,7 +44,7 @@ export default function NavigationBar({ user, isDashboard }) {
 
   return (
     <div className="card text-right card_one">
-      {isDashboard ? <h3>S2A</h3> : <h3 id="save-change">S2A</h3>}
+      {isDashboard ? <h1>S2A</h1> : <h3 id="save-change">S2A</h3>}
       <span className=" ml-auto">
         {/* Here are the Undo-Redo and Save buttons
 				<button className="btn btn-info"> {'<'} </button>&nbsp;

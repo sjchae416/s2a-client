@@ -37,11 +37,11 @@ const App = () => {
 	const [developerApps, setDeveloperApps] = useState([]);
 
 	// REVIEW Apps that the User can run
-	const [runnableApps, setRunnableApps] = useState([]);
+	const [runnableApps, setRunnableApps] = useState(null);
 	// REVIEW Apps that the User can Manage, but published (can run)
-	const [publishedApps, setPublishedApps] = useState([]);
+	const [publishedApps, setPublishedApps] = useState(null);
 	// REVIEW Apps that the User can Manage, but not published (can't run yet)
-	const [unpublishedApps, setUnpublishedApps] = useState([]);
+	const [unpublishedApps, setUnpublishedApps] = useState(null);
 
 	// NOTE TABLES
 	const loadTableIds = (user) => {
@@ -117,14 +117,14 @@ const App = () => {
 		// NOTE load and iterate all apps in db
 		const allAppsInDB = await getAllAppsAPI();
 		const accessibleApps = [];
-		const developerAppList = [];
+		const developerApps = [];
 		// const endUserAppList = [];
 
 		for (let i = 0; i < allAppsInDB?.length; i++) {
 			const app = allAppsInDB[i];
 			const roleURL = app?.roleMembershipSheet;
 			const roleTableData = {
-				name: `${app?.name} Role Membership Sheet`,
+				name: `${app.name} Role Membership Sheet`,
 				// name: 'Rolemembership Sheet',
 				url: roleURL,
 				sheetIndex: 'Sheet1',
@@ -147,7 +147,7 @@ const App = () => {
 							userRoles.map((role) => role.toLowerCase()).includes('developers')
 						) {
 							// NOTE filter all apps into developer apps by checking if user email under developer(s) role
-							developerAppList.push(app);
+							developerApps.push(app);
 						}
 
 						// endUserAppList.push({ app, userRoles });
@@ -164,27 +164,48 @@ const App = () => {
 		}
 
 		// NOTE set all apps with published === true as runnable apps
-		setRunnableApps(
-			accessibleApps.filter((accessibleApp) => {
-				return accessibleApp.published === true;
-			})
-		);
+		setRunnableApps(() => {
+			if (accessibleApps.length > 0) {
+				const filteredApp = accessibleApps.filter((accessibleApp) => {
+					return accessibleApp.app.published === true;
+				});
+
+				if (filteredApp.length > 0) {
+					return filteredApp;
+				}
+			}
+			return null;
+		});
 
 		// NOTE set developer apps with published === true as published apps
-		setPublishedApps(
-			developerAppList.filter((developerApp) => {
-				return developerApp.published === true;
-			})
-		);
+		setPublishedApps(() => {
+			if (developerApps.length > 0) {
+				const filteredApp = developerApps.filter((developerApp) => {
+					return developerApp.published === true;
+				});
+
+				if (filteredApp.length > 0) {
+					return filteredApp;
+				}
+			}
+			return null;
+		});
 
 		// NOTE set developer apps with published === false as unpublished apps
-		setUnpublishedApps(
-			developerAppList.filter((developerApp) => {
-				return developerApp.published === false;
-			})
-		);
+		setUnpublishedApps(() => {
+			if (developerApps.length > 0) {
+				const filteredApp = developerApps.filter((developerApp) => {
+					return developerApp.published === false;
+				});
 
-		// setDeveloperApps(developerAppList);
+				if (filteredApp.length > 0) {
+					return filteredApp;
+				}
+			}
+			return null;
+		});
+
+		// setDeveloperApps(developerApps);
 		// setEndUserApps(endUserAppList);
 	};
 
@@ -299,8 +320,6 @@ const App = () => {
 									setIsAppSaved={setIsAppSaved}
 									isDeveloper={isDeveloper}
 									runnableApps={runnableApps}
-									publishedApps={publishedApps}
-									unpublishedApps={unpublishedApps}
 								/>
 							) : (
 								<LoginPage />
@@ -313,9 +332,11 @@ const App = () => {
 						element={
 							user ? (
 								<ManageAppPage
+									publishedApps={publishedApps}
+									unpublishedApps={unpublishedApps}
 									setIsAppSaved={setIsAppSaved}
 									app={app}
-									developerApps={developerApps}
+									// developerApps={developerApps}
 									setAppData={setAppData}
 									userTables={userTables}
 									viewDatas={viewDatas}
@@ -333,7 +354,7 @@ const App = () => {
 								<AddTablePage
 									tableIds={tableIds}
 									userTables={userTables}
-									developerApps={developerApps}
+									// developerApps={developerApps}
 								/>
 							) : (
 								<LoginPage />
