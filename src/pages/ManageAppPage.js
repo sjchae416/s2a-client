@@ -12,11 +12,12 @@ import {
 } from '../components';
 
 export default function ManageAppPage({
+	setIsAppSaved,
 	appIds,
 	app,
 	setAppData,
-	// FIXME pass userApps to the List when displaying apps
-	userApps,
+	// FIXME pass developerApps to the List when displaying apps
+	developerApps,
 	userTables,
 	viewDatas,
 	setViewDatas,
@@ -138,6 +139,7 @@ export default function ManageAppPage({
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
 						<Sidebar
+							setIsAppSaved={setIsAppSaved}
 							setView={setView}
 							viewName={viewName}
 							checkUnsavedData={checkUnsavedData} // replaces myfun
