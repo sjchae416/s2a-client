@@ -36,9 +36,12 @@ const App = () => {
 	const [endUserApps, setEndUserApps] = useState([]);
 	const [developerApps, setDeveloperApps] = useState([]);
 
+	// REVIEW Apps that the User can run
 	const [runnableApps, setRunnableApps] = useState([]);
-	const [inDevelopmentApps, setInDevelopmentApps] = useState([]);
+	// REVIEW Apps that the User can Manage, but published (can run)
 	const [publishedApps, setPublishedApps] = useState([]);
+	// REVIEW Apps that the User can Manage, but not published (can't run yet)
+	const [unpublishedApps, setUnpublishedApps] = useState([]);
 
 	// NOTE TABLES
 	const loadTableIds = (user) => {
@@ -111,54 +114,94 @@ const App = () => {
 	}
 
 	const loadAllApps = async () => {
-		const apps = await getAllAppsAPI();
-		const endUserAppList = [];
+		// NOTE load and iterate all apps in db
+		const allAppsInDB = await getAllAppsAPI();
+		const accessibleApps = [];
 		const developerAppList = [];
+		// const endUserAppList = [];
 
-		for (let i = 0; i < apps.length; i++) {
-			const app = apps[i];
-			const roleUrl = app.roleMembershipSheet;
+		for (let i = 0; i < allAppsInDB?.length; i++) {
+			const app = allAppsInDB[i];
+			const roleURL = app?.roleMembershipSheet;
 			const roleTableData = {
-				name: 'Rolemembership Sheet',
-				url: roleUrl,
+				name: `${app?.name} Role Membership Sheet`,
+				// name: 'Rolemembership Sheet',
+				url: roleURL,
 				sheetIndex: 'Sheet1',
 			};
 
 			try {
 				const roleSheetData = await loadTableAPI(roleTableData);
+
 				if (roleSheetData !== undefined) {
 					const userRoles = findUserRoles(user.email, roleSheetData);
+
 					if (userRoles.length > 0) {
+						// NOTE filter all apps into accessible apps by checking roles
+						accessibleApps.push({ app, userRoles });
+
 						if (
 							userRoles
 								.map((role) => role.toLowerCase())
 								.includes('developer') ||
 							userRoles.map((role) => role.toLowerCase()).includes('developers')
 						) {
+							// NOTE filter all apps into developer apps by checking if user email under developer(s) role
 							developerAppList.push(app);
 						}
-						endUserAppList.push({ app, userRoles });
+
+						// endUserAppList.push({ app, userRoles });
 					} else {
 						console.log(
-							`The user with email ${user.email} was not found in the role sheet`
+							`The User with email: ${user.email} does not have any roles`
 						);
 					}
 				}
 			} catch (error) {
-				// console.error(error);
+				console.error(error);
+				return new Error(error);
 			}
 		}
-		setDeveloperApps(developerAppList);
-		setEndUserApps(endUserAppList);
+
+		// NOTE set all apps with published === true as runnable apps
+		setRunnableApps(
+			accessibleApps.filter((accessibleApp) => {
+				return accessibleApp.published === true;
+			})
+		);
+
+		// NOTE set developer apps with published === true as published apps
+		setPublishedApps(
+			developerAppList.filter((developerApp) => {
+				return developerApp.published === true;
+			})
+		);
+
+		// NOTE set developer apps with published === false as unpublished apps
+		setUnpublishedApps(
+			developerAppList.filter((developerApp) => {
+				return developerApp.published === false;
+			})
+		);
+
+		// setDeveloperApps(developerAppList);
+		// setEndUserApps(endUserAppList);
 	};
 
 	useEffect(() => {
-		console.log('endUserApps', endUserApps);
-	}, [endUserApps]);
+		console.log('🚀 ~ file: App.js:194 ~ App ~ runnableApps:', runnableApps);
+	}, [runnableApps]);
 
 	useEffect(() => {
-		console.log('developerApps', developerApps);
-	}, [developerApps]);
+		console.log('🚀 ~ file: App.js:198 ~ App ~ publishedApps:', publishedApps);
+	}, [publishedApps]);
+
+	useEffect(() => {
+		console.log(
+			'🚀 ~ file: App.js:203 ~ App ~ unpublishedApps:',
+			unpublishedApps
+		);
+	}, [unpublishedApps]);
 
 	// NOTE keep this for backup
 	// useEffect(() => {
@@ -257,7 +300,7 @@ const App = () => {
 									isDeveloper={isDeveloper}
 									runnableApps={runnableApps}
 									publishedApps={publishedApps}
-									inDevelopmentApps={inDevelopmentApps}
+									unpublishedApps={unpublishedApps}
 								/>
 							) : (
 								<LoginPage />

@@ -10,16 +10,16 @@ export default function DashboardPage({
   setIsAppSaved,
   isDeveloper,
   runnableApps,
-  inDevelopmentApps,
   publishedApps,
+  unpublishedApps,
 }) {
   const { user, setUser } = useContext(UserContext);
   // const [section, setSection] = useState("all");
   const [showMenu, setShowMenu] = useState(false);
 
-  publishedApps = dummyApps.filter((app) => app.status === "published");
-  inDevelopmentApps = dummyApps.filter((app) => app.inDevelopment);
   runnableApps = dummyApps.filter((app) => app.runnable);
+  publishedApps = dummyApps.filter((app) => app.status === "published");
+  unpublishedApps = dummyApps.filter((app) => app.inDevelopment);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);

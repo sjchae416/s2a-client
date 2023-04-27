@@ -19,7 +19,7 @@ export const createAppAPI = async (app) => {
 			throw new Error(errorMessage);
 		}
 	} catch (error) {
-		console.error('Error creating app:', error);
+		console.error('Error creating app: ', error);
 		throw error;
 	}
 };
@@ -27,7 +27,14 @@ export const createAppAPI = async (app) => {
 export const getAllAppsAPI = async () => {
 	try {
 		const response = await fetch(`http://localhost:3333/apps/`);
-		return response.json();
+		const data = response.json();
+		if (response.ok) {
+			return data;
+		} else {
+			const errorMessage = data.message;
+			console.error('Error reading all Apps: ', errorMessage);
+			return null;
+		}
 	} catch (error) {
 		console.error('Error fetching all apps:', error);
 	}
