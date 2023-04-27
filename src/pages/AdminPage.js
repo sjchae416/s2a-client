@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-export default function AdminPage( { developers, setDevelopers, fetchDevelopers } ) {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+export default function AdminPage({
+  developers,
+  setDevelopers,
+  fetchDevelopers,
+}) {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchDevelopers();
@@ -10,10 +14,10 @@ export default function AdminPage( { developers, setDevelopers, fetchDevelopers 
 
   const addDeveloper = async () => {
     try {
-      const response = await fetch('http://localhost:3333/admin', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3333/admin", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
       });
@@ -24,11 +28,11 @@ export default function AdminPage( { developers, setDevelopers, fetchDevelopers 
 
       const data = await response.json();
       setMessage(data.message);
-      setEmail('');
+      setEmail("");
       fetchDevelopers();
     } catch (error) {
-      setMessage('Failed to add developer.');
-      console.error('Fetch Error:', error);
+      setMessage("Failed to add developer.");
+      console.error("Fetch Error:", error);
     }
   };
 

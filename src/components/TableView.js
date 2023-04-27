@@ -23,7 +23,7 @@ export default function TableView({ view, listViews }) {
   const [newRowData, setNewRowData] = useState({});
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [openDetail, setOpenDetail] = useState(false);
+  // const [openDetail, setOpenDetail] = useState(false);
   const [showMinusButtons, setShowMinusButtons] = useState(false);
 
   const [test, setTest] = useState([
