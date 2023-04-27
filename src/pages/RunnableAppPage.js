@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import {NavigationBar, TableView, TableViewSidebar} from '../components';
 import UserContext from '../UserContext';
@@ -172,7 +172,6 @@ export default function RunnableAppPage() {
 	const [selectedView, setSelectedView] = useState(null);
 	const { user, setUser } = useContext(UserContext);
 
-
 	const handleSelectView = (view) => {
 		setSelectedView(view);
 	};
@@ -192,6 +191,5 @@ export default function RunnableAppPage() {
 				</div>
 			</div>
 		</div>
-		
 	);
 }
