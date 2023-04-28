@@ -24,10 +24,8 @@ export const customHistory = createBrowserHistory();
 const App = () => {
 	const { user, setUser } = useContext(UserContext);
 	const [isAppSaved, setIsAppSaved] = useState(false);
-	const [appIds, setAppIds] = useState([]);
 	const [tableIds, setTableIds] = useState([]);
 	const [app, setAppData] = useState(null);
-	const [userApps, setUserApps] = useState(null);
 	const [userTables, setTables] = useState(null);
 	const [viewDatas, setViewDatas] = useState(null);
 	// const [developers, setDevelopers] = useState([]);
@@ -224,27 +222,6 @@ const App = () => {
 		);
 	}, [unpublishedApps]);
 
-	// NOTE keep this for backup
-	// useEffect(() => {
-	// 	const loadApps = async (appIds) => {
-	// 		try {
-	// 			const apps = await Promise.all(
-	// 				appIds.map(async (appId) => {
-	// 					return await getAppByIdAPI(appId);
-	// 				})
-	// 			);
-	// 			console.log('🚀 ~ file: App.js:44 ~ loadApps ~ apps:', apps);
-	// 			setUserApps(apps);
-	// 		} catch (error) {
-	// 			console.error('Error fetching App: ', error);
-	// 		}
-	// 	};
-
-	// 	if (appIds !== null) {
-	// 		loadApps(appIds);
-	// 	}
-	// }, [appIds]);
-
 	// NOTE ADMIN
 	// const fetchDevelopers = async () => {
 	// 	// TODO - Make an api for this
@@ -286,13 +263,9 @@ const App = () => {
 	useEffect(() => {
 		if (user !== null) {
 			checkGlobalTable();
-			// NOTE keep this for backup
-			// loadAppIds();
 			loadAllApps();
 			loadTableIds(user);
 		} else {
-			// NOTE keep this for backup
-			// setAppIds(null);
 			setTableIds(null);
 		}
 	}, [user]);
@@ -373,7 +346,13 @@ const App = () => {
 					/> */}
 					<Route
 						path="/runnable-appIds/:name"
-						element={user ? <RunnableAppPage /> : <LoginPage />}
+						element={
+							user ? (
+								<RunnableAppPage runnableApps={runnableApps} />
+							) : (
+								<LoginPage />
+							)
+						}
 					/>
 				</Routes>
 			</BrowserRouter>

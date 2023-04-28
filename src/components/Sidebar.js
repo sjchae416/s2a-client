@@ -4,6 +4,7 @@ import {
 	createAppAPI,
 	// updateAppAPI,
 	createViewAPI,
+	updateAppAPI,
 	// updateUserAPI,
 } from '../api';
 import Modal from '@mui/material/Modal';
@@ -13,9 +14,6 @@ const Sidebar = ({
 	setView,
 	viewName,
 	checkUnsavedData,
-	// user,
-	// setUser,
-	// appIds,
 	app,
 	setAppData,
 	viewDatas,
@@ -24,10 +22,18 @@ const Sidebar = ({
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const navigate = useNavigate();
 
+	const handleSaveClick = () => {
+		setIsModalVisible(true);
+	};
+
+	const handleModalClose = () => {
+		setIsModalVisible(false);
+	};
+
 	const saveViews = async (viewDatas) => {
 		try {
 			const newViews = await Promise.all(
-				viewDatas.map(async (viewData) => {
+				viewDatas?.map(async (viewData) => {
 					return await createViewAPI(viewData);
 				})
 			);
@@ -39,22 +45,8 @@ const Sidebar = ({
 		}
 	};
 
-	const saveApp = async (
-		// selectedAppId,
-		appData,
-		savedViews
-	) => {
+	const saveApp = async (appData, savedViews) => {
 		try {
-			// FIXME if the App alreadly exits, update the field with passed id(appId), else creat and save
-			// if (selectedAppId) {
-			// const update = {
-			// 	appData,
-			// 	lastModifiedDate: new Date().toLocaleString('en-US', {
-			// 		timeZone: 'America/New_York',
-			// 	}),
-			// };
-			// 	await updateAppAPI(selectedAppId, update);
-			// } else {
 			const newViewsIds = savedViews.map((savedView) => savedView._id);
 			appData.views = newViewsIds;
 
@@ -67,49 +59,41 @@ const Sidebar = ({
 		}
 	};
 
-	// NOTE keep this for backup
-	// const updateUser = async (user, savedApp) => {
-	// 	const newAppIds = [...appIds, savedApp._id];
-	// 	const update = { apps: newAppIds };
-
-	// 	try {
-	// 		const updatedUser = await updateUserAPI(user._id, update);
-	// 		setUser(updatedUser);
-	// 	} catch (error) {
-	// 		console.error('Error updating the User: ', error);
-	// 		throw new Error(error);
-	// 	}
+	// FIXME if the selected App exits, update the field with passed id(selectedAppId)
+	// const updateApp = async (selectedAppId) => {
+	// if (selectedAppId) {
+	// const update = {
+	// 	appData,
+	// 	lastModifiedDate: new Date().toLocaleString('en-US', {
+	// 		timeZone: 'America/New_York',
+	// 	}),
+	// };
+	// 	await updateAppAPI(selectedAppId, update);
+	// } else {
 	// };
 
-	const handleSaveClick = () => {
-		setIsModalVisible(true);
-	};
-
-	const handleModalClose = () => {
-		setIsModalVisible(false);
-	};
-
-	const handlePublish = () => {
-		checkUnsavedData();
-	};
-
-	const handleSaveChanges = async () => {
-		try {
-			const savedViews = await saveViews(viewDatas);
-			await saveApp(
-				// selectedAppId,
-				app,
-				savedViews
-			);
-			// await updateUser(user, savedApp);
-			setAppData(null);
-			setViewDatas([]);
-			setIsAppSaved(true);
-			navigate('/');
-			setIsModalVisible(false);
-		} catch (error) {
-			window.alert(error);
-			console.error('Error while saving the App: ', error);
+	const handleSaveApp = async () => {
+		if (viewDatas) {
+			try {
+				// if (selectedAppId) {
+				//  // TODO if there are new viewDdta, save Views
+				// 	// TODO pass selected App's id to update its fields
+				// 	await updateAppAPI(selectedAppId);
+				// } else {
+				const savedViews = await saveViews(viewDatas);
+				await saveApp(app, savedViews);
+				// }
+				setAppData(null);
+				setViewDatas(null);
+				setIsAppSaved(true);
+				navigate('/');
+			} catch (error) {
+				window.alert(error);
+				console.error('Error while saving the Views or App: ', error);
+				setIsModalVisible(false);
+			}
+		} else {
+			window.alert('Create at least one Table View!');
 			setIsModalVisible(false);
 		}
 	};
@@ -118,17 +102,19 @@ const Sidebar = ({
 		<div className="col-1 border-right text-center">
 			<button
 				onClick={() => {
-					if (viewName) {
-						if (
-							window.confirm(
-								'You have unsaved changes, Are you sure you want to leave!'
-							) === true
-						) {
-							setView('app');
-						}
-					} else {
-						setView('app');
-					}
+					// FIXME won't work; same reason in the ManageAppPage; plus, it can always go back to the App section
+					// TODO but remain crrently typed input fields for viewData
+					// if (viewName) {
+					// 	if (
+					// 		window.confirm(
+					// 			'You have unsaved changes, Are you sure you want to leave!'
+					// 		) === true
+					// 	) {
+					// 		setView('app');
+					// 	}
+					// } else {
+					setView('app');
+					// }
 				}}
 			>
 				App
@@ -136,17 +122,18 @@ const Sidebar = ({
 			<hr />
 			<button onClick={() => setView('view')}>View</button>
 			<hr />
-			<button onClick={handlePublish}>Publish</button>
+			<button onClick={checkUnsavedData}>Publish</button>
 			<hr />
-
 			<button id="save-changes" onClick={handleSaveClick}>
 				Save
 			</button>
 			<hr />
+
 			<Modal open={isModalVisible} onClose={handleModalClose}>
 				<div className="modal-content">
 					<h5>Save Changes</h5>
 					<h5>Would you like to save your changes before proceeding?</h5>
+
 					<button
 						onClick={() => navigate('/')}
 						className="btn btn-danger"
@@ -154,13 +141,15 @@ const Sidebar = ({
 					>
 						Discard
 					</button>
+
 					<button
-						onClick={handleSaveChanges}
+						onClick={handleSaveApp}
 						className="btn btn-success"
 						id="save-changes-btns"
 					>
 						Save
 					</button>
+
 					<button
 						onClick={handleModalClose}
 						className="btn btn-danger"

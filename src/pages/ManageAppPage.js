@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import UserContext from '../UserContext';
 import Box from '@mui/material/Box';
+// FIXME use this to create all pop up modals; especially publish modal, but in Sidebar
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -17,7 +18,6 @@ export default function ManageAppPage({
 	unpublishedApps,
 	// TODO pass publishedApps, unpublishedApps to the App List Component
 	setIsAppSaved,
-	appIds,
 	app,
 	setAppData,
 	userTables,
@@ -27,6 +27,7 @@ export default function ManageAppPage({
 	const { user, setUser } = useContext(UserContext);
 	const [view, setView] = useState('app');
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	// FIXME delete viewName
 	const [viewName, setViewName] = useState('');
 	// const [selectedColumns, setSelectedColumns] = useState([]);
 	// const [viewType, setViewType] = useState("Table");
@@ -42,6 +43,7 @@ export default function ManageAppPage({
 	let navigate = useNavigate();
 
 	const checkUnsavedData = () => {
+		// FIXME viewName never changes. it is set to '' everytime and it is falsy value. condition always false
 		if (viewName) {
 			if (
 				window.confirm(
@@ -61,6 +63,7 @@ export default function ManageAppPage({
 		}
 	};
 
+	// FIXME what does this do? delete if not used. i don't think it's used
 	useEffect(() => {
 		const create_app_modal_btn = document.querySelector('#create-app');
 		const create_app_modal = document.querySelector(
@@ -119,16 +122,28 @@ export default function ManageAppPage({
 		};
 	}, []);
 
+	// FIXME DELETE IF UNUSED!!!!!
 	const handleSaveClick = () => {
 		setIsModalOpen(true);
 	};
 
+	// FIXME DELETE IF UNUSED!!!!!
 	const handleConfirmClick = () => {
 		setIsModalOpen(false);
 	};
 
+	// FIXME DELETE IF UNUSED!!!!!
 	const handleCancelClick = () => {
 		setIsModalOpen(false);
+	};
+
+	// TODO move this to Siderbar together with publish modal
+	const handlePublish = () => {
+		if (app && (viewDatas || viewDataList.length !== 0)) {
+			app.published = true;
+			setAppData(app);
+		}
+		// FIXME close the publish modal after setAppData(app);
 	};
 
 	return (
@@ -144,10 +159,7 @@ export default function ManageAppPage({
 							setIsAppSaved={setIsAppSaved}
 							setView={setView}
 							viewName={viewName}
-							checkUnsavedData={checkUnsavedData} // replaces myfun
-							user={user}
-							setUser={setUser}
-							appIds={appIds}
+							checkUnsavedData={checkUnsavedData}
 							app={app}
 							setAppData={setAppData}
 							viewDatas={viewDatas}
@@ -212,6 +224,8 @@ export default function ManageAppPage({
 						</div>
 					</div>
 				</div>
+
+				{/* FIXME is this used? I think it's an unsed duplicate */}
 				<div className="modal" id="save-change-modal">
 					<div className="modal-dialog-centered">
 						<div className="modal-content">
@@ -252,6 +266,7 @@ export default function ManageAppPage({
 					</div>
 				</div>
 
+				{/* FIXME move and convert public modal into <Modal /> like Save Modal in Sidebar */}
 				<div className="modal" id="create-app-modal-publish">
 					<div className="modal-dialog-centered">
 						<div className="modal-content">
@@ -269,7 +284,7 @@ export default function ManageAppPage({
 										No
 									</button>
 									<button
-										onClick={() => navigate('/')}
+										onClick={handlePublish}
 										className="btn btn-success"
 										id="create-app-btn"
 									>
