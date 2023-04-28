@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { updateSheetAPI } from "../api";
 
 export default function NavigationBar({ user, isDashboard }) {
   const [showMenu, setShowMenu] = useState(false);
@@ -7,6 +8,19 @@ export default function NavigationBar({ user, isDashboard }) {
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
+  };
+
+  const handleTest = async () => {
+    const sheetData = {
+      url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0",
+      range: "Sheet1!A1:B2",
+      values: [
+        ["New value in A1", "New value in B1"],
+        ["New value in A2", "New value in B2"],
+      ],
+    };
+    const newData = await updateSheetAPI(sheetData);
+    console.log(newData);
   };
 
   const handleLogout = () => {
@@ -46,6 +60,7 @@ export default function NavigationBar({ user, isDashboard }) {
     <div className="card text-right card_one">
       {isDashboard ? <h1>S2A</h1> : <h3 id="save-change">S2A</h3>}
       <span className=" ml-auto">
+        <button onClick={handleTest}>Test Button</button>
         {/* Here are the Undo-Redo and Save buttons
 				<button className="btn btn-info"> {'<'} </button>&nbsp;
 				<span className=" ml-auto" />

@@ -24,6 +24,7 @@ import {
 
 import {
 	loadSheetAPI,
+	updateSheetAPI,
 } from './sheetApi';
 
 import {
@@ -47,6 +48,7 @@ export {
 	updateUserAPI,
 	deleteUserAPI,
 	loadSheetAPI,
+	updateSheetAPI,
 	createTableAPI,
 	readAllTablesAPI,
 	readTableAPI,
