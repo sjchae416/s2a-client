@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
 	createTableAPI,
 	deleteTableAPI,
-	loadTableAPI,
+	loadSheetAPI,
 	updateUserAPI,
 } from '../api';
 import SelectedTableConfig from "./SelectedTableConfig";
@@ -125,7 +125,7 @@ export default function TableConfig({
 				);
 				return;
 			}
-			const tableRows = await loadTableAPI(tableData);
+			const tableRows = await loadSheetAPI(tableData);
 			if (tableRows && !tableRows.error) {
 				setTableDataArray(tableRows);
 			} else {

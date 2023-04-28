@@ -15,7 +15,7 @@ import {
 import {
 	getAppByIdAPI,
 	readTableAPI,
-	loadTableAPI,
+	loadSheetAPI,
 	getAllAppsAPI,
 } from './api';
 
@@ -53,7 +53,7 @@ const App = () => {
 				url: 'https://docs.google.com/spreadsheets/d/1CC5H2MVbGg0tm8OyouoR7f2ARR0CK1kqHFNeKYyYtL4/edit#gid=0',
 				sheetIndex: 'Sheet1',
 			};
-			const developers = await loadTableAPI(tableData);
+			const developers = await loadSheetAPI(tableData);
 			let foundDeveloper = false;
 			if (developers !== undefined) {
 				for (let i = 1; i < developers.length; i++) {
@@ -129,7 +129,7 @@ const App = () => {
 			};
 
 			try {
-				const roleSheetData = await loadTableAPI(roleTableData);
+				const roleSheetData = await loadSheetAPI(roleTableData);
 
 				if (roleSheetData !== undefined) {
 					const userRoles = findUserRoles(user.email, roleSheetData);

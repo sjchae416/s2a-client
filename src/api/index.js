@@ -15,13 +15,16 @@ import {
 } from './userApi';
 
 import {
-	loadTableAPI,
 	createTableAPI,
 	readAllTablesAPI,
 	readTableAPI,
 	updateTableAPI,
 	deleteTableAPI,
 } from './tableApi';
+
+import {
+	loadSheetAPI,
+} from './sheetApi';
 
 import {
 	createViewAPI,
@@ -43,7 +46,7 @@ export {
 	getUserByEmailAPI,
 	updateUserAPI,
 	deleteUserAPI,
-	loadTableAPI,
+	loadSheetAPI,
 	createTableAPI,
 	readAllTablesAPI,
 	readTableAPI,

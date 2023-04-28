@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import shortid from 'shortid';
-import { loadTableAPI } from '../api';
+import { loadSheetAPI } from '../api';
 
 export default function ViewConfig({
 	viewRole,
@@ -187,7 +187,7 @@ export default function ViewConfig({
 			url: viewTable.url,
 			sheetIndex: viewTable.sheetIndex,
 		};
-		const data = await loadTableAPI(tableData);
+		const data = await loadSheetAPI(tableData);
 
 		// FIXME this is taking a while.. printing in console or even passing this point in the function takes a while
 		console.log(data);

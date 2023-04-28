@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { loadTableAPI } from '../api';
+import { loadSheetAPI } from '../api';
 
 export default function AppConfig({
 	user,
@@ -48,7 +48,7 @@ export default function AppConfig({
 				//NOTE - In order for sheetIndex to always choose the first sheet index, the metadata must be used. May add it later.
 				sheetIndex: 'Sheet1',
 			};
-			const dataArray = await loadTableAPI(tableData);
+			const dataArray = await loadSheetAPI(tableData);
 			if (dataArray) {
 				setViewRole(dataArray);
 				setRoleData(dataArray);
