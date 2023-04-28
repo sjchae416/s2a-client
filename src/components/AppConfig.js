@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { loadSheetAPI } from '../api';
+import { loadSheetAPI, getFirstSheetNameAPI } from '../api';
 
 export default function AppConfig({
 	user,
@@ -43,10 +43,11 @@ export default function AppConfig({
 	// FN create and fill in App document & and load Table data
 	const loadRoleTable = async () => {
 		if (name && roleMembershipSheet) {
+			const sheetIndex = await getFirstSheetNameAPI({ url: roleMembershipSheet })
 			const sheetData = {
 				url: roleMembershipSheet,
 				//NOTE - In order for sheetIndex to always choose the first sheet index, the metadata must be used. May add it later.
-				sheetIndex: 'Sheet1',
+				sheetIndex: sheetIndex,
 			};
 			const dataArray = await loadSheetAPI(sheetData);
 			if (dataArray) {
@@ -54,7 +55,7 @@ export default function AppConfig({
 				setRoleData(dataArray);
 			} else {
 				alert(
-					"Error loading table. Please check your URL or make sure your role membership sheet sheetIndex is 'Sheet1'"
+					"Error loading table. Please check your URL"
 				);
 				return;
 			}
