@@ -125,7 +125,11 @@ export default function TableConfig({
 				);
 				return;
 			}
-			const tableRows = await loadSheetAPI(tableData);
+			const sheetData = {
+				url: tableData.url,
+				sheetIndex: tableData.sheetIndex,
+			};
+			const tableRows = await loadSheetAPI(sheetData);
 			if (tableRows && !tableRows.error) {
 				setTableDataArray(tableRows);
 			} else {

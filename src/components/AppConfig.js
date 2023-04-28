@@ -43,12 +43,12 @@ export default function AppConfig({
 	// FN create and fill in App document & and load Table data
 	const loadRoleTable = async () => {
 		if (name && roleMembershipSheet) {
-			const tableData = {
+			const sheetData = {
 				url: roleMembershipSheet,
 				//NOTE - In order for sheetIndex to always choose the first sheet index, the metadata must be used. May add it later.
 				sheetIndex: 'Sheet1',
 			};
-			const dataArray = await loadSheetAPI(tableData);
+			const dataArray = await loadSheetAPI(sheetData);
 			if (dataArray) {
 				setViewRole(dataArray);
 				setRoleData(dataArray);

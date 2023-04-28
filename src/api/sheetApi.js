@@ -2,13 +2,13 @@ const defaultHeader = {
 	'Content-Type': 'application/json',
 };
 
-export const loadSheetAPI = async (tableData) => {
+export const loadSheetAPI = async (sheetData) => {
 	try {
-		const response = await fetch('http://localhost:3333/googleapis/loadtable', {
+		const response = await fetch('http://localhost:3333/googleapis/loadsheet', {
 			method: 'POST',
 			credentials: 'include',
 			headers: defaultHeader,
-			body: JSON.stringify(tableData),
+			body: JSON.stringify(sheetData),
 		});
 		const responseBody = await response.text();
 		const parsedData = JSON.parse(responseBody);
@@ -17,3 +17,5 @@ export const loadSheetAPI = async (tableData) => {
 		// console.error(error);
 	}
 };
+
+// export const updateSheetAPI 

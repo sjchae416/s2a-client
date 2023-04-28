@@ -182,12 +182,12 @@ export default function ViewConfig({
 		// FIXME use real Google Account restriction; try to make a Google Account and check what it requires
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regular expression for email format
 
-		const tableData = {
+		const sheetData = {
 			name: viewTable.name,
 			url: viewTable.url,
 			sheetIndex: viewTable.sheetIndex,
 		};
-		const data = await loadSheetAPI(tableData);
+		const data = await loadSheetAPI(sheetData);
 
 		// FIXME this is taking a while.. printing in console or even passing this point in the function takes a while
 		console.log(data);
