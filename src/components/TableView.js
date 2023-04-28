@@ -25,6 +25,17 @@ export default function TableView({ view, listViews }) {
   const [selectedRow, setSelectedRow] = useState(null);
   // const [openDetail, setOpenDetail] = useState(false);
   const [showMinusButtons, setShowMinusButtons] = useState(false);
+  const [selectedRowPosition, setSelectedRowPosition] = useState(0);
+
+  // States to store the position of the row added in the sheet
+  const [addRowPosition, setAddRowPosition] = useState({});
+
+  // States to store the position of the row edited in the sheet
+  const [editPosition, setEditRowPosition] = useState({});
+
+  // States to store the position of the row delete in the sheet
+  const [deleteRowPosition, setDeleteRowPosition] = useState({});
+
 
   const [test, setTest] = useState([
     {
@@ -107,6 +118,29 @@ export default function TableView({ view, listViews }) {
     setTest(updatedTest);
     setFilteredTest([...filteredTest, newRow]);
     setNewRowData({});
+
+    //does not fill in default values for fields not added
+    //test.length is the end of the array ie the last row in tab;e
+    let sheetIdx = table.sheetIndex + "!A" + test.length + ":" + String.fromCharCode(64 + newRow.length) + test.length;
+    let newValues = [];
+    for (let key in newRow) {
+      newValues.push(newRow[key]);
+    }
+
+    console.log(newValues);
+
+    let resource = {
+      data: [
+        {
+          range: sheetIdx,
+          values: [newValues]
+        }
+      ],
+      valueInputOption: "USER_ENTERED"
+    };
+
+    setAddRowPosition(resource);
+
     console.log(newRow);
     console.log(updatedTest);
     handleClose();
@@ -127,16 +161,48 @@ export default function TableView({ view, listViews }) {
       deletedRow[columnName] = selectedRowData[columnName];
     });
     console.log("Deleted Row:", deletedRow);
-    // Call the delete function to remove the row from the data
-    // ...
+
+    // Find index of row to delete
+    const index = test.findIndex((row) => {
+      return Object.keys(row).every((key) => {
+        return row[key] === selectedRowData[key];
+      });
+    });
+
+    let resource = {
+      "deleteDimension": {
+        "range": {
+          "sheetId": table.sheetIndex,
+          "dimension": "ROWS",
+          "startIndex": index,
+          "endIndex": index
+        }
+      }
+    };
+    setDeleteRowPosition(resource);
+
+
+    // Remove row from test array
+    if (index !== -1) {
+      const updatedTest = [...test];
+      updatedTest.splice(index, 1);
+      setTest(updatedTest);
+      setFilteredTest(updatedTest);
+      console.log(updatedTest);
+    }
     handleClose();
   };
 
   const handleRowClick = (row) => {
     const foundRow = test.find((testRow) => testRow.Name === row.Name);
     setSelectedRow(foundRow);
-    // console.log(foundRow);
+
+    const foundRowIndex = test.findIndex((testRow) => testRow.Name === row.Name);
+    setSelectedRowPosition(foundRowIndex);
+    // console.log(foundRowIndex);
+    // console.log(test);
   };
+
   useEffect(() => {
     const result = test.filter((row) => row[viewFilter]);
     setFilteredTest(result);
@@ -202,7 +268,10 @@ export default function TableView({ view, listViews }) {
             updateRecord={updateRecord}
             row={selectedRow}
             views={listViews}
+            rowPosition = {selectedRowPosition}
             onSelectedRowChange={setSelectedRow}
+            editPosition = {setEditRowPosition}
+            deleteRowPosition = {setDeleteRowPosition}
           />
         </Modal>
       )}
