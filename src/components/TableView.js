@@ -127,8 +127,22 @@ export default function TableView({ view, listViews }) {
       deletedRow[columnName] = selectedRowData[columnName];
     });
     console.log("Deleted Row:", deletedRow);
-    // Call the delete function to remove the row from the data
-    // ...
+
+    // Find index of row to delete
+    const index = test.findIndex((row) => {
+      return Object.keys(row).every((key) => {
+        return row[key] === selectedRowData[key];
+      });
+    });
+
+    // Remove row from test array
+    if (index !== -1) {
+      const updatedTest = [...test];
+      updatedTest.splice(index, 1);
+      setTest(updatedTest);
+      setFilteredTest(updatedTest);
+      console.log(updatedTest);
+    }
     handleClose();
   };
 
