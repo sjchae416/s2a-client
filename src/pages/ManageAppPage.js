@@ -17,7 +17,7 @@ export default function ManageAppPage({
 	publishedApps,
 	unpublishedApps,
 	// TODO pass publishedApps, unpublishedApps to the App List Component
-	setIsAppSaved,
+	setReloadApp,
 	app,
 	setAppData,
 	userTables,
@@ -156,7 +156,7 @@ export default function ManageAppPage({
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
 						<Sidebar
-							setIsAppSaved={setIsAppSaved}
+							setReloadApp={setReloadApp}
 							setView={setView}
 							viewName={viewName}
 							checkUnsavedData={checkUnsavedData}

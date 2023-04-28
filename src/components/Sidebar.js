@@ -10,7 +10,7 @@ import {
 import Modal from '@mui/material/Modal';
 
 const Sidebar = ({
-	setIsAppSaved,
+	setReloadApp,
 	setView,
 	viewName,
 	checkUnsavedData,
@@ -85,7 +85,7 @@ const Sidebar = ({
 				// }
 				setAppData(null);
 				setViewDatas(null);
-				setIsAppSaved(true);
+				setReloadApp(true);
 				navigate('/');
 			} catch (error) {
 				window.alert(error);
