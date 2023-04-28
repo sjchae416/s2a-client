@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-const DetailView = ({ row, views, onSelectedRowChange, updateRecord }) => {
+const DetailView = ({ row, views, rowPosition, onSelectedRowChange, updateRecord, editPosition, deleteRowPosition }) => {
   let name, table, col, type, allowedActions, role;
   let editFilter = "",
     editableCols = [];
@@ -37,6 +37,30 @@ const DetailView = ({ row, views, onSelectedRowChange, updateRecord }) => {
   const handleSaveClick = () => {
     const updatedRow = { ...editingRow, ...editingFields };
     console.log(updatedRow); // TODO: send updated row to server
+    console.log(Object.keys(updatedRow).length);
+    
+    // get the sheet index and the values into array
+    // row position is the position in table that was edited
+    let sheetIdx = table.sheetIndex + "!A" + rowPosition + ":" + String.fromCharCode(64 + Object.keys(updatedRow).length) + rowPosition;
+    let newValues = [];
+    for (let key in updatedRow) {
+      newValues.push(updatedRow[key]);
+    }
+
+    console.log(newValues);
+
+    let resource = {
+      data: [
+        {
+          range: sheetIdx,
+          values: [newValues]
+        }
+      ],
+      valueInputOption: "USER_ENTERED"
+    };
+    
+    editPosition(resource);
+
     setEditingRow(updatedRow);
     onSelectedRowChange(updatedRow);
     setIsEditing(false);
@@ -68,6 +92,18 @@ const DetailView = ({ row, views, onSelectedRowChange, updateRecord }) => {
   const handleConfirmDelete = () => {
     // TODO: handle delete row
     console.log("Row to delete:", rowToDelete);
+    let resource = {
+      "deleteDimension": {
+        "range": {
+          "sheetId": table.sheetIndex,
+          "dimension": "ROWS",
+          "startIndex": rowPosition,
+          "endIndex": rowPosition
+        }
+      }
+    };
+    deleteRowPosition(resource);
+
     setOpenDelete(false);
     onSelectedRowChange(null);
   };
