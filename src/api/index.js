@@ -23,6 +23,7 @@ import {
 } from './tableApi';
 
 import {
+	getFirstSheetName,
 	loadSheetAPI,
 	updateSheetAPI,
 } from './sheetApi';
@@ -47,6 +48,7 @@ export {
 	getUserByEmailAPI,
 	updateUserAPI,
 	deleteUserAPI,
+	getFirstSheetName,
 	loadSheetAPI,
 	updateSheetAPI,
 	createTableAPI,
