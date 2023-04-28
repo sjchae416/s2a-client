@@ -79,7 +79,6 @@ export default function ViewConfig({
 				editFilter: viewData.editFilter,
 				editableCols: viewData.editableCols,
 			};
-			// setViewDatas((prev) => [...prev, viewToSave]);
 			setViewDatas((prev) =>
 				prev === null ? [viewToSave] : [...prev, viewToSave]
 			);
@@ -180,6 +179,7 @@ export default function ViewConfig({
 	};
 
 	async function checkUserEmail(col) {
+		// FIXME use real Google Account restriction; try to make a Google Account and check what it requires
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regular expression for email format
 
 		const tableData = {

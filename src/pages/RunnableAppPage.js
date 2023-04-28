@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import {NavigationBar, TableView, TableViewSidebar} from '../components';
+import { NavigationBar, TableView, TableViewSidebar } from '../components';
 import UserContext from '../UserContext';
 
 const view1 = {
@@ -47,7 +47,7 @@ const view1 = {
 			},
 		],
 	},
-	columns: ['Name', 'Email','Class'],
+	columns: ['Name', 'Email', 'Class'],
 	viewType: 'Table',
 	allowedActions: ['Add Record', 'Delete Record'],
 	roles: ['Developer'],
@@ -101,7 +101,7 @@ const view2 = {
 			},
 		],
 	},
-	columns: ['Name', 'Email','Class', 'Grade'],
+	columns: ['Name', 'Email', 'Class', 'Grade'],
 	viewType: 'Detail',
 	allowedActions: ['Edit Record', 'Delete Record'],
 	roles: ['Developer'],
@@ -155,7 +155,7 @@ const view3 = {
 			},
 		],
 	},
-	columns: ['Name', 'Email','Class', 'Grade'],
+	columns: ['Name', 'Email', 'Class', 'Grade'],
 	viewType: 'Table',
 	allowedActions: ['Add Record'],
 	roles: ['Developer'],
@@ -167,7 +167,7 @@ const view3 = {
 
 const views = [view1, view2, view3];
 
-export default function RunnableAppPage() {
+export default function RunnableAppPage({ runnableApps }) {
 	const { name } = useParams();
 	const [selectedView, setSelectedView] = useState(null);
 	const { user, setUser } = useContext(UserContext);
@@ -178,8 +178,8 @@ export default function RunnableAppPage() {
 
 	return (
 		<div>
-			<br/>
-			<br/>
+			<br />
+			<br />
 			<NavigationBar user={user} />
 			<h2>{name}</h2>
 			<div className="page-container">
@@ -187,7 +187,7 @@ export default function RunnableAppPage() {
 					<TableViewSidebar views={views} onSelectView={handleSelectView} />
 				</div>
 				<div className="main-container">
-					{selectedView && <TableView view={selectedView} listViews = {views}/>}
+					{selectedView && <TableView view={selectedView} listViews={views} />}
 				</div>
 			</div>
 		</div>
