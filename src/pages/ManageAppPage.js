@@ -27,7 +27,7 @@ export default function ManageAppPage({
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
 	const [addView, setAddView] = useState(false);
 	const [addApp, setAddApp] = useState(false);
-	const [appType, setAppType] = useState('publish');
+	const [appType, setAppType] = useState('published');
 	const [selectedPublishedApp, setSelectedPublishedApp] = useState({});
 
 	return (
@@ -63,8 +63,8 @@ export default function ManageAppPage({
 									<br />
 									<br />
 									<select onChange={(e) => setAppType(e.target.value)}>
-										<option value="publish">Publish</option>
-										<option value="unpublish">UnPublish</option>
+										<option value="published">Published</option>
+										<option value="unpublished">Unpublished</option>
 									</select>
 									<List
 										type="app"
