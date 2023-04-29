@@ -78,8 +78,7 @@ export default function DashboardPage({
 								{runnableApps?.map((runnableApp) => (
 									<DashboardApp
 										key={runnableApp.app._id}
-										name={runnableApp.app.name}
-										lastOpenedDate={runnableApp.app.lastOpenedDate}
+										runnableApp={runnableApp.app}
 									/>
 								))}
 							</div>
