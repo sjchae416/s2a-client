@@ -374,8 +374,6 @@ export default function TableConfig({
                             handleInputChange(event, key, "type")
                           }
                         >
-                          {/* FIXME remove the blank option and show Text as default and have the value stored default */}
-                          <option></option>
                           {/* FIXME use the ACTUAL type name in JS for value */}
                           <option value="string">Text</option>
                           <option value="int">Number</option>
