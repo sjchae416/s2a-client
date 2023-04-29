@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const DashboardApp = ({ name, lastOpenedDate }) => {
+const DashboardApp = ({ keyApp, name, lastOpenedDate }) => {
 	return (
 		<div className="col-3">
-			<Link to={`/runnable-appIds/${name}`}>
+			<Link to={`/runnable-appIds/${name}/${keyApp}`}>
 				<div className="card p-0 text-center">
 					<h2 className="">{name}</h2>
 					<hr />
