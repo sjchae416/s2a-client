@@ -90,11 +90,11 @@ export default function ViewConfig({
 	};
 
 	const handleRoleChange = (e) => {
-		const { name, checked } = e.target;
+		const { value, checked } = e.target;
 		if (checked) {
-			setRole([...role, name]);
+			setRole([...role, value]);
 		} else {
-			setRole(role.filter((item) => item !== name));
+			setRole(role.filter((item) => item !== value));
 		}
 	};
 

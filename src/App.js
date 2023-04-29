@@ -1,7 +1,6 @@
-import React from 'react';
 import './App.css';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
-import { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import UserContext from './UserContext';
 import {
@@ -13,11 +12,11 @@ import {
 	RunnableAppPage,
 } from './pages';
 import {
-	getAppByIdAPI,
 	readTableAPI,
 	loadSheetAPI,
 	getAllAppsAPI,
 	getFirstSheetNameAPI,
+	readViewAPI,
 } from './api';
 
 export const customHistory = createBrowserHistory();
@@ -25,37 +24,32 @@ export const customHistory = createBrowserHistory();
 const App = () => {
 	const { user, setUser } = useContext(UserContext);
 	const [reloadApp, setReloadApp] = useState(false);
-	const [tableIds, setTableIds] = useState([]);
+	const [tableIds, setTableIds] = useState(null);
 	const [app, setAppData] = useState(null);
 	const [userTables, setTables] = useState(null);
 	const [viewDatas, setViewDatas] = useState(null);
 	// const [developers, setDevelopers] = useState([]);
 	const [isDeveloper, setIsDeveloper] = useState(false);
-
-	const [endUserApps, setEndUserApps] = useState([]);
-	const [developerApps, setDeveloperApps] = useState([]);
-
-	// REVIEW Apps that the User can run
-	const [runnableApps, setRunnableApps] = useState(null);
-	// REVIEW Apps that the User can Manage, but published (can run)
+	// REVIEW Apps that the User can Manage as a Developer, but published (can run)
 	const [publishedApps, setPublishedApps] = useState(null);
-	// REVIEW Apps that the User can Manage, but not published (can't run yet)
+	// REVIEW Apps that the User can Manage as a Developer, but unpublished (can't run yet)
 	const [unpublishedApps, setUnpublishedApps] = useState(null);
+	// REVIEW Apps that the User can run as an End User (published)
+	const [runnableApps, setRunnableApps] = useState(null);
 
 	// NOTE TABLES
-	const loadTableIds = (user) => {
-		setTableIds(user.tables);
-	};
 
+	// TODO abstract into client API
 	const checkGlobalTable = async () => {
 		try {
 			const url =
 				'https://docs.google.com/spreadsheets/d/1CC5H2MVbGg0tm8OyouoR7f2ARR0CK1kqHFNeKYyYtL4/edit#gid=0';
-			const sheetIndex = await getFirstSheetNameAPI({ url: url });
+			// const sheetIndex = await getFirstSheetNameAPI({ url: url });
 			const sheetData = {
 				name: 'Global Developer List',
 				url: url,
-				sheetIndex: sheetIndex,
+				sheetIndex: 'Sheet1',
+				// sheetIndex: sheetIndex,
 			};
 			const developers = await loadSheetAPI(sheetData);
 			let foundDeveloper = false;
@@ -75,6 +69,10 @@ const App = () => {
 		}
 	};
 
+	const loadTableIds = (user) => {
+		setTableIds(user.tables);
+	};
+
 	useEffect(() => {
 		const loadTables = async (tableIds) => {
 			try {
@@ -83,7 +81,7 @@ const App = () => {
 						return await readTableAPI(tableId);
 					})
 				);
-				console.log('🚀 ~ file: App.js:96 ~ loadTables ~ tables:', tables);
+				console.log('🚀 ~ loadTables ~ tables:', tables);
 				setTables(tables);
 			} catch (error) {
 				console.error('Error fetching App: ', error);
@@ -115,6 +113,86 @@ const App = () => {
 		return userRoles; // Return an array of roles
 	}
 
+	// NOTE set developer apps with published === true as published apps
+	const filterPublishedApps = (developerApps) => {
+		const filteredApps = developerApps.filter((developerApp) => {
+			return developerApp.published === true;
+		});
+
+		if (filteredApps.length !== 0) {
+			setPublishedApps(filteredApps);
+		} else {
+			setPublishedApps(null);
+		}
+	};
+
+	// NOTE set developer apps with published === false as unpublished apps
+	const filterUnpublishedApps = (developerApps) => {
+		const filteredApps = developerApps.filter((developerApp) => {
+			return developerApp.published === false;
+		});
+
+		if (filteredApps.length !== 0) {
+			setUnpublishedApps(filteredApps);
+		} else {
+			setUnpublishedApps(null);
+		}
+	};
+
+	// NOTE set accessible apps with published === true and userRoles in view.roles as runnable apps
+	const filterRunnableApps = async (accessibleApps) => {
+		try {
+			let filteredApps = await accessibleApps.reduce(
+				async (accumulatorPromise, accessibleApp) => {
+					// let filteredApps = await Promise.all(
+					// 	accessibleApps.map(async (accessibleApp) => {
+					const accumulator = await accumulatorPromise;
+
+					const appViews = await Promise.all(
+						accessibleApp.app.views.map((viewId) => {
+							return readViewAPI(viewId);
+						})
+					);
+
+					const accessibleViews = appViews.filter((appView) => {
+						return accessibleApp.userRoles.some((userRole) => {
+							return appView.roles.includes(userRole);
+						});
+					});
+
+					if (accessibleViews.length !== 0) {
+						accessibleApp.app.views = accessibleViews;
+						// TODO append new field if field modification is not allowed
+						accessibleApp.app.accessibleViews = accessibleViews;
+						accumulator.push(accessibleApp);
+						// return accessibleApp;
+					}
+					// else {
+					// 	return null;
+					// }
+
+					return accumulator;
+				},
+				Promise.resolve([])
+			);
+			// 	})
+			// );
+
+			// filteredApps = filteredApps.filter((filteredApp) => {
+			// 	return filteredApp !== null;
+			// });
+
+			if (filteredApps.length !== 0) {
+				setRunnableApps(filteredApps);
+			} else {
+				setRunnableApps(null);
+			}
+		} catch (error) {
+			window.alert(error);
+			return new Error('Error filtering runnableApps: ', error);
+		}
+	};
+
 	const loadAllApps = async () => {
 		// NOTE load and iterate all apps in db
 		const allAppsInDB = await getAllAppsAPI();
@@ -125,12 +203,15 @@ const App = () => {
 		for (let i = 0; i < allAppsInDB?.length; i++) {
 			const app = allAppsInDB[i];
 			const roleURL = app?.roleMembershipSheet;
-			const sheetIndex = await getFirstSheetNameAPI({ url: roleURL });
+			// FIXME does not return correctly
+			// const sheetIndex = await getFirstSheetNameAPI({ url: roleURL });
 			const roleTableData = {
 				name: `${app.name} Role Membership Sheet`,
-				// name: 'Rolemembership Sheet',
 				url: roleURL,
-				sheetIndex: sheetIndex,
+				// TODO delete when getFirstSheetNameAPI() is fixed
+				sheetIndex: 'Sheet1',
+				// TODO uncomment when working
+				// sheetIndex: sheetIndex,
 			};
 
 			try {
@@ -141,7 +222,9 @@ const App = () => {
 
 					if (userRoles.length > 0) {
 						// NOTE filter all apps into accessible apps by checking roles
-						accessibleApps.push({ app, userRoles });
+						if (app.published === true) {
+							accessibleApps.push({ app, userRoles });
+						}
 
 						if (
 							userRoles
@@ -152,8 +235,6 @@ const App = () => {
 							// NOTE filter all apps into developer apps by checking if user email under developer(s) role
 							developerApps.push(app);
 						}
-
-						// endUserAppList.push({ app, userRoles });
 					} else {
 						console.log(
 							`The User with email: ${user.email} does not have any roles`
@@ -166,70 +247,36 @@ const App = () => {
 			}
 		}
 
-		// NOTE set all apps with published === true as runnable apps
-		setRunnableApps(() => {
-			if (accessibleApps.length > 0) {
-				const filteredApp = accessibleApps.filter((accessibleApp) => {
-					return accessibleApp.app.published === true;
-				});
+		if (developerApps.lengh !== 0) {
+			filterPublishedApps(developerApps);
+			filterUnpublishedApps(developerApps);
+		} else {
+			setPublishedApps(null);
+			setUnpublishedApps(null);
+		}
 
-				if (filteredApp.length > 0) {
-					return filteredApp;
-				}
-			}
-			return null;
-		});
-
-		// NOTE set developer apps with published === true as published apps
-		setPublishedApps(() => {
-			if (developerApps.length > 0) {
-				const filteredApp = developerApps.filter((developerApp) => {
-					return developerApp.published === true;
-				});
-
-				if (filteredApp.length > 0) {
-					return filteredApp;
-				}
-			}
-			return null;
-		});
-
-		// NOTE set developer apps with published === false as unpublished apps
-		setUnpublishedApps(() => {
-			if (developerApps.length > 0) {
-				const filteredApp = developerApps.filter((developerApp) => {
-					return developerApp.published === false;
-				});
-
-				if (filteredApp.length > 0) {
-					return filteredApp;
-				}
-			}
-			return null;
-		});
-
-		// setDeveloperApps(developerApps);
-		// setEndUserApps(endUserAppList);
+		if (accessibleApps.length !== 0) {
+			filterRunnableApps(accessibleApps);
+		} else {
+			setRunnableApps(null);
+		}
 	};
 
 	useEffect(() => {
-		console.log('🚀 ~ file: App.js:194 ~ App ~ runnableApps:', runnableApps);
-	}, [runnableApps]);
-
-	useEffect(() => {
-		console.log('🚀 ~ file: App.js:198 ~ App ~ publishedApps:', publishedApps);
+		console.log('🚀 ~ App ~ publishedApps:', publishedApps);
 	}, [publishedApps]);
 
 	useEffect(() => {
-		console.log(
-			'🚀 ~ file: App.js:203 ~ App ~ unpublishedApps:',
-			unpublishedApps
-		);
+		console.log('🚀 ~ App ~ unpublishedApps:', unpublishedApps);
 	}, [unpublishedApps]);
 
+	useEffect(() => {
+		console.log('🚀 ~ App ~ runnableApps:', runnableApps);
+	}, [runnableApps]);
+
 	// NOTE ADMIN
+	// TODO abstract into client API
 	// const fetchDevelopers = async () => {
-	// 	// TODO - Make an api for this
 	// 	try {
 	// 		const response = await fetch('http://localhost:3333/admin');
 
@@ -245,12 +292,14 @@ const App = () => {
 	// };
 
 	// NOTE USERS
+	// TODO abstract into client API
 	const fetchCurrentUser = async () => {
 		try {
 			const response = await fetch('http://localhost:3333/auth/authenticated', {
 				credentials: 'include',
 			});
 			const data = await response.json();
+			console.log('🚀 ~ fetchCurrentUser ~ data:', data);
 
 			if (response.ok) {
 				if (!data) {
@@ -266,20 +315,20 @@ const App = () => {
 	};
 
 	useEffect(() => {
-		if (user !== null) {
-			checkGlobalTable();
-			loadAllApps();
-			loadTableIds(user);
-		} else {
-			setTableIds(null);
-		}
-	}, [user]);
-
-	useEffect(() => {
 		if (reloadApp) {
 			loadAllApps();
 		}
 	}, [reloadApp]);
+
+	useEffect(() => {
+		if (user !== null) {
+			checkGlobalTable();
+			loadTableIds(user);
+			loadAllApps();
+		} else {
+			setTableIds(null);
+		}
+	}, [user]);
 
 	useEffect(() => {
 		fetchCurrentUser();

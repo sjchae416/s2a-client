@@ -87,7 +87,6 @@ export default function DashboardPage({
 							<p>Runnable Apps</p> */}
 							<h2>Runnable Apps</h2>
 							<div className="row">
-								{/* TODO filter only Apps with Views that has User's Roles */}
 								{runnableApps?.map((runnableApp) => (
 									<DashboardApp
 										key={runnableApp.app._id}
