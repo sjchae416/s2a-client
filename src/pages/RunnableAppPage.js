@@ -167,14 +167,12 @@ const view3 = {
 
 const views = [view1, view2, view3];
 
-export default function RunnableAppPage({ runnableApps }) {
-	const { name, keyApp } = useParams();
-  	console.log(name, keyApp);
+export default function RunnableAppPage({}) {
+	const { name } = useParams();
+	console.log(name);
 
 	const [selectedView, setSelectedView] = useState(null);
 	const { user, setUser } = useContext(UserContext);
-
-	//console.log(runnableApps);
 
 	const handleSelectView = (view) => {
 		setSelectedView(view);

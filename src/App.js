@@ -19,6 +19,7 @@ import {
 	readViewAPI,
 } from './api';
 
+// FIXME delete if not used
 export const customHistory = createBrowserHistory();
 
 const App = () => {
@@ -30,12 +31,8 @@ const App = () => {
 	const [viewDatas, setViewDatas] = useState(null);
 	// const [developers, setDevelopers] = useState([]);
 	const [isDeveloper, setIsDeveloper] = useState(false);
-	// REVIEW Apps that the User can Manage as a Developer, but published (can run)
 	const [publishedApps, setPublishedApps] = useState(null);
-	// REVIEW Apps that the User can Manage as a Developer, but unpublished (can't run yet)
 	const [unpublishedApps, setUnpublishedApps] = useState(null);
-	// REVIEW Apps that the User can run as an End User (published)
-	// NOTE use accessibleViews field in the element of runnableApps; it's filtered views that the User has access to
 	const [runnableApps, setRunnableApps] = useState(null);
 
 	// NOTE TABLES
@@ -59,8 +56,6 @@ const App = () => {
 			let foundDeveloper = false;
 			if (developers !== undefined) {
 				for (let i = 1; i < developers.length; i++) {
-					// console.log('developers[i][0]', developers[i][0]);
-					// console.log('user.email', user.email);
 					if (developers[i][0] === user.email) {
 						foundDeveloper = true;
 						break;
@@ -117,7 +112,6 @@ const App = () => {
 		return userRoles; // Return an array of roles
 	}
 
-	// NOTE set developer apps with published === true as published apps
 	const filterPublishedApps = (developerApps) => {
 		const filteredApps = developerApps.filter((developerApp) => {
 			return developerApp.published === true;
@@ -130,7 +124,6 @@ const App = () => {
 		}
 	};
 
-	// NOTE set developer apps with published === false as unpublished apps
 	const filterUnpublishedApps = (developerApps) => {
 		const filteredApps = developerApps.filter((developerApp) => {
 			return developerApp.published === false;
@@ -143,7 +136,6 @@ const App = () => {
 		}
 	};
 
-	// NOTE set accessible apps with published === true and userRoles in view.roles as runnable apps
 	const filterRunnableApps = async (accessibleApps) => {
 		try {
 			let filteredApps = await accessibleApps.reduce(
@@ -163,8 +155,6 @@ const App = () => {
 					});
 
 					if (accessibleViews.length !== 0) {
-						// TODO if view (id) not needed later, modify views instead of creating accessibleViews field
-						// accessibleApp.app.views = accessibleViews;
 						accessibleApp.app.accessibleViews = accessibleViews;
 						accumulator.push(accessibleApp);
 					}
@@ -186,7 +176,6 @@ const App = () => {
 	};
 
 	const loadAllApps = async () => {
-		// NOTE load and iterate all apps in db
 		const allAppsInDB = await getAllAppsAPI();
 		const accessibleApps = [];
 		const developerApps = [];
@@ -212,19 +201,17 @@ const App = () => {
 					const userRoles = findUserRoles(user.email, roleSheetData);
 
 					if (userRoles.length > 0) {
-						// NOTE filter all apps into accessible apps by checking roles
-						if (app.published === true) {
-							accessibleApps.push({ app, userRoles });
-						}
-
 						if (
 							userRoles
 								.map((role) => role.toLowerCase())
 								.includes('developer') ||
 							userRoles.map((role) => role.toLowerCase()).includes('developers')
 						) {
-							// NOTE filter all apps into developer apps by checking if user email under developer(s) role
 							developerApps.push(app);
+						}
+
+						if (app.published === true) {
+							accessibleApps.push({ app, userRoles });
 						}
 					} else {
 						console.log(
@@ -390,14 +377,8 @@ const App = () => {
 						}
 					/> */}
 					<Route
-						path="/runnable-appIds/:name/:keyApp"
-						element={
-							user ? (
-								<RunnableAppPage runnableApps={runnableApps} />
-							) : (
-								<LoginPage />
-							)
-						}
+						path="/runnable-appIds/:name"
+						element={user ? <RunnableAppPage /> : <LoginPage />}
 					/>
 				</Routes>
 			</BrowserRouter>
