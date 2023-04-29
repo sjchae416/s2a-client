@@ -44,7 +44,7 @@ const DetailView = ({
   // Event handler for save button click
   const handleSaveClick = () => {
     const updatedRow = { ...editingRow, ...editingFields };
-    console.log(updatedRow); // TODO: send updated row to server
+    console.log(updatedRow);
     console.log(Object.keys(updatedRow).length);
     
     // get the sheet index and the values into array
@@ -104,7 +104,6 @@ const DetailView = ({
   };
 
   const handleConfirmDelete = () => {
-    // TODO: handle delete row
     console.log("Row to delete:", rowToDelete);
     let resource = {
       "deleteDimension": {

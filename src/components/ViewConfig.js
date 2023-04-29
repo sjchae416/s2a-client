@@ -179,8 +179,17 @@ export default function ViewConfig({
 	};
 
 	async function checkUserEmail(col) {
-		// FIXME use real Google Account restriction; try to make a Google Account and check what it requires
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regular expression for email format
+		// REMOVE LATER
+		// ^ matches the start of the string
+		// [a-z0-9] matches any lowercase letter or digit
+		// (\.?[a-z0-9]){4,28} matches 4 to 28 occurrences of an optional dot followed by a lowercase letter or digit
+		// [a-z0-9] matches any lowercase letter or digit
+		// @ matches the "@" symbol
+		// [a-z0-9]+\. matches one or more lowercase letters or digits followed by a dot
+		// [a-z]{2,} matches two or more lowercase letters representing the domain name (e.g., com, org, net, etc.)
+		// $ matches the end of the string
+
+		const emailRegex = /^[a-z0-9](\.?[a-z0-9]){4,28}[a-z0-9]@[a-z0-9]+\.[a-z]{2,}$/i; // regular expression for email format
 
 		const sheetData = {
 			name: viewTable.name,
@@ -188,8 +197,7 @@ export default function ViewConfig({
 			sheetIndex: viewTable.sheetIndex,
 		};
 		const data = await loadSheetAPI(sheetData);
-
-		// FIXME this is taking a while.. printing in console or even passing this point in the function takes a while
+		
 		console.log(data);
 		let emailIndex = -1;
 		const headerRow = data[0];
