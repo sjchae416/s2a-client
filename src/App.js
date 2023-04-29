@@ -36,21 +36,16 @@ const App = () => {
 	const [runnableApps, setRunnableApps] = useState(null);
 
 	// NOTE TABLES
-
 	// TODO abstract into client API
 	const checkGlobalTable = async () => {
 		try {
 			const url =
 				'https://docs.google.com/spreadsheets/d/1CC5H2MVbGg0tm8OyouoR7f2ARR0CK1kqHFNeKYyYtL4/edit#gid=0';
-			// FIXME does not return correctly
-			// const sheetIndex = await getFirstSheetNameAPI({ url: url });
+			const sheetIndex = await getFirstSheetNameAPI({ url: url });
 			const sheetData = {
 				name: 'Global Developer List',
 				url: url,
-				// TODO delete when getFirstSheetNameAPI() is fixed
-				sheetIndex: 'Sheet1',
-				// TODO uncomment when working
-				// sheetIndex: sheetIndex,
+				sheetIndex: sheetIndex,
 			};
 			const developers = await loadSheetAPI(sheetData);
 			let foundDeveloper = false;
