@@ -111,7 +111,7 @@ export default function TableConfig({
 					key: false,
 					label: false,
 					reference: 'false',
-					type: '',
+					type: 'string',
 				}))
 			);
 		}
@@ -148,12 +148,12 @@ export default function TableConfig({
 
 	const handleCreateClick = async () => {
 		// Use the config array to perform desired action with the configuration
-		// console.log(config);
-		// console.log(tableData);
-		// if (!isTypeColumnValid()) {
-		// 	alert('Please select a type for all rows');
-		// 	return;
-		// }
+		console.log(config);
+		console.log(tableData);
+			if (!isTypeColumnValid()) {
+				alert('Please select a type for all rows');
+				return;
+			}
 
 		const createdTable = await createTableAPI(tableData);
 		if (createdTable && !createdTable.error) {

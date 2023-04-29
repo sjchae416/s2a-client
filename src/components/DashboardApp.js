@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const DashboardApp = ({ keyApp, name, lastOpenedDate }) => {
+const DashboardApp = ({ keyApp, name, lastOpenedDate, app }) => {
 	return (
 		<div className="col-3">
 			<Link to={`/runnable-appIds/${name}/${keyApp}`}>

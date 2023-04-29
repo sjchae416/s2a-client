@@ -174,7 +174,7 @@ export default function RunnableAppPage({ runnableApps }) {
 	const [selectedView, setSelectedView] = useState(null);
 	const { user, setUser } = useContext(UserContext);
 
-	//console.log(runnableApps);
+	console.log(runnableApps);
 
 	const handleSelectView = (view) => {
 		setSelectedView(view);

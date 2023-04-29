@@ -77,6 +77,7 @@ export default function DashboardPage({
 										keyApp={runnableApp.app._id}
 										name={runnableApp.app.name}
 										lastOpenedDate={runnableApp.app.lastOpenedDate}
+										app = {runnableApp.app}
 									/>
 								))}
 							</div>

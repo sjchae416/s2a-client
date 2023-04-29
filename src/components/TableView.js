@@ -126,7 +126,8 @@ export default function TableView({ view, listViews }) {
     for (let key in newRow) {
       newValues.push(newRow[key]);
     }
-
+    console.log(newRow.length);
+    console.log(sheetIdx);
     console.log(newValues);
 
     let resource = {
@@ -175,12 +176,11 @@ export default function TableView({ view, listViews }) {
           "sheetId": table.sheetIndex,
           "dimension": "ROWS",
           "startIndex": index,
-          "endIndex": index
+          "endIndex": index + 1
         }
       }
     };
     setDeleteRowPosition(resource);
-
 
     // Remove row from test array
     if (index !== -1) {
