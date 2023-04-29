@@ -104,7 +104,6 @@ const DetailView = ({
   };
 
   const handleConfirmDelete = () => {
-    // TODO: handle delete row
     console.log("Row to delete:", rowToDelete);
     let resource = {
       "deleteDimension": {
