@@ -163,8 +163,8 @@ const App = () => {
 					});
 
 					if (accessibleViews.length !== 0) {
-						// TODO if view (id) needed later, do not modify views and only create accessibleViews field
-						accessibleApp.app.views = accessibleViews;
+						// TODO if view (id) not needed later, modify views instead of creating accessibleViews field
+						// accessibleApp.app.views = accessibleViews;
 						accessibleApp.app.accessibleViews = accessibleViews;
 						accumulator.push(accessibleApp);
 					}
