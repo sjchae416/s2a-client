@@ -1,30 +1,25 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { DashboardApp, NavigationBar } from '../components';
-// import dummyApps from '../testData/test-apps.json';
 import UserContext from '../UserContext';
 
+// FIXME where is this used?
 export const name = '';
 
 export default function DashboardPage({
-	setIsAppSaved,
+	setReloadApp,
 	isDeveloper,
 	runnableApps,
 }) {
 	const { user, setUser } = useContext(UserContext);
-	// const [section, setSection] = useState("all");
 	const [showMenu, setShowMenu] = useState(false);
-
-	// runnableApps = dummyApps.filter((app) => app.runnable);
-	// publishedApps = dummyApps.filter((app) => app.status === 'published');
-	// unpublishedApps = dummyApps.filter((app) => app.inDevelopment);
 
 	const toggleMenu = () => {
 		setShowMenu(!showMenu);
 	};
 
 	const handleManageButton = () => {
-		setIsAppSaved(false);
+		setReloadApp(false);
 	};
 
 	if (!user) {
@@ -54,7 +49,12 @@ export default function DashboardPage({
 								<div className="col-auto">
 									{isDeveloper ? (
 										<Link to="/manage-app">
-											<button className="btn btn-info">Manage App</button>
+											<button
+												className="btn btn-info"
+												onClick={handleManageButton}
+											>
+												Manage App
+											</button>
 										</Link>
 									) : (
 										<></>
@@ -73,18 +73,6 @@ export default function DashboardPage({
 							</div>
 						</div>
 						<div className="box_two">
-							{/* <h3>All Apps</h3>
-							<p>Published Apps</p>
-							<div className="row">
-								{publishedApps.map((app) => (
-									<DashboardApp
-										key={app.name}
-										name={app.name}
-										date={app.date}
-									/>
-								))}
-							</div>
-							<p>Runnable Apps</p> */}
 							<h2>Runnable Apps</h2>
 							<div className="row">
 								{runnableApps?.map((runnableApp) => (

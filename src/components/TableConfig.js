@@ -5,7 +5,7 @@ import {
 	loadSheetAPI,
 	updateUserAPI,
 } from '../api';
-import SelectedTableConfig from "./SelectedTableConfig";
+import SelectedTableConfig from './SelectedTableConfig';
 
 export default function TableConfig({
 	user,
@@ -167,10 +167,12 @@ export default function TableConfig({
 			alert(errorMessage);
 			return;
 		}
+		// const newTableIds =
+		// 	createdTable._id == null
+		// 		? [...tableIds]
+		// 		: [...tableIds, createdTable._id];
 		const newTableIds =
-			createdTable._id == null
-				? [...tableIds]
-				: [...tableIds, createdTable._id];
+			tableIds === null ? [createdTable._id] : [...tableIds, createdTable._id];
 		const update = { tables: newTableIds };
 		const updatedUser = await updateUserAPI(user._id, update);
 
@@ -196,13 +198,13 @@ export default function TableConfig({
 							}
 						});
 					}
-				}else if(field === 'reference'){
+				} else if (field === 'reference') {
 					// if it is a reference, store the table
-					if(value === 'none') updatedConfig[configIndex][field] = value;
-					else{
+					if (value === 'none') updatedConfig[configIndex][field] = value;
+					else {
 						const table = userTables?.find(
-              (item) => item?._id === event.target.value
-            );
+							(item) => item?._id === event.target.value
+						);
 						updatedConfig[configIndex][field] = table;
 					}
 				} else {
@@ -242,7 +244,7 @@ export default function TableConfig({
 			const result = await deleteTableAPI(selectedTableId);
 
 			if (result) {
-				const updatedTableIds = tableIds.filter(
+				const updatedTableIds = tableIds?.filter(
 					(tableId) => tableId !== selectedTableId
 				);
 				const update = { tables: updatedTableIds };
@@ -388,33 +390,33 @@ export default function TableConfig({
             </tbody>
 					</table>
 					{!showSelectedTable && (
-            <div className="text-right">
-              <button
-                onClick={handleCancelClick}
-                className="btn btn-danger can_btn"
-              >
-                Cancel
-              </button>
-              <button onClick={handleCreateClick} className="btn btn-info">
-                Create
-              </button>
-            </div>
-          )}
+						<div className="text-right">
+							<button
+								onClick={handleCancelClick}
+								className="btn btn-danger can_btn"
+							>
+								Cancel
+							</button>
+							<button onClick={handleCreateClick} className="btn btn-info">
+								Create
+							</button>
+						</div>
+					)}
 				</div>
 			)}
 
 			{selectedTable !== null && (
-        <div>
-          <button
-            className="btn btn-danger"
-            onClick={() => handleDeleteTable(user, selectedTable._id)}
-          >
-            DELETE
-          </button>
-        </div>
-      )}
-      <br />
-      <br />
-    </div>
-  );
+				<div>
+					<button
+						className="btn btn-danger"
+						onClick={() => handleDeleteTable(user, selectedTable._id)}
+					>
+						DELETE
+					</button>
+				</div>
+			)}
+			<br />
+			<br />
+		</div>
+	);
 }

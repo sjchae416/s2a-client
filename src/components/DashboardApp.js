@@ -9,7 +9,7 @@ const DashboardApp = ({ name, lastOpenedDate }) => {
 					<h2 className="">{name}</h2>
 					<hr />
 					<div className="p-1">
-						<small>Last modified {lastOpenedDate}</small>
+						<small>Last opened: {lastOpenedDate}</small>
 					</div>
 				</div>
 			</Link>
