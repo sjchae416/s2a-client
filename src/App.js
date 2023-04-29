@@ -35,6 +35,7 @@ const App = () => {
 	// REVIEW Apps that the User can Manage as a Developer, but unpublished (can't run yet)
 	const [unpublishedApps, setUnpublishedApps] = useState(null);
 	// REVIEW Apps that the User can run as an End User (published)
+	// NOTE use accessibleViews field in the element of runnableApps; it's filtered views that the User has access to
 	const [runnableApps, setRunnableApps] = useState(null);
 
 	// NOTE TABLES
@@ -44,11 +45,14 @@ const App = () => {
 		try {
 			const url =
 				'https://docs.google.com/spreadsheets/d/1CC5H2MVbGg0tm8OyouoR7f2ARR0CK1kqHFNeKYyYtL4/edit#gid=0';
+			// FIXME does not return correctly
 			// const sheetIndex = await getFirstSheetNameAPI({ url: url });
 			const sheetData = {
 				name: 'Global Developer List',
 				url: url,
+				// TODO delete when getFirstSheetNameAPI() is fixed
 				sheetIndex: 'Sheet1',
+				// TODO uncomment when working
 				// sheetIndex: sheetIndex,
 			};
 			const developers = await loadSheetAPI(sheetData);
@@ -144,8 +148,6 @@ const App = () => {
 		try {
 			let filteredApps = await accessibleApps.reduce(
 				async (accumulatorPromise, accessibleApp) => {
-					// let filteredApps = await Promise.all(
-					// 	accessibleApps.map(async (accessibleApp) => {
 					const accumulator = await accumulatorPromise;
 
 					const appViews = await Promise.all(
@@ -161,26 +163,16 @@ const App = () => {
 					});
 
 					if (accessibleViews.length !== 0) {
+						// TODO if view (id) needed later, do not modify views and only create accessibleViews field
 						accessibleApp.app.views = accessibleViews;
-						// TODO append new field if field modification is not allowed
 						accessibleApp.app.accessibleViews = accessibleViews;
 						accumulator.push(accessibleApp);
-						// return accessibleApp;
 					}
-					// else {
-					// 	return null;
-					// }
 
 					return accumulator;
 				},
 				Promise.resolve([])
 			);
-			// 	})
-			// );
-
-			// filteredApps = filteredApps.filter((filteredApp) => {
-			// 	return filteredApp !== null;
-			// });
 
 			if (filteredApps.length !== 0) {
 				setRunnableApps(filteredApps);
@@ -198,7 +190,6 @@ const App = () => {
 		const allAppsInDB = await getAllAppsAPI();
 		const accessibleApps = [];
 		const developerApps = [];
-		// const endUserAppList = [];
 
 		for (let i = 0; i < allAppsInDB?.length; i++) {
 			const app = allAppsInDB[i];
