@@ -43,7 +43,12 @@ export const readViewAPI = async (id) => {
 			credentials: 'include',
 			headers: defaultHeader,
 		});
-		return response.json();
+
+		if (response.ok) {
+			return response.json();
+		} else {
+			return new Error(response.json().message);
+		}
 	} catch (error) {
 		console.error(error);
 	}

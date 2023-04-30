@@ -9,11 +9,14 @@ const List = ({
 	viewDataList,
 	setSelectedView,
 	setSelectedTable,
+	unpublishedApps,
+	publishedApps,
+	appType,
 	app,
+	setSelectedPublishedApp,
 }) => {
 	const [selectedApp, setSelectedApp] = useState(null);
-	// FIXME
-	// const [viewsToDisplay, setViewsToDisplay] = useState(viewDataList);
+	// TODO restore viewsToDisplay state
 
 	const handleSelectApp = (app) => {
 		setSelectedApp(app);
@@ -27,6 +30,7 @@ const List = ({
 		setSelectedTable(table);
 	};
 
+	// TODO setViewsTodisplay(appViews)
 	const loadAppViews = async (app) => {
 		try {
 			const appViews = await Promise.all(
@@ -34,7 +38,6 @@ const List = ({
 					return await readViewAPI(viewId);
 				})
 			);
-			// setViewsToDisplay(appViews);
 		} catch (error) {
 			console.error('Error fetching View: ', error);
 		}
@@ -49,32 +52,46 @@ const List = ({
 	return (
 		<div>
 			{/* FIXME check variable */}
-			{type === 'app' && developerApps.length > 0 ? (
+			{type === 'app' ? (
 				<>
-					{developerApps.map(
-						(developerApp) =>
-							developerApp !== null && (
-								<div
-									key={developerApp._id}
-									onClick={() => handleSelectApp(developerApp)}
-								>
-									<hr />
-									{developerApp.name}
-								</div>
-							)
-					)}
-					{/* {endUserApps.map(
-            (endUserApp) =>
-              endUserApp !== null && (
+					{/* {developerApps.map(
+            (developerApp) =>
+              developerApp !== null && (
                 <div
-                  key={endUserApp._id}
-                  onClick={() => handleSelectApp(endUserApp)}
+                  key={developerApp._id}
+                  onClick={() => handleSelectApp(developerApp)}
                 >
                   <hr />
-                  {endUserApp.name}
+                  {developerApp.name}
                 </div>
               )
           )} */}
+
+					{appType === 'published'
+						? publishedApps?.map(
+								(publishedApp) =>
+									publishedApp !== null && (
+										<div
+											key={publishedApp._id}
+											onClick={() => setSelectedPublishedApp(publishedApp)}
+										>
+											<hr />
+											{publishedApp.name}
+										</div>
+									)
+						  )
+						: unpublishedApps?.map(
+								(unpublishedApp) =>
+									unpublishedApp !== null && (
+										<div
+											key={unpublishedApp._id}
+											// onClick={() => handleSelectApp(unpublishedApp)}
+										>
+											<hr />
+											{unpublishedApp.name}
+										</div>
+									)
+						  )}
 				</>
 			) : type === 'view' && viewDataList.length > 0 ? (
 				viewDataList.map(

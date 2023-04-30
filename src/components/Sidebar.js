@@ -10,16 +10,17 @@ import {
 import Modal from '@mui/material/Modal';
 
 const Sidebar = ({
-	setIsAppSaved,
+	setReloadApp,
 	setView,
-	viewName,
-	checkUnsavedData,
 	app,
 	setAppData,
 	viewDatas,
 	setViewDatas,
+	viewDataList,
 }) => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
+	const [isPublishModalVisible, setIsPublishModalVisible] = useState(false);
+
 	const navigate = useNavigate();
 
 	const handleSaveClick = () => {
@@ -59,19 +60,6 @@ const Sidebar = ({
 		}
 	};
 
-	// FIXME if the selected App exits, update the field with passed id(selectedAppId)
-	// const updateApp = async (selectedAppId) => {
-	// if (selectedAppId) {
-	// const update = {
-	// 	appData,
-	// 	lastModifiedDate: new Date().toLocaleString('en-US', {
-	// 		timeZone: 'America/New_York',
-	// 	}),
-	// };
-	// 	await updateAppAPI(selectedAppId, update);
-	// } else {
-	// };
-
 	const handleSaveApp = async () => {
 		if (viewDatas) {
 			try {
@@ -85,7 +73,7 @@ const Sidebar = ({
 				// }
 				setAppData(null);
 				setViewDatas(null);
-				setIsAppSaved(true);
+				setReloadApp(true);
 				navigate('/');
 			} catch (error) {
 				window.alert(error);
@@ -96,6 +84,14 @@ const Sidebar = ({
 			window.alert('Create at least one Table View!');
 			setIsModalVisible(false);
 		}
+	};
+
+	const handlePublish = () => {
+		if (app && (viewDatas || viewDataList.length !== 0)) {
+			app.published = true;
+			setAppData(app);
+		}
+		setIsPublishModalVisible(false);
 	};
 
 	return (
@@ -122,11 +118,9 @@ const Sidebar = ({
 			<hr />
 			<button onClick={() => setView('view')}>View</button>
 			<hr />
-			<button onClick={checkUnsavedData}>Publish</button>
+			<button onClick={() => setIsPublishModalVisible(true)}>Publish</button>
 			<hr />
-			<button id="save-changes" onClick={handleSaveClick}>
-				Save
-			</button>
+			<button onClick={handleSaveClick}>Save</button>
 			<hr />
 
 			<Modal open={isModalVisible} onClose={handleModalClose}>
@@ -156,6 +150,28 @@ const Sidebar = ({
 						id="save-changes-btn"
 					>
 						Cancel
+					</button>
+				</div>
+			</Modal>
+
+			<Modal
+				open={isPublishModalVisible}
+				onClose={() => setIsPublishModalVisible(false)}
+			>
+				<div className="modal-content">
+					<h5>
+						Would you like to publish your app? <br /> If not, it will be saved
+						under in development and will not be available to users.
+					</h5>
+
+					<button
+						onClick={() => setIsPublishModalVisible(false)}
+						className="btn btn-danger"
+					>
+						No
+					</button>
+					<button onClick={handlePublish} className="btn btn-success">
+						Yes
 					</button>
 				</div>
 			</Modal>

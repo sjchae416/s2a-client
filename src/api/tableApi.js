@@ -15,8 +15,7 @@ export const createTableAPI = async (tableData) => {
 		// const data = await response.json();
 
 		// if (response.ok) {
-		// 	const newApp = data;
-		// 	return newApp;
+		// 	return data;
 		// } else {
 		// 	const errorMessage = data.message;
 		// 	throw new Error(errorMessage);

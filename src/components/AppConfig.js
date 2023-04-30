@@ -10,10 +10,36 @@ export default function AppConfig({
 	setName,
 	roleMembershipSheet,
 	setRoleMembershipSheet,
+	selectedPublishedApp,
+	setAddApp,
+	addApp,
+	appType,
+	setSelectedPublishedApp,
 }) {
 	const [showTable, setShowTable] = useState(false);
 	const [roleData, setRoleData] = useState([]);
 	const roleKey = roleData.length > 0 ? roleData[0] : [];
+
+	useEffect(() => {
+		if (addApp) {
+		  setName("");
+		  setRoleMembershipSheet("");
+		  setAddApp(false);
+		}
+	}, [addApp]);
+	
+	useEffect(() => {
+		setName("");
+		setRoleMembershipSheet("");
+		setSelectedPublishedApp({});
+	}, [appType]);
+	
+	useEffect(() => {
+		if (selectedPublishedApp.name) {
+		  setName(selectedPublishedApp.name);
+		  setRoleMembershipSheet(selectedPublishedApp.roleMembershipSheet);
+		}
+	}, [selectedPublishedApp]);
 
 	useEffect(() => {
 		appData.name = name;

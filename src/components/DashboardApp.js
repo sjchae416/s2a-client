@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const DashboardApp = ({ name, lastOpenedDate }) => {
+const DashboardApp = ({ runnableApp }) => {
 	return (
 		<div className="col-3">
-			<Link to={`/runnable-appIds/${name}`}>
+			<Link to={`/runnable-appIds/${runnableApp.name}`}>
 				<div className="card p-0 text-center">
-					<h2 className="">{name}</h2>
+					<h2 className="">{runnableApp.name}</h2>
 					<hr />
 					<div className="p-1">
-						<small>Last modified {lastOpenedDate}</small>
+						<small>Last opened: {runnableApp.lastOpenedDate}</small>
 					</div>
 				</div>
 			</Link>
