@@ -211,14 +211,14 @@ const App = () => {
 			const app = allAppsInDB[i];
 			const roleURL = app?.roleMembershipSheet;
 			// FIXME does not return correctly
-			const sheetIndex = await getFirstSheetNameAPI({ url: roleURL });
+			// const sheetIndex = await getFirstSheetNameAPI({ url: roleURL });
 			const roleTableData = {
 				name: `${app.name} Role Membership Sheet`,
 				url: roleURL,
 				// TODO delete when getFirstSheetNameAPI() is fixed
-				// sheetIndex: 'Sheet1',
+				sheetIndex: 'Sheet1',
 				// TODO uncomment when working
-				sheetIndex: sheetIndex,
+				// sheetIndex: sheetIndex,
 			};
 
 			try {
@@ -252,6 +252,7 @@ const App = () => {
 			}
 		}
 
+		console.log('🚀 ~ loadAllApps ~ developerApps:', developerApps);
 		if (developerApps.lengh !== 0) {
 			filterPublishedApps(developerApps);
 			filterUnpublishedApps(developerApps);
@@ -260,6 +261,7 @@ const App = () => {
 			setUnpublishedApps(null);
 		}
 
+		console.log('🚀 ~ loadAllApps ~ accessibleApps:', accessibleApps);
 		if (accessibleApps.length !== 0) {
 			filterRunnableApps(accessibleApps);
 		} else {
