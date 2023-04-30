@@ -107,7 +107,7 @@ export default function TableConfig({
 					key: false,
 					label: false,
 					reference: 'false',
-					type: '',
+					type: 'string',
 				}))
 			);
 		}
@@ -369,7 +369,6 @@ export default function TableConfig({
 														handleInputChange(event, key, 'type')
 													}
 												>
-													{/* FIXME use the ACTUAL type name in JS for value */}
 													<option value="string">Text</option>
 													<option value="int">Number</option>
 													<option value="bool">Boolean</option>

@@ -107,10 +107,26 @@ const App = () => {
 		return userRoles; // Return an array of roles
 	}
 
-	const filterPublishedApps = (developerApps) => {
-		const filteredApps = developerApps.filter((developerApp) => {
-			return developerApp.published === true;
-		});
+	const filterPublishedApps = async (developerApps) => {
+		const filteredApps = await developerApps.reduce(
+			async (accumulatorPromise, developerApp) => {
+				const accumulator = await accumulatorPromise;
+
+				if (developerApp.published === true) {
+					const appViews = await Promise.all(
+						developerApp.views.map((viewId) => {
+							return readViewAPI(viewId);
+						})
+					);
+
+					developerApp.createdViews = appViews;
+					accumulator.push(developerApp);
+				}
+
+				return accumulator;
+			},
+			Promise.resolve([])
+		);
 
 		if (filteredApps.length !== 0) {
 			setPublishedApps(filteredApps);
@@ -119,10 +135,26 @@ const App = () => {
 		}
 	};
 
-	const filterUnpublishedApps = (developerApps) => {
-		const filteredApps = developerApps.filter((developerApp) => {
-			return developerApp.published === false;
-		});
+	const filterUnpublishedApps = async (developerApps) => {
+		const filteredApps = await developerApps.reduce(
+			async (accumulatorPromise, developerApp) => {
+				const accumulator = await accumulatorPromise;
+
+				if (developerApp.published === false) {
+					const appViews = await Promise.all(
+						developerApp.views.map((viewId) => {
+							return readViewAPI(viewId);
+						})
+					);
+
+					developerApp.createdViews = appViews;
+					accumulator.push(developerApp);
+				}
+
+				return accumulator;
+			},
+			Promise.resolve([])
+		);
 
 		if (filteredApps.length !== 0) {
 			setUnpublishedApps(filteredApps);
@@ -220,6 +252,7 @@ const App = () => {
 			}
 		}
 
+		console.log('🚀 ~ loadAllApps ~ developerApps:', developerApps);
 		if (developerApps.lengh !== 0) {
 			filterPublishedApps(developerApps);
 			filterUnpublishedApps(developerApps);
@@ -228,6 +261,7 @@ const App = () => {
 			setUnpublishedApps(null);
 		}
 
+		console.log('🚀 ~ loadAllApps ~ accessibleApps:', accessibleApps);
 		if (accessibleApps.length !== 0) {
 			filterRunnableApps(accessibleApps);
 		} else {
