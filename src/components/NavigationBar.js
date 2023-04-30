@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { updateSheetAPI, getFirstSheetNameAPI } from "../api";
+import { updateSheetAPI, getFirstSheetNameAPI, addRowAPI } from "../api";
 
 export default function NavigationBar({ user, isDashboard }) {
   const [showMenu, setShowMenu] = useState(false);
@@ -24,6 +24,17 @@ export default function NavigationBar({ user, isDashboard }) {
 
     const firstSheetName = await getFirstSheetNameAPI({url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0"});
     console.log(firstSheetName);
+
+    // const sheetData = {
+    //   url: "https://docs.google.com/spreadsheets/d/1H7i23nYBDzqsXjHXo4vb7W2ciX7nnb3Gf85ALCapigU/edit#gid=0",
+    //   sheetIndex: 'Sheet1',
+    //   values: [
+    //     ["New Value in A3", "New Value in B3"],
+    //   ]
+    // }
+
+    // const newData = await addRowAPI(sheetData);
+    // console.log(newData);
   };
 
   const handleLogout = () => {

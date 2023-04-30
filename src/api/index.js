@@ -26,6 +26,7 @@ import {
 	getFirstSheetNameAPI,
 	loadSheetAPI,
 	updateSheetAPI,
+	addRowAPI,
 } from './sheetApi';
 
 import {
@@ -51,6 +52,7 @@ export {
 	getFirstSheetNameAPI,
 	loadSheetAPI,
 	updateSheetAPI,
+	addRowAPI,
 	createTableAPI,
 	readAllTablesAPI,
 	readTableAPI,

@@ -54,3 +54,22 @@ export const updateSheetAPI = async (sheetData) => {
     // console.error(error);
   }
 };
+
+export const addRowAPI = async (sheetData) => {
+  try {
+    const response = await fetch(
+      "http://localhost:3333/googleapis/addrow",
+      {
+        method: "POST",
+        credentials: "include",
+        headers: defaultHeader,
+        body: JSON.stringify(sheetData),
+      }
+    );
+    const responseBody = await response.text();
+    const parsedData = JSON.parse(responseBody);
+    return parsedData;
+  } catch (error) {
+    console.error(error);
+  }
+};
