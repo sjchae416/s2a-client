@@ -76,6 +76,7 @@ export default function AppConfig({
 				sheetIndex: sheetIndex,
 			};
 			const dataArray = await loadSheetAPI(sheetData);
+			//console.log(dataArray);
 			if (dataArray) {
 				setViewRole(dataArray);
 				setRoleData(dataArray);

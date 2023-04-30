@@ -4,7 +4,12 @@ import { Link } from 'react-router-dom';
 const DashboardApp = ({ runnableApp }) => {
 	return (
 		<div className="col-3">
-			<Link to={`/runnable-appIds/${runnableApp.name}`}>
+			<Link
+				to={{
+					pathname: `/runnable-appIds/${runnableApp.name}/${runnableApp._id}`,
+
+				}}
+			>
 				<div className="card p-0 text-center">
 					<h2 className="">{runnableApp.name}</h2>
 					<hr />

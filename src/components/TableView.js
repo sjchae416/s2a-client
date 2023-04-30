@@ -3,21 +3,12 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DetailView from "./DetailView";
+import { readTableAPI } from "../api";
+import { loadSheetAPI } from "../api";
 
-export default function TableView({ view, listViews }) {
-  let name, table, col, type, allowedActions, role;
-  let viewFilter = "",
-    userFilter = "";
-  name = view.name;
-  table = view.table;
-  col = view.columns;
-  type = view.viewType;
-  allowedActions = view.allowedActions;
-  role = view.roles;
-
-  if (view.filter != "") viewFilter = view.filter;
-  if (view.userFilter != "") userFilter = view.userFilter;
-
+export default function TableView({view, listViews }) {
+  const [tableData, setTableData] = useState([]);
+  const [test, setTest] = useState([]);
   const [open, setOpen] = useState(false);
   const [openDelete, setDeleteOpen] = useState(false);
   const [newRowData, setNewRowData] = useState({});
@@ -36,53 +27,54 @@ export default function TableView({ view, listViews }) {
   // States to store the position of the row delete in the sheet
   const [deleteRowPosition, setDeleteRowPosition] = useState({});
 
-
-  const [test, setTest] = useState([
-    {
-      Name: "George Chen",
-      Email: "george@gmail.com",
-      Class: "CSE 314",
-      Grade: "B",
-      Passed: true,
-    },
-    {
-      Name: "Bob Ross",
-      Email: "bob@gmail.com",
-      Class: "CSE 215",
-      Grade: "A",
-      Passed: true,
-    },
-    {
-      Name: "John Smith",
-      Email: "john@gmail.com",
-      Class: "CSE 220",
-      Grade: "B-",
-      Passed: true,
-    },
-    {
-      Name: "Kevin Lin",
-      Email: "kevin@gmail.com",
-      Class: "CSE 214",
-      Grade: "C-",
-      Passed: false,
-    },
-    {
-      Name: "Henry Chen",
-      Email: "henry@gmail.com",
-      Class: "CSE 312",
-      Grade: "A",
-      Passed: true,
-    },
-    {
-      Name: "Bob Chen",
-      Email: "bob@gmail.com",
-      Class: "CSE 216",
-      Grade: "A",
-      Passed: true,
-    },
-  ]);
-
   const [filteredTest, setFilteredTest] = useState([...test]);
+
+  let name, table, col, type, allowedActions, role;
+  let viewFilter = "",
+  userFilter = "";
+  name = view.name;
+  table = view.table;
+  col = view.columns;
+  type = view.viewType;
+  allowedActions = view.allowedActions;
+  role = view.roles;
+
+  const getTableData = async () => {
+    const data = await readTableAPI(view.table)
+    setTableData(data);
+
+    console.log(data);
+
+    const sheetData = {
+      name: data.name,
+      url: data.url,
+      sheetIndex: data.sheetIndex,
+    };
+    const tableData = await loadSheetAPI(sheetData);
+    //gets the array of the data except for the name of the column
+
+    const result = tableData.slice(1).map(row => {
+      const obj = {};
+      tableData[0].forEach((key, index) => {
+        obj[key] = row[index];
+      });
+      return obj;
+    });
+    
+    setTest(result);
+
+  };
+  
+  useEffect(() => {
+    console.log(view);
+		getTableData();
+    console.log(test);
+
+    // const result = test.filter((row) => row[viewFilter]);
+    // setFilteredTest(result);
+
+    //console.log(result);
+	}, []);
 
   const handleOpen = () => {
     setOpen(true);
@@ -203,10 +195,6 @@ export default function TableView({ view, listViews }) {
     // console.log(test);
   };
 
-  useEffect(() => {
-    const result = test.filter((row) => row[viewFilter]);
-    setFilteredTest(result);
-  }, []);
 
   const updateRecord = (data) => {
     const index = filteredTest.findIndex((item) => item.Email === data.Email);
@@ -215,6 +203,7 @@ export default function TableView({ view, listViews }) {
 
   return (
     <div>
+      <h2>{name}</h2>
       <Button
         variant="contained"
         onClick={handleOpen}
@@ -241,7 +230,7 @@ export default function TableView({ view, listViews }) {
           </tr>
         </thead>
         <tbody>
-          {filteredTest.map((row) => (
+          {test.map((row) => (
             <tr key={row.Name} onClick={() => handleRowClick(row)}>
               {col.map((column) => (
                 <td key={column}>{row[column]}</td>
