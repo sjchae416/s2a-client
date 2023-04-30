@@ -150,10 +150,10 @@ export default function TableConfig({
 		// Use the config array to perform desired action with the configuration
 		console.log(config);
 		console.log(tableData);
-			if (!isTypeColumnValid()) {
-				alert('Please select a type for all rows');
-				return;
-			}
+		if (!isTypeColumnValid()) {
+			alert('Please select a type for all rows');
+			return;
+		}
 
 		const createdTable = await createTableAPI(tableData);
 		if (createdTable && !createdTable.error) {
