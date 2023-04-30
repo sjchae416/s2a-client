@@ -107,10 +107,26 @@ const App = () => {
 		return userRoles; // Return an array of roles
 	}
 
-	const filterPublishedApps = (developerApps) => {
-		const filteredApps = developerApps.filter((developerApp) => {
-			return developerApp.published === true;
-		});
+	const filterPublishedApps = async (developerApps) => {
+		const filteredApps = await developerApps.reduce(
+			async (accumulatorPromise, developerApp) => {
+				const accumulator = await accumulatorPromise;
+
+				if (developerApp.published === true) {
+					const appViews = await Promise.all(
+						developerApp.views.map((viewId) => {
+							return readViewAPI(viewId);
+						})
+					);
+
+					developerApp.createdViews = appViews;
+					accumulator.push(developerApp);
+				}
+
+				return accumulator;
+			},
+			Promise.resolve([])
+		);
 
 		if (filteredApps.length !== 0) {
 			setPublishedApps(filteredApps);
@@ -119,10 +135,26 @@ const App = () => {
 		}
 	};
 
-	const filterUnpublishedApps = (developerApps) => {
-		const filteredApps = developerApps.filter((developerApp) => {
-			return developerApp.published === false;
-		});
+	const filterUnpublishedApps = async (developerApps) => {
+		const filteredApps = await developerApps.reduce(
+			async (accumulatorPromise, developerApp) => {
+				const accumulator = await accumulatorPromise;
+
+				if (developerApp.published === false) {
+					const appViews = await Promise.all(
+						developerApp.views.map((viewId) => {
+							return readViewAPI(viewId);
+						})
+					);
+
+					developerApp.createdViews = appViews;
+					accumulator.push(developerApp);
+				}
+
+				return accumulator;
+			},
+			Promise.resolve([])
+		);
 
 		if (filteredApps.length !== 0) {
 			setUnpublishedApps(filteredApps);
@@ -179,14 +211,14 @@ const App = () => {
 			const app = allAppsInDB[i];
 			const roleURL = app?.roleMembershipSheet;
 			// FIXME does not return correctly
-			// const sheetIndex = await getFirstSheetNameAPI({ url: roleURL });
+			const sheetIndex = await getFirstSheetNameAPI({ url: roleURL });
 			const roleTableData = {
 				name: `${app.name} Role Membership Sheet`,
 				url: roleURL,
 				// TODO delete when getFirstSheetNameAPI() is fixed
-				sheetIndex: 'Sheet1',
+				// sheetIndex: 'Sheet1',
 				// TODO uncomment when working
-				// sheetIndex: sheetIndex,
+				sheetIndex: sheetIndex,
 			};
 
 			try {
