@@ -107,7 +107,7 @@ export default function TableConfig({
 					key: false,
 					label: false,
 					reference: 'false',
-					type: '',
+					type: 'string',
 				}))
 			);
 		}

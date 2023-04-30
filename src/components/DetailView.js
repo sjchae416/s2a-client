@@ -61,6 +61,7 @@ const DetailView = ({
       newValues.push(updatedRow[key]);
     }
 
+    console.log(sheetIdx);
     console.log(newValues);
 
     let resource = {
@@ -111,7 +112,7 @@ const DetailView = ({
           "sheetId": table.sheetIndex,
           "dimension": "ROWS",
           "startIndex": rowPosition,
-          "endIndex": rowPosition
+          "endIndex": rowPosition + 1
         }
       }
     };
