@@ -406,8 +406,14 @@ const App = () => {
 						}
 					/> */}
 					<Route
-						path="/runnable-appIds/:name"
-						element={user ? <RunnableAppPage /> : <LoginPage />}
+						path="/runnable-appIds/:name/:id"
+						element={
+							user ? (
+							<RunnableAppPage runnableApps = {runnableApps} />
+							) : (
+							<LoginPage />
+							)
+						}
 					/>
 				</Routes>
 			</BrowserRouter>

@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom';
 import { DashboardApp, NavigationBar } from '../components';
 import UserContext from '../UserContext';
 
-// FIXME where is this used?
-export const name = '';
-
 export default function DashboardPage({
 	setReloadApp,
 	isDeveloper,
