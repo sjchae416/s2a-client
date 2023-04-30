@@ -38,10 +38,10 @@ const SelectedTableConfig = ({ keys, userTables }) => {
           <td>
             <select>
               {[
-                { type: "Text", name: "Text" },
-                { type: "Number", name: "Number" },
-                { type: "Boolean", name: "Boolean" },
-                { type: "URL", name: "URL" },
+                { type: "string", name: "Text" },
+                { type: "int", name: "Number" },
+                { type: "bool", name: "Boolean" },
+                { type: "url", name: "URL" },
               ].map((item) => (
                 <option
                   key={item.type}

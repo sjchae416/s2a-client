@@ -369,11 +369,10 @@ export default function TableConfig({
 														handleInputChange(event, key, 'type')
 													}
 												>
-													{/* FIXME use the ACTUAL type name in JS for value */}
-													<option value="Text">Text</option>
-													<option value="Number">Number</option>
-													<option value="Boolean">Boolean</option>
-													<option value="URL">URL</option>
+													<option value="string">Text</option>
+													<option value="int">Number</option>
+													<option value="bool">Boolean</option>
+													<option value="url">URL</option>
 												</select>
 											</td>
 										</tr>
