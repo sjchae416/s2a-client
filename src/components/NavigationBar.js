@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { updateSheetAPI, getFirstSheetNameAPI, addRowAPI } from "../api";
+import { updateSheetAPI, getFirstSheetNameAPI, addRowAPI, loadSheetAPI } from "../api";
 
 export default function NavigationBar({ user, isDashboard }) {
   const [showMenu, setShowMenu] = useState(false);
@@ -13,20 +13,26 @@ export default function NavigationBar({ user, isDashboard }) {
   const handleTest = async () => {
     // const sheetData = {
     //   url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0",
-    //   range: "Sheet1!A1:B2",
+    //   range: "Different Name!A3:B3",
     //   values: [
-    //     ["New value in A1", "New value in B1"],
-    //     ["New value in A2", "New value in B2"],
+    //     ["", ""],
     //   ],
     // };
-    // const newData = await updateSheetAPI(sheetData);
-    // console.log(newData);
+    // await updateSheetAPI(sheetData);
+    
+    // const sheetData2 = {
+    //   url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0",
+    //   sheetIndex: "Different Name",
+    // }
 
-    const firstSheetName = await getFirstSheetNameAPI({url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0"});
-    console.log(firstSheetName);
+    // const responses = await loadSheetAPI(sheetData2);
+    // console.log(responses);
+
+    // const firstSheetName = await getFirstSheetNameAPI({url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0"});
+    // console.log(firstSheetName);
 
     // const sheetData = {
-    //   url: "https://docs.google.com/spreadsheets/d/1H7i23nYBDzqsXjHXo4vb7W2ciX7nnb3Gf85ALCapigU/edit#gid=0",
+    //   url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0",
     //   sheetIndex: 'Sheet1',
     //   values: [
     //     ["New Value in A3", "New Value in B3"],
