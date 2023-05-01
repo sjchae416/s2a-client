@@ -106,15 +106,26 @@ const DetailView = ({
 
   const handleConfirmDelete = () => {
     console.log("Row to delete:", rowToDelete);
+
+    let sheetIdx = 
+      table.sheetIndex + 
+      "!A" + 
+      rowPosition + 
+      ":" + 
+      String.fromCharCode(64 + Object.keys(rowToDelete).length) + 
+      rowPosition;
+    let values = [];
+
+    for(let i = 0; i < Object.keys(rowToDelete).length; i++){
+      values[i] = "";
+    }
     let resource = {
-      "deleteDimension": {
-        "range": {
-          "sheetId": table.sheetIndex,
-          "dimension": "ROWS",
-          "startIndex": rowPosition,
-          "endIndex": rowPosition + 1
+      data:[
+        {
+          range: sheetIdx,
+          values :''
         }
-      }
+      ]
     };
     deleteRowPosition(resource);
 
