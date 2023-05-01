@@ -1365,11 +1365,11 @@ input[type='number'] {
 	background-color: #c1bdbd;
 }
 
-tr:not(.clickable) {
+/* tr:not(.clickable) {
 	user-select: none;
 	pointer-events: none;
 }
 
 tr:not(.clickable) td {
 	background-color: #ffffff;
-}
+} */
