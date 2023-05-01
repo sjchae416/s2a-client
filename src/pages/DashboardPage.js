@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { DashboardApp, NavigationBar } from '../components';
 import UserContext from '../UserContext';
+import { Margin } from '@mui/icons-material';
 
 export default function DashboardPage({
 	setAppData,
@@ -48,13 +49,15 @@ export default function DashboardPage({
 								<div className="col-auto">
 									{isDeveloper ? (
 										<div>
+                      <p>
 											<Link to="/add-table">
 												<button className="btn btn-info create_table_btn">
 													Manage Table
 												</button>
 											</Link>
-
-											<Link to="/manage-app">
+                      </p>
+                      <p>
+                        <Link to="/manage-app">
 												<button
 													className="btn btn-info"
 													onClick={handleManageButton}
@@ -62,6 +65,7 @@ export default function DashboardPage({
 													Manage App
 												</button>
 											</Link>
+                      </p>
 										</div>
 									) : (
 										<div>
