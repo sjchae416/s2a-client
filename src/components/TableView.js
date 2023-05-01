@@ -166,17 +166,22 @@ export default function TableView({view, listViews }) {
         return row[key] === selectedRowData[key];
       });
     });
+  
+    let sheetIdx = tableData.sheetIdx + "!A" + index + String.fromCharCode(64 + Object.keys(deletedRow).length) + index;
+    let values = [];
 
+    for(let i = 0; i < Object.keys(deletedRow).length; i++){
+      values[i] = "";
+    }
     let resource = {
-      "deleteDimension": {
-        "range": {
-          "sheetId": table.sheetIndex,
-          "dimension": "ROWS",
-          "startIndex": index,
-          "endIndex": index + 1
-        }
-      }
+        data:[
+            {
+                range: sheetIdx,
+                values :''
+            }
+        ]
     };
+
     setDeleteRowPosition(resource);
 
     // Remove row from test array
@@ -236,26 +241,24 @@ export default function TableView({view, listViews }) {
         </thead>
         <tbody>
         {test.map((row) => (
-          <tr
-            key={row.Name}
-            onClick={() => handleRowClick(row)}
-            className={detailApps.length > 0 ? "clickable" : ""}
-          >
-            {col.map((column) => (
-              <td key={column}>{row[column]}</td>
-            ))}
-            {showMinusButtons && (
-              <td>
-                <button onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteRow(row);
-                }}>
-                  -
-                </button>
-              </td>
-            )}
-          </tr>
-        ))}
+             <tr key={row.Name} onClick={() => handleRowClick(row)}>
+               {col.map((column) => (
+                 <td key={column}>{row[column]}</td>
+              ))}
+              {showMinusButtons && (
+                <td>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteRow(row);
+                    }}
+                  >
+                    -
+                  </button>
+                </td>
+              )}
+            </tr>
+          ))}
         </tbody>
       </table>
       {selectedRow && (
