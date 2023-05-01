@@ -30,7 +30,6 @@ export default function TableView({view, listViews }) {
   const [filteredTest, setFilteredTest] = useState([...test]);
 
   const detailApps = listViews.filter((view) => view.viewType === "Detail");
-  console.log(detailApps);
 
   let name, table, col, type, allowedActions, role;
   let viewFilter = "",
