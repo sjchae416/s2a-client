@@ -14,6 +14,7 @@ const Sidebar = ({
 	setView,
 	app,
 	setAppData,
+	setSelectedApp,
 	viewDatas,
 	setViewDatas,
 	viewDataList,
@@ -71,6 +72,7 @@ const Sidebar = ({
 				const savedViews = await saveViews(viewDatas);
 				await saveApp(app, savedViews);
 				// }
+				setSelectedApp(null);
 				setAppData(null);
 				setViewDatas(null);
 				setReloadApp(true);
@@ -92,6 +94,11 @@ const Sidebar = ({
 			setAppData(app);
 		}
 		setIsPublishModalVisible(false);
+	};
+
+	const handleDiscard = () => {
+		setSelectedApp(null);
+		navigate('/');
 	};
 
 	return (
@@ -129,7 +136,7 @@ const Sidebar = ({
 					<h5>Would you like to save your changes before proceeding?</h5>
 
 					<button
-						onClick={() => navigate('/')}
+						onClick={handleDiscard}
 						className="btn btn-danger"
 						id="dismiss_create_app_modals"
 					>

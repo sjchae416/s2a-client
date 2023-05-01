@@ -4,6 +4,7 @@ import { DashboardApp, NavigationBar } from '../components';
 import UserContext from '../UserContext';
 
 export default function DashboardPage({
+	setAppData,
 	setReloadApp,
 	isDeveloper,
 	runnableApps,
@@ -16,6 +17,7 @@ export default function DashboardPage({
 	};
 
 	const handleManageButton = () => {
+		setAppData(null);
 		setReloadApp(false);
 	};
 
@@ -44,31 +46,32 @@ export default function DashboardPage({
 						<div className="box_three">
 							<div className="row">
 								<div className="col-auto">
-									{isDeveloper ? (
-										<Link to="/manage-app">
-											<button
-												className="btn btn-info"
-												onClick={handleManageButton}
-											>
-												Manage App
-											</button>
-										</Link>
-									) : (
-										<></>
-									)}
-									<br />
-									{isDeveloper ? (
+									<div>
 										<Link to="/add-table">
 											<button className="btn btn-info create_table_btn">
 												Add Table
 											</button>
 										</Link>
+									</div>
+
+									{isDeveloper ? (
+										<div>
+											<Link to="/manage-app">
+												<button
+													className="btn btn-info"
+													onClick={handleManageButton}
+												>
+													Manage App
+												</button>
+											</Link>
+										</div>
 									) : (
-										<></>
+										<div>Not Allowed to Manage the App</div>
 									)}
 								</div>
 							</div>
 						</div>
+
 						<div className="box_two">
 							<h2>Runnable Apps</h2>
 							<div className="row">

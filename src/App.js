@@ -351,6 +351,7 @@ const App = () => {
 						element={
 							user ? (
 								<DashboardPage
+									setAppData={setAppData}
 									setReloadApp={setReloadApp}
 									isDeveloper={isDeveloper}
 									runnableApps={runnableApps}
