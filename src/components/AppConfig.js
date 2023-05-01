@@ -11,13 +11,13 @@ export default function AppConfig({
 	setSelectedApp,
 	showTable,
 	setShowTable,
-	// setAddApp,
-	// addApp,
+	// setAddApp,// addApp,
 }) {
 	const [name, setName] = useState('');
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
 	const [roleData, setRoleData] = useState([]);
 	const roleKey = roleData.length > 0 ? roleData[0] : [];
+	const [sheetIndex, setSheetIndex] = useState("");
 
 	const now = new Date();
 	const nycTimeString = now.toLocaleString('en-US', {
@@ -31,6 +31,7 @@ export default function AppConfig({
 		roleMembershipSheet: roleMembershipSheet,
 		createdAt: nycTimeString,
 		lastModifiedDate: nycTimeString,
+		sheetIndex,
 	};
 
 	// useEffect(() => {
@@ -45,13 +46,16 @@ export default function AppConfig({
 		if (app !== null) {
 			setName(app.name);
 			setRoleMembershipSheet(app.roleMembershipSheet);
+			setSheetIndex(app.sheetIndex);
 		} else if (app === null && selectedApp !== null) {
 			setName(selectedApp.name);
 			setRoleMembershipSheet(selectedApp.roleMembershipSheet);
+			setSheetIndex(selectedApp.sheetIndex);
 			appData.views = selectedApp.createdViews;
 		} else {
 			setName('');
 			setRoleMembershipSheet('');
+			setSheetIndex('');
 		}
 	}, [app, selectedApp]);
 
@@ -150,6 +154,16 @@ export default function AppConfig({
 					value={roleMembershipSheet}
 					className="form-control"
 					onChange={(e) => handleRoleOnChange(e)}
+				/>
+			</div>
+			<div className="form-group">
+				<label>Sheet Index</label>
+				<input
+				    required
+					type="text"
+					value={sheetIndex}
+					className="form-control"
+					onChange={(e) => setSheetIndex(e.target.value)}
 				/>
 			</div>
 			<div className="text-right">
