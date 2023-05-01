@@ -1373,3 +1373,15 @@ input[type='number'] {
 tr:not(.clickable) td {
 	background-color: #ffffff;
 } */
+
+.detail-sidebar {
+	background-color: #f1f1f1;
+	float: left;
+	width: 30%;
+	padding-right: 5%;
+  }
+  
+  .detail-main-container {
+	float: right;
+	width: 68%;
+  }

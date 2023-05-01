@@ -4,7 +4,7 @@ import { NavigationBar, TableView, TableViewSidebar } from '../components';
 import UserContext from '../UserContext';
 
 export default function RunnableAppPage({runnableApps}) {
-	const { name, id } = useParams();
+	const { id } = useParams();
 
 	// find app in runnableApps with same ID
 	const runnableApp = runnableApps.find(app => app.app._id === id);
@@ -25,7 +25,7 @@ export default function RunnableAppPage({runnableApps}) {
 			<br />
 			<br />
 			<NavigationBar user={user} />
-			<h2>{name}</h2>
+			<h2>{runnableApp.app.name}</h2>
 			<div className="page-container">
 				<div className="sidebar-container">
 					<TableViewSidebar views={views} onSelectView={handleSelectView} />
