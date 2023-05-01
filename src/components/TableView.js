@@ -66,6 +66,8 @@ export default function TableView({view, listViews }) {
     
     setTest(result);
 
+    console.log(result);
+
   };
   
   useEffect(() => {
@@ -236,24 +238,18 @@ export default function TableView({view, listViews }) {
         {test.map((row) => (
           <tr
             key={row.Name}
-            onClick={() => {
-              if (detailApps.length > 0) {
-                handleRowClick(row);
-              }
-            }}
-            className={detailApps.length > 0 ? 'clickable' : ''}
+            onClick={() => handleRowClick(row)}
+            className={detailApps.length > 0 ? "clickable" : ""}
           >
             {col.map((column) => (
               <td key={column}>{row[column]}</td>
             ))}
             {showMinusButtons && (
               <td>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteRow(row);
-                  }}
-                >
+                <button onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteRow(row);
+                }}>
                   -
                 </button>
               </td>
