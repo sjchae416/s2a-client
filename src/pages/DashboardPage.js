@@ -46,16 +46,14 @@ export default function DashboardPage({
 						<div className="box_three">
 							<div className="row">
 								<div className="col-auto">
-									<div>
-										<Link to="/add-table">
-											<button className="btn btn-info create_table_btn">
-												Manage Table
-											</button>
-										</Link>
-									</div>
-
 									{isDeveloper ? (
 										<div>
+											<Link to="/add-table">
+												<button className="btn btn-info create_table_btn">
+													Manage Table
+												</button>
+											</Link>
+
 											<Link to="/manage-app">
 												<button
 													className="btn btn-info"
@@ -66,7 +64,12 @@ export default function DashboardPage({
 											</Link>
 										</div>
 									) : (
-										<div>Not Allowed to Manage the App</div>
+										<div>
+											<p>
+												You have no access to Manage the App and the Table. Ask
+												Deployer to add you as a Global Developer
+											</p>
+										</div>
 									)}
 								</div>
 							</div>
