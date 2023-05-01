@@ -49,7 +49,7 @@ export default function DashboardPage({
 									<div>
 										<Link to="/add-table">
 											<button className="btn btn-info create_table_btn">
-												Add Table
+												Manage Table
 											</button>
 										</Link>
 									</div>

@@ -7,7 +7,7 @@ import {
 	LoginPage,
 	DashboardPage,
 	ManageAppPage,
-	AddTablePage,
+	ManageTablePage,
 	AdminPage,
 	RunnableAppPage,
 } from './pages';
@@ -386,7 +386,7 @@ const App = () => {
 						path="/add-table"
 						element={
 							user ? (
-								<AddTablePage
+								<ManageTablePage
 									tableIds={tableIds}
 									userTables={userTables}
 									// developerApps={developerApps}
@@ -410,9 +410,9 @@ const App = () => {
 						path="/runnable-appIds/:name/:id"
 						element={
 							user ? (
-							<RunnableAppPage runnableApps = {runnableApps} />
+								<RunnableAppPage runnableApps={runnableApps} />
 							) : (
-							<LoginPage />
+								<LoginPage />
 							)
 						}
 					/>
