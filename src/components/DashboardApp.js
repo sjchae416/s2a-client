@@ -6,7 +6,7 @@ const DashboardApp = ({ runnableApp }) => {
 		<div className="col-3">
 			<Link
 				to={{
-					pathname: `/runnable-appIds/${runnableApp.name}/${runnableApp._id}`,
+					pathname: `/runnable-appIds/${runnableApp._id}`,
 
 				}}
 			>
