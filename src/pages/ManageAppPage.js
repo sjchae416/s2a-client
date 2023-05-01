@@ -41,7 +41,9 @@ export default function ManageAppPage({
 		setSelectedApp(null);
 		setShowTable(false);
 		setReloadApp(false);
-		// setAddApp(true);
+    setViewDataList([]);
+    //setAddApp(true);
+    setSelectedView({});
 	};
 
 	return (
