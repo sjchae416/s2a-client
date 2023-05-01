@@ -198,7 +198,10 @@ export default function AppConfig({
 					<br />
 
 					{selectedApp && (
-						<button onClick={() => handleDeleteApp(selectedApp._id)}>
+						<button 
+            className="btn btn-danger"
+            onClick={() => handleDeleteApp(selectedApp._id)}
+            >
 							DELETE
 						</button>
 					)}
