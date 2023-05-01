@@ -120,7 +120,7 @@ export default function TableView({view, listViews }) {
     });
     const updatedTest = [...test, newRow];
     setTest(updatedTest);
-    // console.log('updatedTest', updatedTest);
+    console.log('updatedTest', updatedTest);
     setFilteredTest([...filteredTest, newRow]);
     setNewRowData({});
 
@@ -132,8 +132,7 @@ export default function TableView({view, listViews }) {
       newValues.push(newRow[key]);
     }
     // console.log('newRow Length', Object.keys(newRow).length);
-    console.log('sheetIdx', sheetIdx);
-    console.log('newValues', newValues);
+    
 
     // let resource = {
     //   data: [
@@ -152,9 +151,10 @@ export default function TableView({view, listViews }) {
       range: sheetIdx,
       values: [newValues],
     }
-
+    // console.log('tableData.url', tableData.url);
+    // console.log('sheetIdx', sheetIdx);
+    // console.log('newValues', newValues);
     await updateSheetAPI(sheetData);
-
     // console.log('newRow', newRow);
     // console.log('updatedTest', updatedTest);
     handleClose();
@@ -169,12 +169,12 @@ export default function TableView({view, listViews }) {
     setShowMinusButtons(!showMinusButtons);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     const deletedRow = {};
     col.forEach((columnName) => {
       deletedRow[columnName] = selectedRowData[columnName];
     });
-    console.log("Deleted Row:", deletedRow);
+    // console.log("Deleted Row:", deletedRow);
 
     // Find index of row to delete
     const index = test.findIndex((row) => {
@@ -183,24 +183,48 @@ export default function TableView({view, listViews }) {
       });
     });
   
-    let sheetIdx = tableData.sheetIdx + "!A" + index + String.fromCharCode(64 + Object.keys(deletedRow).length) + index;
+    let sheetIdx = tableData.sheetIndex + "!A" + (index + 2) + ':' + String.fromCharCode(64 + Object.keys(deletedRow).length) + (index + 2);
     let values = [];
 
     for(let i = 0; i < Object.keys(deletedRow).length; i++){
       values[i] = "";
     }
-    let resource = {
-        data:[
-            {
-                range: sheetIdx,
-                values :''
-            }
-        ]
-    };
 
-    setDeleteRowPosition(resource);
+    // console.log('sheetIdx', sheetIdx);
+    // console.log('values', values);
 
-    // Remove row from test array
+    const sheetData = {
+      url: tableData.url,
+      range: sheetIdx,
+      values: [values],
+    }
+    // console.log('tableData.url', tableData.url);
+    // console.log('sheetIdx', sheetIdx);
+    // console.log('values', values);
+
+    await updateSheetAPI(sheetData);
+
+    // const sheetData = {
+    //   url: "https://docs.google.com/spreadsheets/d/190mGZY2-lVzsT9W95nJxYMwIuc6OSSkdfT8dqIuHnpY/edit#gid=0",
+    //   range: "Sheet1!A10:D10",
+    //   values: [
+    //     ["", "", "", ""],
+    //   ],
+    // };
+    // await updateSheetAPI(sheetData);
+
+    // let resource = {
+    //     data:[
+    //         {
+    //             range: sheetIdx,
+    //             values :''
+    //         }
+    //     ]
+    // };
+
+    // setDeleteRowPosition(resource);
+
+    //Remove row from test array
     if (index !== -1) {
       const updatedTest = [...test];
       updatedTest.splice(index, 1);

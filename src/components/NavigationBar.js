@@ -11,14 +11,14 @@ export default function NavigationBar({ user }) {
   };
 
   const handleTest = async () => {
-    // const sheetData = {
-    //   url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0",
-    //   range: "Different Name!A3:B3",
-    //   values: [
-    //     ["", ""],
-    //   ],
-    // };
-    // await updateSheetAPI(sheetData);
+    const sheetData = {
+      url: "https://docs.google.com/spreadsheets/d/190mGZY2-lVzsT9W95nJxYMwIuc6OSSkdfT8dqIuHnpY/edit#gid=0",
+      range: "Sheet1!A10:D10",
+      values: [
+        ["", "", "", ""],
+      ],
+    };
+    await updateSheetAPI(sheetData);
     
     // const sheetData2 = {
     //   url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0",
