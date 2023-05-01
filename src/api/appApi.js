@@ -67,7 +67,12 @@ export const deleteAppAPI = async (id) => {
 		const response = await fetch(`http://localhost:3333/apps/${id}`, {
 			method: 'DELETE',
 		});
-		return response.status === 204;
+
+		if (response.ok) {
+			return response.status === 204;
+		} else {
+			return new Error(response.statusText);
+		}
 	} catch (error) {
 		console.error('Error deleting app:', error);
 	}

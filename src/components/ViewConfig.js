@@ -70,7 +70,7 @@ export default function ViewConfig({
       const viewToSave = {
         name: viewData.viewName,
         table: viewData.selectedTableId,
-        colums: viewData.selectedColumns,
+        columns: viewData.selectedColumns,
         viewType: viewData.viewType,
         allowedActions: viewData.allowedAction,
         roles: viewData.role,

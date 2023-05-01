@@ -27,6 +27,7 @@ export default function ManageAppPage({
 	// REVIEW not uesd at all, only changes the state
 	// const [addApp, setAddApp] = useState(false);
 	const [appType, setAppType] = useState('published');
+	const [showTable, setShowTable] = useState(false);
 	const [selectedApp, setSelectedApp] = useState(null);
 
 	useEffect(() => {
@@ -38,6 +39,8 @@ export default function ManageAppPage({
 	const handleAddApp = () => {
 		setAppData(null);
 		setSelectedApp(null);
+		setShowTable(false);
+		setReloadApp(false);
 		// setAddApp(true);
 	};
 
@@ -82,6 +85,7 @@ export default function ManageAppPage({
 									<List
 										type="app"
 										setAppData={setAppData}
+										setShowTable={setShowTable}
 										viewDatas={viewDatas}
 										viewDataList={viewDataList}
 										setSelectedView={setSelectedView}
@@ -118,11 +122,15 @@ export default function ManageAppPage({
 								<br />
 								{view === 'app' ? (
 									<AppConfig
+										setReloadApp={setReloadApp}
 										setViewRole={setViewRole}
 										user={user}
 										app={app}
 										setAppData={setAppData}
 										selectedApp={selectedApp}
+										setSelectedApp={setSelectedApp}
+										showTable={showTable}
+										setShowTable={setShowTable}
 										// addApp={addApp}
 										// setAddApp={setAddApp}
 									/>

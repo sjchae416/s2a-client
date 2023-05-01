@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { loadSheetAPI, getFirstSheetNameAPI } from '../api';
+import { loadSheetAPI, getFirstSheetNameAPI, deleteAppAPI } from '../api';
 
 export default function AppConfig({
 	user,
+	setReloadApp,
 	app,
 	setAppData,
 	setViewRole,
 	selectedApp,
+	setSelectedApp,
+	showTable,
+	setShowTable,
 	// setAddApp,
 	// addApp,
 }) {
 	const [name, setName] = useState('');
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
-	const [showTable, setShowTable] = useState(false);
 	const [roleData, setRoleData] = useState([]);
 	const roleKey = roleData.length > 0 ? roleData[0] : [];
 
@@ -23,7 +26,7 @@ export default function AppConfig({
 	// }, [addApp]);
 
 	useEffect(() => {
-		if (app !== null && selectedApp === null) {
+		if (app !== null) {
 			setName(app.name);
 			setRoleMembershipSheet(app.roleMembershipSheet);
 		} else if (app === null && selectedApp !== null) {
@@ -92,6 +95,26 @@ export default function AppConfig({
 		setAppData(appData);
 	};
 
+	const handleDeleteApp = async (selectedAppId) => {
+		try {
+			const result = await deleteAppAPI(selectedAppId);
+
+			if (result) {
+				// TODO reset necessary states
+				setShowTable(false);
+				setAppData(null);
+				setSelectedApp(null);
+			} else {
+				window.alert('Failed to delete the App');
+			}
+		} catch (error) {
+			window.alert(error);
+			console.error('Error while deleting the App: ', error);
+		}
+
+		setReloadApp(true);
+	};
+
 	return (
 		<div
 			className="card"
@@ -127,7 +150,7 @@ export default function AppConfig({
 			</div>
 			<div className="text-right">
 				<button onClick={handleLoad} className="btn btn-info">
-					Load
+					Load Role Membership Table
 				</button>
 			</div>
 
@@ -169,6 +192,12 @@ export default function AppConfig({
 						</tbody>
 					</table>
 					<br />
+
+					{selectedApp && (
+						<button onClick={() => handleDeleteApp(selectedApp._id)}>
+							DELETE
+						</button>
+					)}
 				</div>
 			)}
 

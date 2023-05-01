@@ -4,6 +4,7 @@ import { readViewAPI } from '../api';
 const List = ({
 	type,
 	setAppData,
+	setShowTable,
 	userTables,
 	viewDatas,
 	viewDataList,
@@ -20,6 +21,7 @@ const List = ({
 
 	const handleSelectApp = (app) => {
 		setAppData(null);
+		setShowTable(false);
 		setSelectedApp(app);
 	};
 
