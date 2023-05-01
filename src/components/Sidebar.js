@@ -61,17 +61,17 @@ const Sidebar = ({
 		}
 	};
 
-  function checkTableView (viewDatas) {
-    for (let i = 0; i < viewDatas.length; i++) {
-      if (viewDatas[i].viewType === "Table") {
-        return true;
-      }
-    }
-    return false;
-  }
+	function checkTableView(viewDatas) {
+		for (let i = 0; i < viewDatas.length; i++) {
+			if (viewDatas[i].viewType === 'Table') {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	const handleSaveApp = async () => {
-		if (viewDatas && (checkTableView(viewDatas))) {
+		if (viewDatas && checkTableView(viewDatas)) {
 			try {
 				// if (selectedAppId) {
 				//  // TODO if there are new viewDdta, save Views
@@ -86,10 +86,11 @@ const Sidebar = ({
 				setReloadApp(true);
 				navigate('/');
 			} catch (error) {
-          window.alert(error);
-          console.error('Error while saving the Views or App: ', error);
-          setIsModalVisible(false);
-      }
+				// TODO delete viewDatas.views when failed to create the App
+				window.alert(error);
+				console.error('Error while saving the Views or App: ', error);
+				setIsModalVisible(false);
+			}
 		} else {
 			window.alert('Create at least one Table View!');
 			setIsModalVisible(false);
