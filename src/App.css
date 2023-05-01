@@ -1364,3 +1364,12 @@ input[type='number'] {
 .button-link:hover {
 	background-color: #c1bdbd;
 }
+
+tr:not(.clickable) {
+	user-select: none;
+	pointer-events: none;
+}
+
+tr:not(.clickable) td {
+	background-color: #ffffff;
+}

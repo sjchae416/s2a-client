@@ -29,6 +29,9 @@ export default function TableView({view, listViews }) {
 
   const [filteredTest, setFilteredTest] = useState([...test]);
 
+  const detailApps = listViews.filter((view) => view.viewType === "Detail");
+  console.log(detailApps);
+
   let name, table, col, type, allowedActions, role;
   let viewFilter = "",
   userFilter = "";
@@ -43,7 +46,7 @@ export default function TableView({view, listViews }) {
     const data = await readTableAPI(view.table)
     setTableData(data);
 
-    console.log(data);
+    //console.log(data);
 
     const sheetData = {
       name: data.name,
@@ -63,17 +66,19 @@ export default function TableView({view, listViews }) {
     
     setTest(result);
 
+    console.log(result);
+
   };
   
   useEffect(() => {
-    console.log(view);
+    //console.log(view);
 		getTableData();
-    console.log(test);
+    //console.log(test);
 
-    // const result = test.filter((row) => row[viewFilter]);
-    // setFilteredTest(result);
+    const result = test.filter((row) => row[viewFilter]);
+    setFilteredTest(result);
 
-    //console.log(result);
+    console.log(result);
 	}, []);
 
   const handleOpen = () => {
@@ -230,25 +235,27 @@ export default function TableView({view, listViews }) {
           </tr>
         </thead>
         <tbody>
-          {test.map((row) => (
-            <tr key={row.Name} onClick={() => handleRowClick(row)}>
-              {col.map((column) => (
-                <td key={column}>{row[column]}</td>
-              ))}
-              {showMinusButtons && (
-                <td>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteRow(row);
-                    }}
-                  >
-                    -
-                  </button>
-                </td>
-              )}
-            </tr>
-          ))}
+        {test.map((row) => (
+          <tr
+            key={row.Name}
+            onClick={() => handleRowClick(row)}
+            className={detailApps.length > 0 ? "clickable" : ""}
+          >
+            {col.map((column) => (
+              <td key={column}>{row[column]}</td>
+            ))}
+            {showMinusButtons && (
+              <td>
+                <button onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteRow(row);
+                }}>
+                  -
+                </button>
+              </td>
+            )}
+          </tr>
+        ))}
         </tbody>
       </table>
       {selectedRow && (
@@ -256,7 +263,7 @@ export default function TableView({view, listViews }) {
           <DetailView
             updateRecord={updateRecord}
             row={selectedRow}
-            views={listViews}
+            views={detailApps}
             rowPosition = {selectedRowPosition}
             onSelectedRowChange={setSelectedRow}
             editPosition = {setEditRowPosition}
