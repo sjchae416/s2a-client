@@ -7,6 +7,7 @@ import UserContext from '../UserContext';
 export const name = '';
 
 export default function DashboardPage({
+  setAppData,
 	setReloadApp,
 	isDeveloper,
 	runnableApps,
@@ -19,6 +20,7 @@ export default function DashboardPage({
 	};
 
 	const handleManageButton = () => {
+		setAppData(null);
 		setReloadApp(false);
 	};
 
