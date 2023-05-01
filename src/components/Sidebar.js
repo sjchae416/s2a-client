@@ -4,6 +4,7 @@ import {
 	createAppAPI,
 	// updateAppAPI,
 	createViewAPI,
+	deleteViewAPI,
 	updateAppAPI,
 	// updateUserAPI,
 } from '../api';
@@ -51,12 +52,21 @@ const Sidebar = ({
 		try {
 			const newViewsIds = savedViews.map((savedView) => savedView._id);
 			appData.views = newViewsIds;
-
-			const newApp = await createAppAPI(appData);
-
-			return newApp;
+			let newApp;
+			try {
+				newApp = await createAppAPI(appData);
+				return newApp;
+			} catch (error) {
+				await Promise.all(
+					newApp.views?.map(async (viewId) => {
+						await deleteViewAPI(viewId);
+					})
+				);
+				console.error('Error creating the new App: ', error);
+				return new Error(error);
+			}
 		} catch (error) {
-			console.error('Error saving new App', error);
+			console.error('Error saving new App: ', error);
 			throw new Error(error);
 		}
 	};
@@ -86,7 +96,6 @@ const Sidebar = ({
 				setReloadApp(true);
 				navigate('/');
 			} catch (error) {
-				// TODO delete viewDatas.views when failed to create the App
 				window.alert(error);
 				console.error('Error while saving the Views or App: ', error);
 				setIsModalVisible(false);
