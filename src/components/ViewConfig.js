@@ -571,17 +571,17 @@ export default function ViewConfig({
         <div className="text-right">
           <button
             type="button"
-            className="btn btn-info can_btn"
-            onClick={updateViewList}
+            onClick={deleteViewList}
+            className="btn btn-danger can_btn"
           >
-            Save
+            Delete
           </button>
           <button
             type="button"
-            onClick={deleteViewList}
-            className="btn btn-danger"
+            className="btn btn-info"
+            onClick={updateViewList}
           >
-            Delete
+            Save
           </button>
         </div>
       ) : (
