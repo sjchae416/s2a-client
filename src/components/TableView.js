@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DetailView from "./DetailView";
 import { readTableAPI } from "../api";
-import { loadSheetAPI } from "../api";
+import { loadSheetAPI, updateSheetAPI } from "../api";
 
 export default function TableView({view, listViews }) {
   const [tableData, setTableData] = useState([]);
@@ -30,7 +30,9 @@ export default function TableView({view, listViews }) {
   const [filteredTest, setFilteredTest] = useState([...test]);
 
   const detailApps = listViews.filter((view) => view.viewType === "Detail");
-  console.log(detailApps);
+  // console.log('detailApps', detailApps);
+
+  
 
   let name, table, col, type, allowedActions, role;
   let viewFilter = "",
@@ -66,7 +68,7 @@ export default function TableView({view, listViews }) {
     
     setTest(result);
 
-    console.log(result);
+    // console.log('result', result);
 
   };
   
@@ -78,8 +80,13 @@ export default function TableView({view, listViews }) {
     const result = test.filter((row) => row[viewFilter]);
     setFilteredTest(result);
 
-    console.log(result);
+    // console.log('result', result);
 	}, []);
+
+
+  useEffect(() => {
+    console.log('test in useEffect', test);
+  }, [test]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -95,7 +102,7 @@ export default function TableView({view, listViews }) {
     setNewRowData({ ...newRowData, [name]: value });
   };
 
-  const handleAddRow = () => {
+  const handleAddRow = async () => {
     //check if the fields are empty and type correctness
     for (let i = 0; i < col.length; i++) {
       if (!newRowData[col[i]]) {
@@ -113,34 +120,43 @@ export default function TableView({view, listViews }) {
     });
     const updatedTest = [...test, newRow];
     setTest(updatedTest);
+    // console.log('updatedTest', updatedTest);
     setFilteredTest([...filteredTest, newRow]);
     setNewRowData({});
 
     //does not fill in default values for fields not added
     //test.length is the end of the array ie the last row in tab;e
-    let sheetIdx = table.sheetIndex + "!A" + test.length + ":" + String.fromCharCode(64 + newRow.length) + test.length;
+    let sheetIdx = tableData.sheetIndex + "!A" + (updatedTest.length + 1) + ":" + String.fromCharCode(64 + Object.keys(newRow).length) + (updatedTest.length + 1);
     let newValues = [];
     for (let key in newRow) {
       newValues.push(newRow[key]);
     }
-    console.log(newRow.length);
-    console.log(sheetIdx);
-    console.log(newValues);
+    // console.log('newRow Length', Object.keys(newRow).length);
+    console.log('sheetIdx', sheetIdx);
+    console.log('newValues', newValues);
 
-    let resource = {
-      data: [
-        {
-          range: sheetIdx,
-          values: [newValues]
-        }
-      ],
-      valueInputOption: "USER_ENTERED"
-    };
+    // let resource = {
+    //   data: [
+    //     {
+    //       range: sheetIdx,
+    //       values: [newValues]
+    //     }
+    //   ],
+    //   valueInputOption: "USER_ENTERED"
+    // };
 
-    setAddRowPosition(resource);
+    // setAddRowPosition(resource);
 
-    console.log(newRow);
-    console.log(updatedTest);
+    const sheetData = {
+      url: tableData.url,
+      range: sheetIdx,
+      values: [newValues],
+    }
+
+    await updateSheetAPI(sheetData);
+
+    // console.log('newRow', newRow);
+    // console.log('updatedTest', updatedTest);
     handleClose();
   };
 
@@ -185,7 +201,7 @@ export default function TableView({view, listViews }) {
       updatedTest.splice(index, 1);
       setTest(updatedTest);
       setFilteredTest(updatedTest);
-      console.log(updatedTest);
+      console.log('updatedTest', updatedTest);
     }
     handleClose();
   };
