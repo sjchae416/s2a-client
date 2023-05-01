@@ -210,15 +210,11 @@ const App = () => {
 		for (let i = 0; i < allAppsInDB?.length; i++) {
 			const app = allAppsInDB[i];
 			const roleURL = app?.roleMembershipSheet;
-			// FIXME does not return correctly
-			// const sheetIndex = await getFirstSheetNameAPI({ url: roleURL });
+			const sheetIndex = app?.sheetIndex;
 			const roleTableData = {
 				name: `${app.name} Role Membership Sheet`,
 				url: roleURL,
-				// TODO delete when getFirstSheetNameAPI() is fixed
-				sheetIndex: 'Sheet1',
-				// TODO uncomment when working
-				// sheetIndex: sheetIndex,
+				sheetIndex: sheetIndex,
 			};
 
 			try {
