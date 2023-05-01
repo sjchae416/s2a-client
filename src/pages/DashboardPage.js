@@ -38,7 +38,7 @@ export default function DashboardPage({
 			<br />
 			<br />
 			<div className="container">
-				<NavigationBar user={user} isDashboard={true} />
+				<NavigationBar user={user} />
 				<br />
 
 				<div className="card">

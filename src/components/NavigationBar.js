@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { updateSheetAPI, getFirstSheetNameAPI, addRowAPI, loadSheetAPI } from "../api";
 
-export default function NavigationBar({ user, isDashboard }) {
+export default function NavigationBar({ user }) {
   const [showMenu, setShowMenu] = useState(false);
   let navigate = useNavigate();
 
@@ -78,7 +78,7 @@ export default function NavigationBar({ user, isDashboard }) {
 
   return (
     <div className="card text-right card_one">
-      {isDashboard ? <h1>S2A</h1> : <h3 id="save-change">S2A</h3>}
+      <h1 id="save-change">S2A</h1>
       <span className=" ml-auto">
         <button onClick={handleTest}>Test Button</button>
         {/* Here are the Undo-Redo and Save buttons

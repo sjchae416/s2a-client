@@ -19,6 +19,20 @@ export default function AppConfig({
 	const [roleData, setRoleData] = useState([]);
 	const roleKey = roleData.length > 0 ? roleData[0] : [];
 
+	const now = new Date();
+	const nycTimeString = now.toLocaleString('en-US', {
+		timeZone: 'America/New_York',
+	});
+
+	const appData = {
+		name: name,
+		creator: user.email,
+		views: [],
+		roleMembershipSheet: roleMembershipSheet,
+		createdAt: nycTimeString,
+		lastModifiedDate: nycTimeString,
+	};
+
 	// useEffect(() => {
 	// 	if (addApp) {
 	// 		setAddApp(false);
@@ -26,6 +40,8 @@ export default function AppConfig({
 	// }, [addApp]);
 
 	useEffect(() => {
+		console.log('🚀 ~ app:', app);
+		console.log('🚀 ~ selectedApp:', selectedApp);
 		if (app !== null) {
 			setName(app.name);
 			setRoleMembershipSheet(app.roleMembershipSheet);
@@ -39,29 +55,17 @@ export default function AppConfig({
 		}
 	}, [app, selectedApp]);
 
-	// useEffect(() => {
-	// 	appData.name = name;
-	// 	appData.roleMembershipSheet = roleMembershipSheet;
-	// }, [name, roleMembershipSheet]);
-
-	useEffect(() => {
-		if (app !== null) {
-			console.log('🚀 ~ app:', app);
-		}
-	}, [app]);
-
-	const now = new Date();
-	const nycTimeString = now.toLocaleString('en-US', {
-		timeZone: 'America/New_York',
-	});
-
-	const appData = {
-		name: name,
-		creator: user.email,
-		views: [],
-		roleMembershipSheet: roleMembershipSheet,
-		createdAt: nycTimeString,
-		lastModifiedDate: nycTimeString,
+	const handleNameOnChange = (e) => {
+		setName(e.target.value);
+		// if (selectedApp !== null) {
+		// 	appData.name = name;
+		// }
+	};
+	const handleRoleOnChange = (e) => {
+		setRoleMembershipSheet(e.target.value);
+		// if (selectedApp !== null) {
+		// 	appData.name = name;
+		// }
 	};
 
 	// FN create and fill in App document & and load Table data
@@ -135,7 +139,7 @@ export default function AppConfig({
 					type="text"
 					value={name}
 					className="form-control"
-					onChange={(e) => setName(e.target.value)}
+					onChange={(e) => handleNameOnChange(e)}
 				/>
 			</div>
 			<div className="form-group">
@@ -145,7 +149,7 @@ export default function AppConfig({
 					type="text"
 					value={roleMembershipSheet}
 					className="form-control"
-					onChange={(e) => setRoleMembershipSheet(e.target.value)}
+					onChange={(e) => handleRoleOnChange(e)}
 				/>
 			</div>
 			<div className="text-right">

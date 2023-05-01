@@ -252,7 +252,6 @@ const App = () => {
 			}
 		}
 
-		console.log('🚀 ~ loadAllApps ~ developerApps:', developerApps);
 		if (developerApps.lengh !== 0) {
 			filterPublishedApps(developerApps);
 			filterUnpublishedApps(developerApps);
@@ -261,7 +260,6 @@ const App = () => {
 			setUnpublishedApps(null);
 		}
 
-		console.log('🚀 ~ loadAllApps ~ accessibleApps:', accessibleApps);
 		if (accessibleApps.length !== 0) {
 			filterRunnableApps(accessibleApps);
 		} else {
@@ -306,7 +304,6 @@ const App = () => {
 				credentials: 'include',
 			});
 			const data = await response.json();
-			console.log('🚀 ~ fetchCurrentUser ~ data:', data);
 
 			if (response.ok) {
 				if (!data) {
