@@ -109,7 +109,7 @@ const Sidebar = ({
 		if (app && (viewDatas || viewDataList.length !== 0)) {
 			app.published = true;
 			setAppData(app);
-			handleSaveApp(app);
+			//handleSaveApp(app);
 		}
 		setIsPublishModalVisible(false);
 	};
