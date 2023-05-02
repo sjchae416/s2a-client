@@ -72,13 +72,13 @@ const Sidebar = ({
 	}
 
 	const handleSaveApp = async () => {
-		if(selectedApp !== null) {
-			// handle updating an app and then navigate to dashboard
-			// TODO - check if the existing views have atleast one table view
-			//console.log("existing app case");
-			navigate('/');
-		}
-		else if (app!==null && viewDatas && checkTableView(viewDatas)) {
+		// if(selectedApp !== null) {
+		// 	// handle updating an app and then navigate to dashboard
+		// 	// TODO - check if the existing views have atleast one table view
+		// 	//console.log("existing app case");
+		// 	navigate('/');
+		// }
+		if (viewDatas && checkTableView(viewDatas)) {
 			try {
 				// if (selectedAppId) {
 				//  // TODO if there are new viewDdta, save Views
