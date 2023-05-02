@@ -21,7 +21,6 @@ export default function ViewConfig({
   const [filter, setFilter] = useState("");
   const [userFilter, setUserFilter] = useState("");
   const [editFilter, setEditFilter] = useState("");
-  // const [editableCols, setEditableCols] = useState([]);
   const [boolConfigs, setBoolConfigs] = useState([]);
   const [emailConfigs, setEmailConfigs] = useState([]);
   const [selectedEditColumns, setSelectedEditColumns] = useState([]);
