@@ -63,6 +63,15 @@ export default function TableConfig({
 		return true;
 	};
 
+	const isKeyChosen = () => {
+		for (let i = 0; i < config.length; i++) {
+			if (config[i].key) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	const isNameUnique = () => {
 		for (let i = 0; i < userTables?.length; i++) {
 			if (userTables[i]?.name === name) {
@@ -148,6 +157,11 @@ export default function TableConfig({
 		// console.log(tableData);
 		if (!isTypeColumnValid()) {
 			alert('Please select a type for all rows');
+			return;
+		}
+
+		if(!isKeyChosen()){
+			alert('Please choose a key for at least one row');
 			return;
 		}
 

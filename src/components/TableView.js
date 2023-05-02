@@ -6,9 +6,9 @@ import DetailView from "./DetailView";
 import { readTableAPI } from "../api";
 import { loadSheetAPI, updateSheetAPI } from "../api";
 
-export default function TableView({view, listViews }) {
+export default function TableView({ view, listViews }) {
   const [tableData, setTableData] = useState([]);
-  const [test, setTest] = useState([]);
+  const [tableViewObjArr, settableViewObjArr] = useState([]);
   const [open, setOpen] = useState(false);
   const [openDelete, setDeleteOpen] = useState(false);
   const [newRowData, setNewRowData] = useState({});
@@ -27,16 +27,14 @@ export default function TableView({view, listViews }) {
   // States to store the position of the row delete in the sheet
   const [deleteRowPosition, setDeleteRowPosition] = useState({});
 
-  const [filteredTest, setFilteredTest] = useState([...test]);
+  const [filteredtableViewObjArr, setFilteredtableViewObjArr] = useState([...tableViewObjArr]);
 
   const detailApps = listViews.filter((view) => view.viewType === "Detail");
   // console.log('detailApps', detailApps);
 
-  
-
   let name, table, col, type, allowedActions, role;
   let viewFilter = "",
-  userFilter = "";
+    userFilter = "";
   name = view.name;
   table = view.table;
   col = view.columns;
@@ -44,11 +42,22 @@ export default function TableView({view, listViews }) {
   allowedActions = view.allowedActions;
   role = view.roles;
 
+  useEffect(() => {
+    getTableData();
+
+    const result = tableViewObjArr.filter((row) => row[viewFilter]);
+    setFilteredtableViewObjArr(result);
+
+  }, []);
+
+  useEffect(() => {
+    console.log("tableViewObjArr in useEffect", tableViewObjArr);
+  }, [tableViewObjArr]);
+
   const getTableData = async () => {
-    const data = await readTableAPI(view.table)
+    const data = await readTableAPI(view.table);
     setTableData(data);
 
-    //console.log(data);
 
     const sheetData = {
       name: data.name,
@@ -58,35 +67,17 @@ export default function TableView({view, listViews }) {
     const tableData = await loadSheetAPI(sheetData);
     //gets the array of the data except for the name of the column
 
-    const result = tableData.slice(1).map(row => {
+    const result = tableData.slice(1).map((row) => {
       const obj = {};
       tableData[0].forEach((key, index) => {
         obj[key] = row[index];
       });
       return obj;
     });
-    
-    setTest(result);
 
-    // console.log('result', result);
+    settableViewObjArr(result);
 
   };
-  
-  useEffect(() => {
-    //console.log(view);
-		getTableData();
-    //console.log(test);
-
-    const result = test.filter((row) => row[viewFilter]);
-    setFilteredTest(result);
-
-    // console.log('result', result);
-	}, []);
-
-
-  useEffect(() => {
-    console.log('test in useEffect', test);
-  }, [test]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -102,8 +93,31 @@ export default function TableView({view, listViews }) {
     setNewRowData({ ...newRowData, [name]: value });
   };
 
+  const checkKeyIntegrity = () => {
+    let keyColumn = "";
+    // Find Key Column
+    for(let i = 0; i < tableData.columns.length; i++){
+      if(tableData.columns[i].key){
+        keyColumn = tableData.columns[i].name;
+      }
+    }
+    let keys = [];
+    for(let i = 0; i < tableViewObjArr.length; i++){
+      keys.push(tableViewObjArr[i][keyColumn]);
+
+    }
+    let newRowDataKeyVal = newRowData[keyColumn].toString();
+    return !keys.includes(newRowDataKeyVal);
+  }
+
+
   const handleAddRow = async () => {
     //check if the fields are empty and type correctness
+    if(!checkKeyIntegrity()){
+      alert("Input a unique key. Key already exists!");
+      return;
+    }
+
     for (let i = 0; i < col.length; i++) {
       if (!newRowData[col[i]]) {
         alert("Please fill in all fields");
@@ -118,45 +132,35 @@ export default function TableView({view, listViews }) {
     col.forEach((column) => {
       newRow[column] = newRowData[column] || "";
     });
-    const updatedTest = [...test, newRow];
-    setTest(updatedTest);
-    console.log('updatedTest', updatedTest);
-    setFilteredTest([...filteredTest, newRow]);
+    const updatedtableViewObjArr = [...tableViewObjArr, newRow];
+    settableViewObjArr(updatedtableViewObjArr);
+    setFilteredtableViewObjArr([...filteredtableViewObjArr, newRow]);
     setNewRowData({});
 
     //does not fill in default values for fields not added
-    //test.length is the end of the array ie the last row in tab;e
-    let sheetIdx = tableData.sheetIndex + "!A" + (updatedTest.length + 1) + ":" + String.fromCharCode(64 + Object.keys(newRow).length) + (updatedTest.length + 1);
+    //tableViewObjArr.length is the end of the array ie the last row in tab;e
+    let sheetIdx =
+      tableData.sheetIndex +
+      "!A" +
+      (updatedtableViewObjArr.length + 1) +
+      ":" +
+      String.fromCharCode(64 + Object.keys(newRow).length) +
+      (updatedtableViewObjArr.length + 1);
     let newValues = [];
     for (let key in newRow) {
       newValues.push(newRow[key]);
     }
-    // console.log('newRow Length', Object.keys(newRow).length);
     
-
-    // let resource = {
-    //   data: [
-    //     {
-    //       range: sheetIdx,
-    //       values: [newValues]
-    //     }
-    //   ],
-    //   valueInputOption: "USER_ENTERED"
-    // };
-
-    // setAddRowPosition(resource);
-
     const sheetData = {
       url: tableData.url,
       range: sheetIdx,
       values: [newValues],
-    }
+    };
     // console.log('tableData.url', tableData.url);
     // console.log('sheetIdx', sheetIdx);
     // console.log('newValues', newValues);
     await updateSheetAPI(sheetData);
-    // console.log('newRow', newRow);
-    // console.log('updatedTest', updatedTest);
+
     handleClose();
   };
 
@@ -177,27 +181,31 @@ export default function TableView({view, listViews }) {
     // console.log("Deleted Row:", deletedRow);
 
     // Find index of row to delete
-    const index = test.findIndex((row) => {
+    const index = tableViewObjArr.findIndex((row) => {
       return Object.keys(row).every((key) => {
         return row[key] === selectedRowData[key];
       });
     });
-  
-    let sheetIdx = tableData.sheetIndex + "!A" + (index + 2) + ':' + String.fromCharCode(64 + Object.keys(deletedRow).length) + (index + 2);
+
+    let sheetIdx =
+      tableData.sheetIndex +
+      "!A" +
+      (index + 2) +
+      ":" +
+      String.fromCharCode(64 + Object.keys(deletedRow).length) +
+      (index + 2);
     let values = [];
 
-    for(let i = 0; i < Object.keys(deletedRow).length; i++){
+    for (let i = 0; i < Object.keys(deletedRow).length; i++) {
       values[i] = "";
     }
 
-    // console.log('sheetIdx', sheetIdx);
-    // console.log('values', values);
-
+   
     const sheetData = {
       url: tableData.url,
       range: sheetIdx,
       values: [values],
-    }
+    };
     // console.log('tableData.url', tableData.url);
     // console.log('sheetIdx', sheetIdx);
     // console.log('values', values);
@@ -224,31 +232,32 @@ export default function TableView({view, listViews }) {
 
     // setDeleteRowPosition(resource);
 
-    //Remove row from test array
+    //Remove row from tableViewObjArr array
     if (index !== -1) {
-      const updatedTest = [...test];
-      updatedTest.splice(index, 1);
-      setTest(updatedTest);
-      setFilteredTest(updatedTest);
-      console.log('updatedTest', updatedTest);
+      const updatedtableViewObjArr = [...tableViewObjArr];
+      updatedtableViewObjArr.splice(index, 1);
+      settableViewObjArr(updatedtableViewObjArr);
+      setFilteredtableViewObjArr(updatedtableViewObjArr);
+      console.log("updatedtableViewObjArr", updatedtableViewObjArr);
     }
     handleClose();
   };
 
   const handleRowClick = (row) => {
-    const foundRow = test.find((testRow) => testRow.Name === row.Name);
+    const foundRow = tableViewObjArr.find((tableViewObjArrRow) => tableViewObjArrRow.Name === row.Name);
     setSelectedRow(foundRow);
 
-    const foundRowIndex = test.findIndex((testRow) => testRow.Name === row.Name);
+    const foundRowIndex = tableViewObjArr.findIndex(
+      (tableViewObjArrRow) => tableViewObjArrRow.Name === row.Name
+    );
     setSelectedRowPosition(foundRowIndex);
     // console.log(foundRowIndex);
-    // console.log(test);
+    // console.log(tableViewObjArr);
   };
 
-
   const updateRecord = (data) => {
-    const index = filteredTest.findIndex((item) => item.Email === data.Email);
-    filteredTest[index] = data;
+    const index = filteredtableViewObjArr.findIndex((item) => item.Email === data.Email);
+    filteredtableViewObjArr[index] = data;
   };
 
   return (
@@ -280,10 +289,10 @@ export default function TableView({view, listViews }) {
           </tr>
         </thead>
         <tbody>
-        {test.map((row) => (
-             <tr key={row.Name} onClick={() => handleRowClick(row)}>
-               {col.map((column) => (
-                 <td key={column}>{row[column]}</td>
+          {tableViewObjArr.map((row) => (
+            <tr key={row.Name} onClick={() => handleRowClick(row)}>
+              {col.map((column) => (
+                <td key={column}>{row[column]}</td>
               ))}
               {showMinusButtons && (
                 <td>
@@ -307,10 +316,10 @@ export default function TableView({view, listViews }) {
             updateRecord={updateRecord}
             row={selectedRow}
             views={detailApps}
-            rowPosition = {selectedRowPosition}
+            rowPosition={selectedRowPosition}
             onSelectedRowChange={setSelectedRow}
-            editPosition = {setEditRowPosition}
-            deleteRowPosition = {setDeleteRowPosition}
+            editPosition={setEditRowPosition}
+            deleteRowPosition={setDeleteRowPosition}
           />
         </Modal>
       )}
