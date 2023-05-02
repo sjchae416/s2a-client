@@ -28,6 +28,7 @@ const App = () => {
 	const [tableIds, setTableIds] = useState(null);
 	const [app, setAppData] = useState(null);
 	const [userTables, setTables] = useState(null);
+	// NOTE viewDatas will store locally created Views (an array of viewToSave's)
 	const [viewDatas, setViewDatas] = useState(null);
 	// const [developers, setDevelopers] = useState([]);
 	const [isDeveloper, setIsDeveloper] = useState(false);
