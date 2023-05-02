@@ -1,7 +1,7 @@
 import React from "react";
 
 // using this to print out the config of the selected tble
-const SelectedTableConfig = ({ keys, userTables }) => {
+const SelectedTableConfig = ({ keys, userTables, handleInputChangesss }) => {
   return (
     <>
       {keys.map((key) => (
@@ -13,6 +13,8 @@ const SelectedTableConfig = ({ keys, userTables }) => {
                 type="radio"
                 name={`radio-col1`}
                 defaultChecked={key.key}
+                value={key._id}
+                onChange={(event) => handleInputChangesss(event, key, "key")}
               />
             </label>
           </td>
@@ -22,21 +24,35 @@ const SelectedTableConfig = ({ keys, userTables }) => {
                 type="radio"
                 name={`radio-col2`}
                 defaultChecked={key.label}
+                value={key._id}
+                onChange={(event) => handleInputChangesss(event, key, "label")}
               />
             </label>
           </td>
           <td>
-            <select name={`select-${key}`} defaultValue="none">
-              <option value="none">None</option>
+            <select
+              name={key._id}
+              onChange={(event) =>
+                handleInputChangesss(event, key, "reference")
+              }
+            >
+              <option>None</option>
               {userTables?.map((table) => (
-                <option key={table._id} value={table._id}>
+                <option
+                  key={table._id}
+                  value={table.name}
+                  selected={key.reference === table.name ? true : false}
+                >
                   {table.name}
                 </option>
               ))}
             </select>
           </td>
           <td>
-            <select>
+            <select
+              name={key._id}
+              onChange={(event) => handleInputChangesss(event, key, "type")}
+            >
               {[
                 { type: "string", name: "Text" },
                 { type: "int", name: "Number" },
@@ -45,6 +61,7 @@ const SelectedTableConfig = ({ keys, userTables }) => {
               ].map((item) => (
                 <option
                   key={item.type}
+                  value={item.type}
                   selected={key.type === item.type ? true : false}
                 >
                   {item.name}
