@@ -53,11 +53,13 @@ export default function AppConfig({
 			setSheetIndex(selectedApp.sheetIndex);
 			appData.views = selectedApp.createdViews;
 		}
+		// REVIEW backup
 		// else if (appData) {
 		// 	setName(appData.name);
 		// 	setRoleMembershipSheet(appData.roleMembershipSheet);
 		// 	setSheetIndex(appData.sheetIndex);
 		// }
+		// REVIEW backup
 		else {
 			setName('');
 			setRoleMembershipSheet('');
@@ -66,29 +68,33 @@ export default function AppConfig({
 	}, [app, selectedApp]);
 
 	const handleNameOnChange = (e) => {
+		// REVIEW backup
 		// setSelectedApp(null);
+		// REVIEW backup
 		setName(e.target.value);
+		// REVIEW backup
 		// if (selectedApp !== null) {
 		// 	appData.name = name;
 		// }
+		// REVIEW backup
 	};
 	const handleRoleOnChange = (e) => {
+		// REVIEW backup
 		// setSelectedApp(null);
+		// REVIEW backup
 		setRoleMembershipSheet(e.target.value);
+		// REVIEW backup
 		// if (selectedApp !== null) {
 		// 	appData.name = name;
 		// }
+		// REVIEW backup
 	};
 
 	// FN create and fill in App document & and load Table data
 	const loadRoleTable = async () => {
-		if (name && roleMembershipSheet) {
-			const sheetIndex = await getFirstSheetNameAPI({
-				url: roleMembershipSheet,
-			});
+		if (name && roleMembershipSheet && sheetIndex) {
 			const sheetData = {
 				url: roleMembershipSheet,
-				//NOTE - In order for sheetIndex to always choose the first sheet index, the metadata must be used. May add it later.
 				sheetIndex: sheetIndex,
 			};
 			const dataArray = await loadSheetAPI(sheetData);

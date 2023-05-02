@@ -87,12 +87,16 @@ const Sidebar = ({
 		if (checkTableView(viewDatas) || checkTableView(selectedApp.createdViews)) {
 			try {
 				if (selectedApp) {
-					if (viewDatas !== null) {
+					const currViewIds = viewDataList.map((view) => {
+						return view._id;
+					});
+					let newViewsIds;
+					if (viewDatas) {
 						const savedViews = await saveNewViews(viewDatas);
-						const newViewsIds = savedViews.map((savedView) => savedView._id);
-						app.views = [...selectedApp.views, newViewsIds];
+						newViewsIds = savedViews.map((savedView) => savedView._id);
+						app.views = [...currViewIds, ...newViewsIds];
 					} else {
-						app.views = [selectedApp.views];
+						app.views = currViewIds;
 					}
 
 					const now = new Date();
@@ -102,7 +106,18 @@ const Sidebar = ({
 					app.lastModifiedDate = nycTimeString;
 
 					const update = app;
-					await updateAppAPI(selectedApp._id, update);
+					try {
+						await updateAppAPI(selectedApp._id, update);
+					} catch (error) {
+						// TODO delete all newViewsIds
+						await Promise.all(
+							newViewsIds?.map(async (viewId) => {
+								await deleteViewAPI(viewId);
+							})
+						);
+						console.error('Error updating the App: ', error);
+						return new Error(error);
+					}
 				} else {
 					const savedViews = await saveNewViews(viewDatas);
 					await saveNewApp(app, savedViews);

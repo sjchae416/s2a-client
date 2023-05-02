@@ -51,10 +51,27 @@ export default function ViewConfig({
 		editableCols: selectedEditColumns,
 	};
 
+	const viewToSave = {
+		name: viewData.viewName,
+		table: viewData.selectedTableId,
+		columns: viewData.selectedColumns,
+		viewType: viewData.viewType,
+		allowedActions: viewData.allowedAction,
+		roles: viewData.role,
+		filter: viewData.filter,
+		userFilter: viewData.userFilter,
+		editFilter: viewData.editFilter,
+		editableCols: viewData.editableCols,
+	};
+
 	const isObjectInArray = (obj, arr) => {
 		const objJSON = JSON.stringify(obj);
 		return arr?.some((element) => JSON.stringify(element) === objJSON);
 	};
+
+	useEffect(() => {
+		console.log('🚀 ~ file: ViewConfig.js:34 ~ viewDataList:', viewDataList);
+	}, [viewDataList]);
 
 	useEffect(() => {
 		console.log('🚀 ~ file: ViewConfig.js:34 ~ viewDatas:', viewDatas);
@@ -79,6 +96,20 @@ export default function ViewConfig({
 				(userTable) => userTable?._id === selectedView.table
 			)?.columns;
 			setColumns(selectedTableColumns);
+		} else {
+			setViewName('');
+			setSelectedTableId('');
+			setSelectedColumns([]);
+			setViewType('Table');
+			setAllowAction([]);
+			setRole([]);
+			setFilter('');
+			setUserFilter('');
+			setEditFilter('');
+			setSelectedEditColumns([]);
+			setColumns([]);
+			setViewTable(null);
+			formElement.current.reset();
 		}
 	}, [selectedView]);
 
@@ -93,7 +124,7 @@ export default function ViewConfig({
 		e.preventDefault();
 
 		if (!viewName) {
-			return window.alert('Enter View name!');
+			return window.alert('Enter View name!11111111111');
 		} else if (!selectedTableId) {
 			return window.alert('Select table!');
 		} else if (selectedColumns.length === 0) {
@@ -101,18 +132,18 @@ export default function ViewConfig({
 		} else if (role.length === 0) {
 			return window.alert('Choose role!');
 		} else {
-			const viewToSave = {
-				name: viewData.viewName,
-				table: viewData.selectedTableId,
-				columns: viewData.selectedColumns,
-				viewType: viewData.viewType,
-				allowedActions: viewData.allowedAction,
-				roles: viewData.role,
-				filter: viewData.filter,
-				userFilter: viewData.userFilter,
-				editFilter: viewData.editFilter,
-				editableCols: viewData.editableCols,
-			};
+			// const viewToSave = {
+			// 	name: viewData.viewName,
+			// 	table: viewData.selectedTableId,
+			// 	columns: viewData.selectedColumns,
+			// 	viewType: viewData.viewType,
+			// 	allowedActions: viewData.allowedAction,
+			// 	roles: viewData.role,
+			// 	filter: viewData.filter,
+			// 	userFilter: viewData.userFilter,
+			// 	editFilter: viewData.editFilter,
+			// 	editableCols: viewData.editableCols,
+			// };
 
 			setViewDatas((prev) =>
 				prev === null ? [viewToSave] : [...prev, viewToSave]
@@ -149,14 +180,18 @@ export default function ViewConfig({
 	};
 
 	const handleCancel = () => {
-		setSelectedColumns([]);
-		//setShowTable(false);
+		setSelectedView(null);
 		setViewName('');
+		setSelectedTableId('');
+		setSelectedColumns([]);
 		setViewType('Table');
 		setAllowAction([]);
 		setRole([]);
+		setFilter('');
+		setUserFilter('');
+		setEditFilter('');
+		setSelectedEditColumns([]);
 		setColumns([]);
-		setSelectedTableId('');
 		setViewTable(null);
 		formElement.current.reset();
 	};
@@ -171,24 +206,25 @@ export default function ViewConfig({
 		} else if (role.length === 0) {
 			return window.alert('Choose role!');
 		} else {
-			const viewToSave = {
-				name: viewData.viewName,
-				table: viewData.selectedTableId,
-				columns: viewData.selectedColumns,
-				viewType: viewData.viewType,
-				allowedActions: viewData.allowedAction,
-				roles: viewData.role,
-				filter: viewData.filter,
-				userFilter: viewData.userFilter,
-				editFilter: viewData.editFilter,
-				editableCols: viewData.editableCols,
-			};
+			// const viewToSave = {
+			// 	name: viewData.viewName,
+			// 	table: viewData.selectedTableId,
+			// 	columns: viewData.selectedColumns,
+			// 	viewType: viewData.viewType,
+			// 	allowedActions: viewData.allowedAction,
+			// 	roles: viewData.role,
+			// 	filter: viewData.filter,
+			// 	userFilter: viewData.userFilter,
+			// 	editFilter: viewData.editFilter,
+			// 	editableCols: viewData.editableCols,
+			// };
 
 			if (isObjectInArray(selectedView, viewDataList)) {
 				try {
 					const updatedView = await updateViewAPI(selectedView._id, viewToSave);
 					if (updatedView) {
 						window.alert(`View ${updatedView.name} updated successfully`);
+						setSelectedView(updatedView);
 						setViewDataList((prev) => {
 							const indexToUpdate = prev.findIndex(
 								(view) => view._id === selectedView?._id
@@ -201,9 +237,6 @@ export default function ViewConfig({
 
 							return prev;
 						});
-
-						handleCancel();
-						setSelectedView(null);
 					}
 				} catch (error) {
 					console.error('Error updating the View: ', error);
@@ -211,13 +244,14 @@ export default function ViewConfig({
 				}
 			} else if (isObjectInArray(selectedView, viewDatas)) {
 				setViewDatas((prev) => {
-					const indexToUpdate = prev?.findIndex(
+					const indexToUpdate = prev.findIndex(
 						(view) => JSON.stringify(view) === JSON.stringify(selectedView)
 					);
 
 					if (indexToUpdate !== -1) {
 						const updatedViewDatas = [...prev];
 						updatedViewDatas[indexToUpdate] = viewToSave;
+						setSelectedView(viewToSave);
 						window.alert(`View ${viewToSave.name} updated successfully`);
 						return updatedViewDatas;
 					}
@@ -271,29 +305,29 @@ export default function ViewConfig({
 	}
 
 	const handleDeleteView = async (selectedViewId) => {
-		// FIXME some bugs
-		// REVIEW DB view VS Local view
-		// TODO delete selectedView of viewDatas and update viewDatas and viewDataList
 		if (isObjectInArray(selectedView, viewDataList)) {
-			// TODO handle when existing View
-			const viewIdToBeDeleted = selectedView._id;
-			const result = await deleteViewAPI(selectedViewId);
-			// TODO loadAllApps() here? or just update the viewDataList?
+			const viewIdToBeDeleted = selectedViewId;
+			const result = await deleteViewAPI(viewIdToBeDeleted);
 
 			if (result) {
 				setViewDataList((prev) => {
-					return prev.filter((view) => view._id !== viewIdToBeDeleted);
+					return prev.filter((view) => {
+						return view?._id !== viewIdToBeDeleted;
+					});
 				});
-				handleCancel();
+				// handleCancel();
+				setSelectedView(null);
 			} else {
 				window.alert('Failed to delete the View');
 			}
 		} else if (isObjectInArray(selectedView, viewDatas)) {
-			// TODO handle when local View
-
-			setViewDatas((prev) =>
-				prev === null ? [selectedView] : [...prev, selectedView]
-			);
+			setViewDatas((prev) => {
+				return prev.filter((view) => {
+					return JSON.stringify(view) !== JSON.stringify(selectedView);
+				});
+			});
+			// handleCancel();
+			setSelectedView(null);
 		}
 	};
 

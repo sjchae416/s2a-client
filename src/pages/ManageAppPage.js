@@ -35,6 +35,7 @@ export default function ManageAppPage({
 		if (selectedApp !== null) {
 			setViewDataList(selectedApp.createdViews);
 		} else {
+			setSelectedView(null);
 			setViewDataList(null);
 		}
 		setViewDatas(null);
@@ -48,6 +49,11 @@ export default function ManageAppPage({
 		setViewDataList(null);
 		//setAddApp(true);
 		setSelectedView(null);
+	};
+
+	const handleAddView = () => {
+		setSelectedView(null);
+		setAddView(true);
 	};
 
 	return (
@@ -107,14 +113,7 @@ export default function ManageAppPage({
 
 							{view === 'view' && app && (
 								<>
-									<button
-										onClick={() => {
-											setSelectedView(null);
-											setAddView(true);
-										}}
-									>
-										Add View
-									</button>
+									<button onClick={handleAddView}>Add View</button>
 									<List
 										type="view"
 										viewDatas={viewDatas}
