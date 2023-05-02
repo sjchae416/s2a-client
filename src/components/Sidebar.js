@@ -18,6 +18,7 @@ const Sidebar = ({
 	viewDatas,
 	setViewDatas,
 	viewDataList,
+	setViewDataList,
 }) => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [isPublishModalVisible, setIsPublishModalVisible] = useState(false);
@@ -107,6 +108,7 @@ const Sidebar = ({
 					await saveNewApp(app, savedViews);
 				}
 				setAppData(null);
+				setViewDataList(null);
 				setViewDatas(null);
 				setReloadApp(true);
 				navigate('/');
@@ -122,7 +124,7 @@ const Sidebar = ({
 	};
 
 	const handleUnpublish = () => {
-		if (app && (viewDatas || viewDataList.length !== 0)) {
+		if (app && (viewDatas || viewDataList)) {
 			app.published = false;
 			setAppData(app);
 		}
@@ -131,7 +133,7 @@ const Sidebar = ({
 	};
 
 	const handlePublish = () => {
-		if (app && (viewDatas || viewDataList.length !== 0)) {
+		if (app && (viewDatas || viewDataList)) {
 			app.published = true;
 			setAppData(app);
 		}
@@ -140,7 +142,11 @@ const Sidebar = ({
 	};
 
 	const handleDiscard = () => {
+		setAppData(null);
+		setViewDatas(null);
+		setViewDataList(null);
 		setSelectedApp(null);
+		setReloadApp(true);
 		navigate('/');
 	};
 
@@ -148,19 +154,7 @@ const Sidebar = ({
 		<div className="col-1 border-right text-center">
 			<button
 				onClick={() => {
-					// FIXME won't work; same reason in the ManageAppPage; plus, it can always go back to the App section
-					// TODO but remain crrently typed input fields for viewData
-					// if (viewName) {
-					// 	if (
-					// 		window.confirm(
-					// 			'You have unsaved changes, Are you sure you want to leave!'
-					// 		) === true
-					// 	) {
-					// 		setView('app');
-					// 	}
-					// } else {
 					setView('app');
-					// }
 				}}
 			>
 				App

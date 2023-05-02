@@ -16,13 +16,26 @@ const List = ({
 	app,
 	setSelectedApp,
 }) => {
-	// const [selectedApp, setSelectedApp] = useState(null);
 	// TODO restore viewsToDisplay state
+	const [viewsToDisplay, setViewsToDisplay] = useState(null);
+
+	useEffect(() => {
+		if (viewDataList && viewDatas) {
+			setViewsToDisplay([...viewDataList, ...viewDatas]);
+		} else if (viewDataList) {
+			setViewsToDisplay(viewDataList);
+		} else if (viewDatas) {
+			setViewsToDisplay(viewDatas);
+		} else {
+			setViewsToDisplay(null);
+		}
+	}, [viewDataList, viewDatas]);
 
 	const handleSelectApp = (app) => {
 		setAppData(null);
 		setShowTable(false);
 		setSelectedApp(app);
+		setSelectedView(null);
 	};
 
 	const handleSelectView = (view) => {
@@ -31,19 +44,6 @@ const List = ({
 
 	const handleSelectTable = (table) => {
 		setSelectedTable(table);
-	};
-
-	// TODO setViewsTodisplay(appViews)
-	const loadAppViews = async (app) => {
-		try {
-			const appViews = await Promise.all(
-				app.views.map(async (viewId) => {
-					return await readViewAPI(viewId);
-				})
-			);
-		} catch (error) {
-			console.error('Error fetching View: ', error);
-		}
 	};
 
 	// useEffect(() => {
@@ -82,16 +82,16 @@ const List = ({
 									)
 						  )}
 				</div>
-			) : type === 'view' && viewDataList.length > 0 ? (
-				viewDataList.map(
-					(viewData) =>
-						viewData !== null && (
+			) : type === 'view' && viewsToDisplay ? (
+				viewsToDisplay.map(
+					(view) =>
+						view !== null && (
 							<div
-								key={viewData._id}
-								onClick={() => handleSelectView(viewData)}
+								key={JSON.stringify(view)}
+								onClick={() => handleSelectView(view)}
 							>
 								<hr />
-								{viewData.viewName || viewData.name}
+								{view.viewName || view.name}
 							</div>
 						)
 				)

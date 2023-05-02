@@ -21,8 +21,9 @@ export default function ManageAppPage({
 	const { user, setUser } = useContext(UserContext);
 	const [view, setView] = useState('app');
 	const [viewRole, setViewRole] = useState([]);
-	const [viewDataList, setViewDataList] = useState([]);
-	const [selectedView, setSelectedView] = useState({});
+	// NOTE viewDataList will store existing Views
+	const [viewDataList, setViewDataList] = useState(null);
+	const [selectedView, setSelectedView] = useState(null);
 	const [addView, setAddView] = useState(false);
 	// REVIEW not uesd at all, only changes the state
 	// const [addApp, setAddApp] = useState(false);
@@ -32,9 +33,11 @@ export default function ManageAppPage({
 
 	useEffect(() => {
 		if (selectedApp !== null) {
-			// setViewDatas(selectedApp.cretedViews);
 			setViewDataList(selectedApp.createdViews);
+		} else {
+			setViewDataList(null);
 		}
+		setViewDatas(null);
 	}, [selectedApp]);
 
 	const handleAddApp = () => {
@@ -42,9 +45,9 @@ export default function ManageAppPage({
 		setSelectedApp(null);
 		setShowTable(false);
 		setReloadApp(false);
-		setViewDataList([]);
+		setViewDataList(null);
 		//setAddApp(true);
-		setSelectedView({});
+		setSelectedView(null);
 	};
 
 	return (
@@ -66,6 +69,7 @@ export default function ManageAppPage({
 							viewDatas={viewDatas}
 							setViewDatas={setViewDatas}
 							viewDataList={viewDataList}
+							setViewDataList={setViewDataList}
 						/>
 
 						<div className="col-1 border-right text-center">
@@ -105,7 +109,7 @@ export default function ManageAppPage({
 								<>
 									<button
 										onClick={() => {
-											setSelectedView({});
+											setSelectedView(null);
 											setAddView(true);
 										}}
 									>
@@ -145,6 +149,7 @@ export default function ManageAppPage({
 										selectedApp={selectedApp}
 										viewDatas={viewDatas}
 										setViewDatas={setViewDatas}
+										viewDataList={viewDataList}
 										setViewDataList={setViewDataList}
 										selectedView={selectedView}
 										setSelectedView={setSelectedView}

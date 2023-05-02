@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import shortid from 'shortid';
-import { loadSheetAPI } from '../api';
+import {
+	deleteAppAPI,
+	deleteViewAPI,
+	loadSheetAPI,
+	updateViewAPI,
+} from '../api';
 
 export default function ViewConfig({
 	viewRole,
@@ -8,6 +13,7 @@ export default function ViewConfig({
 	selectedApp,
 	viewDatas,
 	setViewDatas,
+	viewDataList,
 	setViewDataList,
 	selectedView,
 	setSelectedView,
@@ -22,7 +28,6 @@ export default function ViewConfig({
 	const [filter, setFilter] = useState('');
 	const [userFilter, setUserFilter] = useState('');
 	const [editFilter, setEditFilter] = useState('');
-	const [editableCols, setEditableCols] = useState([]);
 	const [boolConfigs, setBoolConfigs] = useState([]);
 	const [emailConfigs, setEmailConfigs] = useState([]);
 	const [selectedEditColumns, setSelectedEditColumns] = useState([]);
@@ -31,10 +36,6 @@ export default function ViewConfig({
 	const [viewTable, setViewTable] = useState(null);
 
 	const formElement = useRef();
-
-	useEffect(() => {
-		console.log('🚀 ~ file: ViewConfig.js:34 ~ viewDatas:', viewDatas);
-	}, [viewDatas]);
 
 	const viewData = {
 		_id: shortid.generate(),
@@ -47,13 +48,50 @@ export default function ViewConfig({
 		filter: filter,
 		userFilter: userFilter,
 		editFilter: editFilter,
-		editableCols: editableCols,
+		editableCols: selectedEditColumns,
 	};
+
+	const isObjectInArray = (obj, arr) => {
+		const objJSON = JSON.stringify(obj);
+		return arr?.some((element) => JSON.stringify(element) === objJSON);
+	};
+
+	useEffect(() => {
+		console.log('🚀 ~ file: ViewConfig.js:34 ~ viewDatas:', viewDatas);
+	}, [viewDatas]);
+
+	useEffect(() => {
+		console.log('🚀 ~ useEffect ~ selectedView:', selectedView);
+
+		if (selectedView) {
+			setViewName(selectedView.name);
+			setSelectedTableId(selectedView.table);
+			setSelectedColumns(selectedView.columns);
+			setViewType(selectedView.viewType);
+			setAllowAction(selectedView.allowedActions);
+			setRole(selectedView.roles);
+			setFilter(selectedView.filter);
+			setUserFilter(selectedView.userFilters);
+			setEditFilter(selectedView.editfilter);
+			setSelectedEditColumns(selectedView.editableCols);
+
+			const selectedTableColumns = userTables?.find(
+				(userTable) => userTable?._id === selectedView.table
+			)?.columns;
+			setColumns(selectedTableColumns);
+		}
+	}, [selectedView]);
+
+	useEffect(() => {
+		if (addView) {
+			handleCancel();
+			setAddView(false);
+		}
+	}, [addView]);
 
 	const handleCreateView = async (e) => {
 		e.preventDefault();
 
-		// let bool = await checkUserEmail();
 		if (!viewName) {
 			return window.alert('Enter View name!');
 		} else if (!selectedTableId) {
@@ -75,12 +113,10 @@ export default function ViewConfig({
 				editFilter: viewData.editFilter,
 				editableCols: viewData.editableCols,
 			};
+
 			setViewDatas((prev) =>
 				prev === null ? [viewToSave] : [...prev, viewToSave]
 			);
-			setViewDataList((preVal) => {
-				return [...preVal, viewData];
-			});
 			handleCancel();
 		}
 	};
@@ -125,32 +161,7 @@ export default function ViewConfig({
 		formElement.current.reset();
 	};
 
-	useEffect(() => {
-		if (addView) {
-			handleCancel();
-			setAddView(false);
-		}
-	}, [addView]);
-
-	useEffect(() => {
-		if (selectedView.viewName || selectedView.name) {
-			setSelectedColumns(selectedView.selectedColumns || selectedView.columns);
-			setViewName(selectedView.viewName || selectedView.name);
-			setViewType(selectedView.viewType);
-			setAllowAction(selectedView.allowedAction || selectedView.allowedActions);
-			setRole(selectedView.role || selectedView.roles);
-			setSelectedTableId(selectedView.selectedTableId || selectedView.table);
-
-			const selectedTableColumns = userTables?.find(
-				(userTable) =>
-					userTable?._id === selectedView.selectedTableId || selectedView.table
-			)?.columns;
-
-			setColumns(selectedTableColumns);
-		}
-	}, [selectedView.viewName, selectedView.name]);
-
-	const updateViewList = async () => {
+	const handleUpdateView = async () => {
 		if (!viewName) {
 			return window.alert('Enter View name!');
 		} else if (!selectedTableId) {
@@ -160,14 +171,60 @@ export default function ViewConfig({
 		} else if (role.length === 0) {
 			return window.alert('Choose role!');
 		} else {
-			// TODO if new View added, add the viewData into selectedApp.createdViews
-			setViewDataList((preVal) => {
-				const index = preVal.findIndex((item) => item._id === selectedView._id);
-				preVal[index] = viewData;
-				return preVal;
-			});
-			handleCancel();
-			setSelectedView({});
+			const viewToSave = {
+				name: viewData.viewName,
+				table: viewData.selectedTableId,
+				columns: viewData.selectedColumns,
+				viewType: viewData.viewType,
+				allowedActions: viewData.allowedAction,
+				roles: viewData.role,
+				filter: viewData.filter,
+				userFilter: viewData.userFilter,
+				editFilter: viewData.editFilter,
+				editableCols: viewData.editableCols,
+			};
+
+			if (isObjectInArray(selectedView, viewDataList)) {
+				try {
+					const updatedView = await updateViewAPI(selectedView._id, viewToSave);
+					if (updatedView) {
+						window.alert(`View ${updatedView.name} updated successfully`);
+						setViewDataList((prev) => {
+							const indexToUpdate = prev.findIndex(
+								(view) => view._id === selectedView?._id
+							);
+							if (indexToUpdate !== -1) {
+								const updatedViewDataList = [...prev];
+								updatedViewDataList[indexToUpdate] = updatedView;
+								return updatedViewDataList;
+							}
+
+							return prev;
+						});
+
+						handleCancel();
+						setSelectedView(null);
+					}
+				} catch (error) {
+					console.error('Error updating the View: ', error);
+					window.alert(error);
+				}
+			} else if (isObjectInArray(selectedView, viewDatas)) {
+				setViewDatas((prev) => {
+					const indexToUpdate = prev?.findIndex(
+						(view) => JSON.stringify(view) === JSON.stringify(selectedView)
+					);
+
+					if (indexToUpdate !== -1) {
+						const updatedViewDatas = [...prev];
+						updatedViewDatas[indexToUpdate] = viewToSave;
+						window.alert(`View ${viewToSave.name} updated successfully`);
+						return updatedViewDatas;
+					}
+
+					return prev;
+				});
+			}
 		}
 	};
 
@@ -213,12 +270,35 @@ export default function ViewConfig({
 		return !(invalidEmails.length > 0);
 	}
 
-	const deleteViewList = () => {
-		setViewDataList((preVal) => {
-			const res = preVal.filter((item) => item._id !== selectedView._id);
-			return res;
-		});
-		handleCancel();
+	const handleDeleteView = async (selectedViewId) => {
+		// FIXME some bugs
+		// REVIEW DB view VS Local view
+		// TODO delete selectedView of viewDatas and update viewDatas and viewDataList
+		if (isObjectInArray(selectedView, viewDataList)) {
+			// TODO handle when existing View
+			const viewIdToBeDeleted = selectedView._id;
+			const result = await deleteViewAPI(selectedViewId);
+			// TODO loadAllApps() here? or just update the viewDataList?
+
+			if (result) {
+				setViewDataList((prev) => {
+					return prev.filter((view) => view._id !== viewIdToBeDeleted);
+				});
+				handleCancel();
+			} else {
+				window.alert('Failed to delete the View');
+			}
+		} else if (isObjectInArray(selectedView, viewDatas)) {
+			// TODO handle when local View
+
+			setViewDatas((prev) =>
+				prev === null ? [selectedView] : [...prev, selectedView]
+			);
+		}
+	};
+
+	const handleViewName = (e) => {
+		setViewName(e.target.value);
 	};
 
 	const handleSelectTable = (e) => {
@@ -305,6 +385,7 @@ export default function ViewConfig({
 		console.log(viewData);
 	};
 
+	// FIXME delete if not planning to use somewhere else
 	const handleUserFilterButtonChange = (e, name) => {
 		console.log(name);
 		setUserFilter(name);
@@ -316,11 +397,13 @@ export default function ViewConfig({
 		// console.log(viewData);
 	};
 
+	// FIXME delete if not planning to use somewhere else
 	const handleTableView = (e) => {
 		setViewType(e.target.value);
 		setEditFilter('');
 	};
 
+	// FIXME delete if not planning to use somewhere else
 	const handleDetailView = (e) => {
 		setViewType(e.target.value);
 		setFilter('');
@@ -342,7 +425,7 @@ export default function ViewConfig({
 				<label>View Name</label>
 				<input
 					value={viewName}
-					onChange={(e) => setViewName(e.target.value)}
+					onChange={(e) => handleViewName(e)}
 					type="text"
 					className="form-control"
 				/>
@@ -353,11 +436,7 @@ export default function ViewConfig({
 					<option value="">Select Table</option>
 					{userTables?.map((table) => (
 						<option
-							selected={
-								selectedView.selectedTableId || selectedView.table === table._id
-									? true
-									: false
-							}
+							selected={table._id === selectedView?.table ? true : false}
 							key={table._id}
 							value={table._id}
 						>
@@ -559,11 +638,11 @@ export default function ViewConfig({
 				<p>Selected Roles: {role.join(', ')}</p>
 			</div>
 
-			{selectedView.viewName || selectedView.name ? (
+			{selectedView !== null ? (
 				<div className="text-right">
 					<button
 						type="button"
-						onClick={deleteViewList}
+						onClick={() => handleDeleteView(selectedView._id)}
 						className="btn btn-danger can_btn"
 					>
 						Delete
@@ -571,7 +650,7 @@ export default function ViewConfig({
 					<button
 						type="button"
 						className="btn btn-info"
-						onClick={updateViewList}
+						onClick={handleUpdateView}
 					>
 						Save
 					</button>

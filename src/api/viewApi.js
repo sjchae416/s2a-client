@@ -62,7 +62,12 @@ export const updateViewAPI = async (id, viewData) => {
 			headers: defaultHeader,
 			body: JSON.stringify(viewData),
 		});
-		return response.json();
+
+		if (response.ok) {
+			return response.json();
+		} else {
+			return new Error(response.json().message);
+		}
 	} catch (error) {
 		console.error(error);
 	}
@@ -75,7 +80,12 @@ export const deleteViewAPI = async (id) => {
 			credentials: 'include',
 			headers: defaultHeader,
 		});
-		return response.status === 204;
+
+		if (response.ok) {
+			return response.status === 204;
+		} else {
+			return new Error(response.statusText);
+		}
 	} catch (error) {
 		console.error(error);
 	}

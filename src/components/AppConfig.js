@@ -47,7 +47,7 @@ export default function AppConfig({
 			setName(app.name);
 			setRoleMembershipSheet(app.roleMembershipSheet);
 			setSheetIndex(app.sheetIndex);
-		} else if (app === null && selectedApp !== null) {
+		} else if (selectedApp !== null) {
 			setName(selectedApp.name);
 			setRoleMembershipSheet(selectedApp.roleMembershipSheet);
 			setSheetIndex(selectedApp.sheetIndex);
