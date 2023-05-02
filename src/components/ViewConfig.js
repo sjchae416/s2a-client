@@ -21,9 +21,9 @@ export default function ViewConfig({
   const [filter, setFilter] = useState("");
   const [userFilter, setUserFilter] = useState("");
   const [editFilter, setEditFilter] = useState("");
-  const [editableCols, setEditableCols] = useState([]);
   const [boolConfigs, setBoolConfigs] = useState([]);
   const [emailConfigs, setEmailConfigs] = useState([]);
+  const [editableCols, setEditableCol] = useState([]);
   const [selectedEditColumns, setSelectedEditColumns] = useState([]);
   const [columns, setColumns] = useState([]);
   const [selectedTableId, setSelectedTableId] = useState("");
@@ -126,6 +126,7 @@ export default function ViewConfig({
     setColumns([]);
     setSelectedTableId("");
     setViewTable(null);
+    setEditableCol([]);
     formElement.current.reset();
   };
 
@@ -139,6 +140,7 @@ export default function ViewConfig({
   useEffect(() => {
     if (selectedView.viewName || selectedView.name) {
       setSelectedColumns(selectedView.selectedColumns || selectedView.columns);
+      setEditableCol(selectedView.editableCols || selectedView.editableCols);
       setViewName(selectedView.viewName || selectedView.name);
       setViewType(selectedView.viewType);
       setAllowAction(selectedView.allowedAction || selectedView.allowedActions);
@@ -247,10 +249,10 @@ export default function ViewConfig({
   const handleEditCheckboxChange = (e, column) => {
     const { name, checked } = e.target;
     if (checked) {
-      setSelectedEditColumns([...selectedEditColumns, name]);
+      setEditableCol([...editableCols, name]);
     } else {
-      setSelectedEditColumns(
-        selectedEditColumns.filter((column) => column !== name)
+      setEditableCol(
+        editableCols.filter((column) => column !== name)
       );
     }
   };
@@ -535,23 +537,23 @@ export default function ViewConfig({
 
             <div className="form-group">
               <label>Editable Columns</label>
-              {columns?.map((column) => (
-                <div key={column._id}>
+              {selectedColumns?.map((column) => (
+                <div key={column}>
                   <input
-                    checked={selectedEditColumns.includes(column.name)}
+                    checked={editableCols.includes(column)}
                     type="checkbox"
-                    id={`editcheckbox-${column.name}`}
-                    name={column.name}
-                    onChange={(e) => handleEditCheckboxChange(e, column.name)}
+                    id={`editcheckbox-${column}`}
+                    name={column}
+                    onChange={(e) => handleEditCheckboxChange(e, column)}
                   />
-                  <label htmlFor={`editcheckbox-${column.name}`}>
-                    {column.name}
+                  <label htmlFor={`editcheckbox-${column}`}>
+                    {column}
                   </label>
                 </div>
               ))}
             </div>
 
-            <p>Selected Editable Columns: {selectedEditColumns.join(", ")}</p>
+            <p>Selected Editable Columns: {editableCols.join(", ")}</p>
           </div>
         )}
       </div>

@@ -72,12 +72,6 @@ const Sidebar = ({
 	}
 
 	const handleSaveApp = async () => {
-		// if(selectedApp !== null) {
-		// 	// handle updating an app and then navigate to dashboard
-		// 	// TODO - check if the existing views have atleast one table view
-		// 	//console.log("existing app case");
-		// 	navigate('/');
-		// }
 		if (viewDatas && checkTableView(viewDatas)) {
 			try {
 				// if (selectedAppId) {
@@ -109,7 +103,7 @@ const Sidebar = ({
 		if (app && (viewDatas || viewDataList.length !== 0)) {
 			app.published = true;
 			setAppData(app);
-			handleSaveApp(app);
+			window.alert('Your app has been published! Now it is time to Save it.');
 		}
 		setIsPublishModalVisible(false);
 	};
