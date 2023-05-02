@@ -23,6 +23,7 @@ export default function ViewConfig({
   const [editFilter, setEditFilter] = useState("");
   const [boolConfigs, setBoolConfigs] = useState([]);
   const [emailConfigs, setEmailConfigs] = useState([]);
+  const [editableCols, setEditableCol] = useState([]);
   const [selectedEditColumns, setSelectedEditColumns] = useState([]);
   const [columns, setColumns] = useState([]);
   const [selectedTableId, setSelectedTableId] = useState("");
@@ -45,7 +46,7 @@ export default function ViewConfig({
     filter: filter,
     userFilter: userFilter,
     editFilter: editFilter,
-    editableCols: selectedEditColumns,
+    editableCols: editableCols,
   };
 
   const handleCreateView = async (e) => {
@@ -76,7 +77,7 @@ export default function ViewConfig({
         filter: viewData.filter,
         userFilter: viewData.userFilter,
         editFilter: viewData.editFilter,
-        editableCols: viewData.selectedEditColumns,
+        editableCols: viewData.editableCols,
       };
       setViewDatas((prev) =>
         prev === null ? [viewToSave] : [...prev, viewToSave]
@@ -125,7 +126,7 @@ export default function ViewConfig({
     setColumns([]);
     setSelectedTableId("");
     setViewTable(null);
-    setSelectedEditColumns([]);
+    setEditableCol([]);
     formElement.current.reset();
   };
 
@@ -139,7 +140,7 @@ export default function ViewConfig({
   useEffect(() => {
     if (selectedView.viewName || selectedView.name) {
       setSelectedColumns(selectedView.selectedColumns || selectedView.columns);
-      setSelectedEditColumns(selectedView.selectedEditColumns || selectedView.editableCols);
+      setEditableCol(selectedView.editableCols || selectedView.editableCols);
       setViewName(selectedView.viewName || selectedView.name);
       setViewType(selectedView.viewType);
       setAllowAction(selectedView.allowedAction || selectedView.allowedActions);
@@ -248,10 +249,10 @@ export default function ViewConfig({
   const handleEditCheckboxChange = (e, column) => {
     const { name, checked } = e.target;
     if (checked) {
-      setSelectedEditColumns([...selectedEditColumns, name]);
+      setEditableCol([...editableCols, name]);
     } else {
-      setSelectedEditColumns(
-        selectedEditColumns.filter((column) => column !== name)
+      setEditableCol(
+        editableCols.filter((column) => column !== name)
       );
     }
   };
@@ -539,7 +540,7 @@ export default function ViewConfig({
               {selectedColumns?.map((column) => (
                 <div key={column}>
                   <input
-                    checked={selectedEditColumns.includes(column)}
+                    checked={editableCols.includes(column)}
                     type="checkbox"
                     id={`editcheckbox-${column}`}
                     name={column}
@@ -552,7 +553,7 @@ export default function ViewConfig({
               ))}
             </div>
 
-            <p>Selected Editable Columns: {selectedEditColumns.join(", ")}</p>
+            <p>Selected Editable Columns: {editableCols.join(", ")}</p>
           </div>
         )}
       </div>
