@@ -64,12 +64,12 @@ export default function TableView({ view, listViews }) {
       url: data.url,
       sheetIndex: data.sheetIndex,
     };
-    const tableData = await loadSheetAPI(sheetData);
+    const sheetTableData = await loadSheetAPI(sheetData);
     //gets the array of the data except for the name of the column
 
-    const result = tableData.slice(1).map((row) => {
+    const result = sheetTableData.slice(1).map((row) => {
       const obj = {};
-      tableData[0].forEach((key, index) => {
+      sheetTableData[0].forEach((key, index) => {
         obj[key] = row[index];
       });
       return obj;
