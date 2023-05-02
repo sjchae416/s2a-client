@@ -87,7 +87,8 @@ const Sidebar = ({
 				navigate('/');
 			} catch (error) {
 				// TODO delete viewDatas.views when failed to create the App
-				window.alert(error);
+				console.error(error);
+				// window.alert(error);
 				console.error('Error while saving the Views or App: ', error);
 				setIsModalVisible(false);
 			}

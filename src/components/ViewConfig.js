@@ -179,47 +179,47 @@ export default function ViewConfig({
     }
   };
 
-  async function checkUserEmail(col) {
-    // REMOVE LATER
-    // ^ matches the start of the string
-    // [a-z0-9] matches any lowercase letter or digit
-    // (\.?[a-z0-9]){4,28} matches 4 to 28 occurrences of an optional dot followed by a lowercase letter or digit
-    // [a-z0-9] matches any lowercase letter or digit
-    // @ matches the "@" symbol
-    // [a-z0-9]+\. matches one or more lowercase letters or digits followed by a dot
-    // [a-z]{2,} matches two or more lowercase letters representing the domain name (e.g., com, org, net, etc.)
-    // $ matches the end of the string
+  // async function checkUserEmail(col) {
+  //   // REMOVE LATER
+  //   // ^ matches the start of the string
+  //   // [a-z0-9] matches any lowercase letter or digit
+  //   // (\.?[a-z0-9]){4,28} matches 4 to 28 occurrences of an optional dot followed by a lowercase letter or digit
+  //   // [a-z0-9] matches any lowercase letter or digit
+  //   // @ matches the "@" symbol
+  //   // [a-z0-9]+\. matches one or more lowercase letters or digits followed by a dot
+  //   // [a-z]{2,} matches two or more lowercase letters representing the domain name (e.g., com, org, net, etc.)
+  //   // $ matches the end of the string
 
-    const emailRegex =
-      /^[a-z0-9](\.?[a-z0-9]){4,28}[a-z0-9]@[a-z0-9]+\.[a-z]{2,}$/i; // regular expression for email format
+  //   const emailRegex =
+  //     /^[a-z0-9](\.?[a-z0-9]){4,28}[a-z0-9]@[a-z0-9]+\.[a-z]{2,}$/i; // regular expression for email format
 
-    const sheetData = {
-      name: viewTable.name,
-      url: viewTable.url,
-      sheetIndex: viewTable.sheetIndex,
-    };
-    const data = await loadSheetAPI(sheetData);
+  //   const sheetData = {
+  //     name: viewTable.name,
+  //     url: viewTable.url,
+  //     sheetIndex: viewTable.sheetIndex,
+  //   };
+  //   const data = await loadSheetAPI(sheetData);
 
-    console.log(data);
-    let emailIndex = -1;
-    const headerRow = data[0];
-    for (let i = 0; i < headerRow.length; i++) {
-      if (headerRow[i] === col.name) {
-        emailIndex = i;
-        break;
-      }
-    }
+  //   console.log(data);
+  //   let emailIndex = -1;
+  //   const headerRow = data[0];
+  //   for (let i = 0; i < headerRow.length; i++) {
+  //     if (headerRow[i] === col.name) {
+  //       emailIndex = i;
+  //       break;
+  //     }
+  //   }
 
-    const emails = [];
-    for (let i = 1; i < data.length; i++) {
-      const row = data[i];
-      console.log(row);
-    }
+  //   const emails = [];
+  //   for (let i = 1; i < data.length; i++) {
+  //     const row = data[i];
+  //     console.log(row);
+  //   }
 
-    const invalidEmails = emails.filter((email) => !emailRegex.test(email));
-    console.log(invalidEmails);
-    return !(invalidEmails.length > 0);
-  }
+  //   const invalidEmails = emails.filter((email) => !emailRegex.test(email));
+  //   console.log(invalidEmails);
+  //   return !(invalidEmails.length > 0);
+  // }
 
   const deleteViewList = () => {
     setViewDataList((preVal) => {
@@ -257,24 +257,31 @@ export default function ViewConfig({
 
   const handleUserFilterCheckboxChange = (e) => {
     const { checked } = e.target;
+    // if (checked) {
+    //   // Filter config objects where type is email
+    //   const textConfigs = columns.filter(
+    //     (columns) => columns.type === "string"
+    //   );
+    //   // go through columns if email then push to emailConfigs
+    //   for (let i = 0; i < textConfigs.length; i++) {
+    //     if (checkUserEmail(textConfigs[i])) emailConfigs.push(textConfigs[i]);
+    //   }
+    //   if (emailConfigs.length > 0) setEmailConfigs(emailConfigs);
+    //   else {
+    //     return window.alert("There are no columns with emails");
+    //   }
+    // } else {
+    //   // Clear the bool configs from state
+    //   setEmailConfigs([]);
+    //   setUserFilter("");
+    //   console.log(viewData);
+    // }
     if (checked) {
-      // Filter config objects where type is email
-      const textConfigs = columns.filter(
-        (columns) => columns.type === "string"
-      );
-      // go through columns if email then push to emailConfigs
-      for (let i = 0; i < textConfigs.length; i++) {
-        if (checkUserEmail(textConfigs[i])) emailConfigs.push(textConfigs[i]);
-      }
-      if (emailConfigs.length > 0) setEmailConfigs(emailConfigs);
-      else {
-        return window.alert("There are no columns with emails");
-      }
+      const emailConfigs = columns.filter((columns) => columns.type === "string");
+      setEmailConfigs(emailConfigs);
     } else {
-      // Clear the bool configs from state
       setEmailConfigs([]);
       setUserFilter("");
-      console.log(viewData);
     }
   };
 

@@ -262,7 +262,8 @@ export default function TableConfig({
 				window.alert('Failed to delete the Table');
 			}
 		} catch (error) {
-			window.alert(error);
+			console.error(error);
+			// window.alert(error);
 			console.error('Error while deleting the Table: ', error);
 		}
 	};

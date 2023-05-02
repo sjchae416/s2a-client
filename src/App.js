@@ -197,7 +197,8 @@ const App = () => {
 				setRunnableApps(null);
 			}
 		} catch (error) {
-			window.alert(error);
+			console.error(error);
+			// window.alert(error);
 			return new Error('Error filtering runnableApps: ', error);
 		}
 	};

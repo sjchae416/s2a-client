@@ -116,7 +116,8 @@ export default function AppConfig({
 				window.alert('Failed to delete the App');
 			}
 		} catch (error) {
-			window.alert(error);
+			console.error(error);
+			// window.alert(error);
 			console.error('Error while deleting the App: ', error);
 		}
 
