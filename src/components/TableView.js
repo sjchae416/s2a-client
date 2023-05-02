@@ -206,9 +206,9 @@ export default function TableView({ view, listViews }) {
       range: sheetIdx,
       values: [values],
     };
-    // console.log('tableData.url', tableData.url);
-    // console.log('sheetIdx', sheetIdx);
-    // console.log('values', values);
+    console.log('tableData.url', tableData.url);
+    console.log('sheetIdx', sheetIdx);
+    console.log('values', values);
 
     await updateSheetAPI(sheetData);
 

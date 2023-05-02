@@ -177,7 +177,7 @@ const App = () => {
 
 					const accessibleViews = appViews.filter((appView) => {
 						return accessibleApp.userRoles.some((userRole) => {
-							return appView.roles.includes(userRole);
+							return appView?.roles.includes(userRole);
 						});
 					});
 
