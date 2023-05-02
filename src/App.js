@@ -381,6 +381,7 @@ const App = () => {
 						element={
 							user ? (
 								<ManageTablePage
+                  setTables={setTables}
 									tableIds={tableIds}
 									userTables={userTables}
 									// developerApps={developerApps}

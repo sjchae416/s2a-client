@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { TableConfig, List, NavigationBar } from '../components';
 import UserContext from '../UserContext';
 
-export default function ManageTablePage({ tableIds, userTables }) {
+export default function ManageTablePage({ tableIds, userTables, setTables }) {
 	const { user, setUser } = useContext(UserContext);
 	const [selectedTable, setSelectedTable] = useState(null);
 	const [addTable, setAddTable] = useState(false);
@@ -37,6 +37,7 @@ export default function ManageTablePage({ tableIds, userTables }) {
 						</div>
 						<div className="col-auto">
 							<TableConfig
+                setTables={setTables}
 								user={user}
 								setUser={setUser}
 								tableIds={tableIds}
