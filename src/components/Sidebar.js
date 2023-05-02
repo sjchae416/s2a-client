@@ -14,6 +14,7 @@ const Sidebar = ({
 	setView,
 	app,
 	setAppData,
+	selectedApp,
 	setSelectedApp,
 	viewDatas,
 	setViewDatas,
@@ -71,7 +72,13 @@ const Sidebar = ({
 	}
 
 	const handleSaveApp = async () => {
-		if (viewDatas && checkTableView(viewDatas)) {
+		if(selectedApp !== null) {
+			// handle updating an app and then navigate to dashboard
+			// TODO - check if the existing views have atleast one table view
+			//console.log("existing app case");
+			navigate('/');
+		}
+		else if (app!==null && viewDatas && checkTableView(viewDatas)) {
 			try {
 				// if (selectedAppId) {
 				//  // TODO if there are new viewDdta, save Views
@@ -101,6 +108,7 @@ const Sidebar = ({
 		if (app && (viewDatas || viewDataList.length !== 0)) {
 			app.published = true;
 			setAppData(app);
+			handleSaveApp(app);
 		}
 		setIsPublishModalVisible(false);
 	};
