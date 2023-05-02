@@ -32,6 +32,7 @@ export default function ManageAppPage({
 
 	useEffect(() => {
 		if (selectedApp !== null) {
+			// setViewDatas(selectedApp.cretedViews);
 			setViewDataList(selectedApp.createdViews);
 		}
 	}, [selectedApp]);
@@ -41,9 +42,9 @@ export default function ManageAppPage({
 		setSelectedApp(null);
 		setShowTable(false);
 		setReloadApp(false);
-    setViewDataList([]);
-    //setAddApp(true);
-    setSelectedView({});
+		setViewDataList([]);
+		//setAddApp(true);
+		setSelectedView({});
 	};
 
 	return (
@@ -60,6 +61,7 @@ export default function ManageAppPage({
 							setView={setView}
 							app={app}
 							setAppData={setAppData}
+							selectedApp={selectedApp}
 							setSelectedApp={setSelectedApp}
 							viewDatas={viewDatas}
 							setViewDatas={setViewDatas}
@@ -140,6 +142,7 @@ export default function ManageAppPage({
 									<ViewConfig
 										viewRole={viewRole}
 										userTables={userTables}
+										selectedApp={selectedApp}
 										viewDatas={viewDatas}
 										setViewDatas={setViewDatas}
 										setViewDataList={setViewDataList}

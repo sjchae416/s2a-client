@@ -1,605 +1,597 @@
-import React, { useEffect, useRef, useState } from "react";
-import shortid from "shortid";
-import { loadSheetAPI } from "../api";
+import React, { useEffect, useRef, useState } from 'react';
+import shortid from 'shortid';
+import { loadSheetAPI } from '../api';
 
 export default function ViewConfig({
-  viewRole,
-  userTables,
-  viewDatas,
-  setViewDatas,
-  setViewDataList,
-  selectedView,
-  setSelectedView,
-  addView,
-  setAddView,
+	viewRole,
+	userTables,
+	selectedApp,
+	viewDatas,
+	setViewDatas,
+	setViewDataList,
+	selectedView,
+	setSelectedView,
+	addView,
+	setAddView,
 }) {
-  const [viewName, setViewName] = useState("");
-  const [selectedColumns, setSelectedColumns] = useState([]);
-  const [viewType, setViewType] = useState("Table");
-  const [allowedAction, setAllowAction] = useState([]);
-  const [role, setRole] = useState([]);
-  const [filter, setFilter] = useState("");
-  const [userFilter, setUserFilter] = useState("");
-  const [editFilter, setEditFilter] = useState("");
-  const [editableCols, setEditableCols] = useState([]);
-  const [boolConfigs, setBoolConfigs] = useState([]);
-  const [emailConfigs, setEmailConfigs] = useState([]);
-  const [selectedEditColumns, setSelectedEditColumns] = useState([]);
-  const [columns, setColumns] = useState([]);
-  const [selectedTableId, setSelectedTableId] = useState("");
-  const [viewTable, setViewTable] = useState(null);
+	const [viewName, setViewName] = useState('');
+	const [selectedColumns, setSelectedColumns] = useState([]);
+	const [viewType, setViewType] = useState('Table');
+	const [allowedAction, setAllowAction] = useState([]);
+	const [role, setRole] = useState([]);
+	const [filter, setFilter] = useState('');
+	const [userFilter, setUserFilter] = useState('');
+	const [editFilter, setEditFilter] = useState('');
+	const [editableCols, setEditableCols] = useState([]);
+	const [boolConfigs, setBoolConfigs] = useState([]);
+	const [emailConfigs, setEmailConfigs] = useState([]);
+	const [selectedEditColumns, setSelectedEditColumns] = useState([]);
+	const [columns, setColumns] = useState([]);
+	const [selectedTableId, setSelectedTableId] = useState('');
+	const [viewTable, setViewTable] = useState(null);
 
-  const formElement = useRef();
+	const formElement = useRef();
 
-  useEffect(() => {
-    console.log("🚀 ~ file: ViewConfig.js:34 ~ viewDatas:", viewDatas);
-  }, [viewDatas]);
+	useEffect(() => {
+		console.log('🚀 ~ file: ViewConfig.js:34 ~ viewDatas:', viewDatas);
+	}, [viewDatas]);
 
-  const viewData = {
-    _id: shortid.generate(),
-    viewName: viewName,
-    selectedTableId: selectedTableId,
-    selectedColumns: selectedColumns,
-    viewType: viewType,
-    allowedAction: allowedAction,
-    role: role,
-    filter: filter,
-    userFilter: userFilter,
-    editFilter: editFilter,
-    editableCols: editableCols,
-  };
+	const viewData = {
+		_id: shortid.generate(),
+		viewName: viewName,
+		selectedTableId: selectedTableId,
+		selectedColumns: selectedColumns,
+		viewType: viewType,
+		allowedAction: allowedAction,
+		role: role,
+		filter: filter,
+		userFilter: userFilter,
+		editFilter: editFilter,
+		editableCols: editableCols,
+	};
 
-  const handleCreateView = async (e) => {
-    e.preventDefault();
+	const handleCreateView = async (e) => {
+		e.preventDefault();
 
-    // let bool = await checkUserEmail();
+		// let bool = await checkUserEmail();
+		if (!viewName) {
+			return window.alert('Enter View name!');
+		} else if (!selectedTableId) {
+			return window.alert('Select table!');
+		} else if (selectedColumns.length === 0) {
+			return window.alert('Choose columns!');
+		} else if (role.length === 0) {
+			return window.alert('Choose role!');
+		} else {
+			const viewToSave = {
+				name: viewData.viewName,
+				table: viewData.selectedTableId,
+				columns: viewData.selectedColumns,
+				viewType: viewData.viewType,
+				allowedActions: viewData.allowedAction,
+				roles: viewData.role,
+				filter: viewData.filter,
+				userFilter: viewData.userFilter,
+				editFilter: viewData.editFilter,
+				editableCols: viewData.editableCols,
+			};
+			setViewDatas((prev) =>
+				prev === null ? [viewToSave] : [...prev, viewToSave]
+			);
+			setViewDataList((preVal) => {
+				return [...preVal, viewData];
+			});
+			handleCancel();
+		}
+	};
 
-    // if (!bool) {
-    //   return window.alert("Invalid Email in Selected Table");
-    // }
+	const handleRoleChange = (e) => {
+		const { value, checked } = e.target;
+		if (checked) {
+			setRole([...role, value]);
+		} else {
+			setRole(role.filter((item) => item !== value));
+		}
+	};
 
-    if (!viewName) {
-      return window.alert("Enter View name!");
-    } else if (!selectedTableId) {
-      return window.alert("Select table!");
-    } else if (selectedColumns.length === 0) {
-      return window.alert("Choose columns!");
-    } else if (role.length === 0) {
-      return window.alert("Choose role!");
-    } else {
-      const viewToSave = {
-        name: viewData.viewName,
-        table: viewData.selectedTableId,
-        columns: viewData.selectedColumns,
-        viewType: viewData.viewType,
-        allowedActions: viewData.allowedAction,
-        roles: viewData.role,
-        filter: viewData.filter,
-        userFilter: viewData.userFilter,
-        editFilter: viewData.editFilter,
-        editableCols: viewData.editableCols,
-      };
-      setViewDatas((prev) =>
-        prev === null ? [viewToSave] : [...prev, viewToSave]
-      );
-      setViewDataList((preVal) => {
-        return [...preVal, viewData];
-      });
-      handleCancel();
-    }
-  };
+	const handleCheckboxChange = (e, column) => {
+		const { name, checked } = e.target;
+		if (checked) {
+			setSelectedColumns([...selectedColumns, name]);
+		} else {
+			setSelectedColumns(selectedColumns.filter((column) => column !== name));
+		}
+	};
 
-  const handleRoleChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      setRole([...role, value]);
-    } else {
-      setRole(role.filter((item) => item !== value));
-    }
-  };
+	const handleAllowedActionCheckboxChange = (e, column) => {
+		const { name, checked } = e.target;
+		if (checked) {
+			setAllowAction([...allowedAction, name]);
+		} else {
+			setAllowAction(allowedAction.filter((column) => column !== name));
+		}
+	};
 
-  const handleCheckboxChange = (e, column) => {
-    const { name, checked } = e.target;
-    if (checked) {
-      setSelectedColumns([...selectedColumns, name]);
-    } else {
-      setSelectedColumns(selectedColumns.filter((column) => column !== name));
-    }
-  };
+	const handleCancel = () => {
+		setSelectedColumns([]);
+		//setShowTable(false);
+		setViewName('');
+		setViewType('Table');
+		setAllowAction([]);
+		setRole([]);
+		setColumns([]);
+		setSelectedTableId('');
+		setViewTable(null);
+		formElement.current.reset();
+	};
 
-  const handleAllowedActionCheckboxChange = (e, column) => {
-    const { name, checked } = e.target;
-    if (checked) {
-      setAllowAction([...allowedAction, name]);
-    } else {
-      setAllowAction(allowedAction.filter((column) => column !== name));
-    }
-  };
+	useEffect(() => {
+		if (addView) {
+			handleCancel();
+			setAddView(false);
+		}
+	}, [addView]);
 
-  const handleCancel = () => {
-    setSelectedColumns([]);
-    //setShowTable(false);
-    setViewName("");
-    setViewType("Table");
-    setAllowAction([]);
-    setRole([]);
-    setColumns([]);
-    setSelectedTableId("");
-    setViewTable(null);
-    formElement.current.reset();
-  };
+	useEffect(() => {
+		if (selectedView.viewName || selectedView.name) {
+			setSelectedColumns(selectedView.selectedColumns || selectedView.columns);
+			setViewName(selectedView.viewName || selectedView.name);
+			setViewType(selectedView.viewType);
+			setAllowAction(selectedView.allowedAction || selectedView.allowedActions);
+			setRole(selectedView.role || selectedView.roles);
+			setSelectedTableId(selectedView.selectedTableId || selectedView.table);
 
-  useEffect(() => {
-    if (addView) {
-      handleCancel();
-      setAddView(false);
-    }
-  }, [addView]);
+			const selectedTableColumns = userTables?.find(
+				(userTable) =>
+					userTable?._id === selectedView.selectedTableId || selectedView.table
+			)?.columns;
 
-  useEffect(() => {
-    if (selectedView.viewName || selectedView.name) {
-      setSelectedColumns(selectedView.selectedColumns || selectedView.columns);
-      setViewName(selectedView.viewName || selectedView.name);
-      setViewType(selectedView.viewType);
-      setAllowAction(selectedView.allowedAction || selectedView.allowedActions);
-      setRole(selectedView.role || selectedView.roles);
-      setSelectedTableId(selectedView.selectedTableId || selectedView.table);
+			setColumns(selectedTableColumns);
+		}
+	}, [selectedView.viewName, selectedView.name]);
 
-      const selectedTableColumns = userTables?.find(
-        (userTable) =>
-          userTable?._id === selectedView.selectedTableId || selectedView.table
-      )?.columns;
+	const updateViewList = async () => {
+		if (!viewName) {
+			return window.alert('Enter View name!');
+		} else if (!selectedTableId) {
+			return window.alert('Select table!');
+		} else if (selectedColumns.length === 0) {
+			return window.alert('Choose columns!');
+		} else if (role.length === 0) {
+			return window.alert('Choose role!');
+		} else {
+			// TODO if new View added, add the viewData into selectedApp.createdViews
+			setViewDataList((preVal) => {
+				const index = preVal.findIndex((item) => item._id === selectedView._id);
+				preVal[index] = viewData;
+				return preVal;
+			});
+			handleCancel();
+			setSelectedView({});
+		}
+	};
 
-      setColumns(selectedTableColumns);
-    }
-  }, [selectedView.viewName, selectedView.name]);
+	async function checkUserEmail(col) {
+		// REMOVE LATER
+		// ^ matches the start of the string
+		// [a-z0-9] matches any lowercase letter or digit
+		// (\.?[a-z0-9]){4,28} matches 4 to 28 occurrences of an optional dot followed by a lowercase letter or digit
+		// [a-z0-9] matches any lowercase letter or digit
+		// @ matches the "@" symbol
+		// [a-z0-9]+\. matches one or more lowercase letters or digits followed by a dot
+		// [a-z]{2,} matches two or more lowercase letters representing the domain name (e.g., com, org, net, etc.)
+		// $ matches the end of the string
 
-  const updateViewList = async () => {
-    // let bool = await checkUserEmail();
-    // if (!bool) {
-    //   return window.alert("Invalid Email in Selected Table");
-    // }
+		const emailRegex =
+			/^[a-z0-9](\.?[a-z0-9]){4,28}[a-z0-9]@[a-z0-9]+\.[a-z]{2,}$/i; // regular expression for email format
 
-    if (!viewName) {
-      return window.alert("Enter View name!");
-    } else if (!selectedTableId) {
-      return window.alert("Select table!");
-    } else if (selectedColumns.length === 0) {
-      return window.alert("Choose columns!");
-    } else if (role.length === 0) {
-      return window.alert("Choose role!");
-    } else {
-      setViewDataList((preVal) => {
-        const index = preVal.findIndex((item) => item._id === selectedView._id);
-        preVal[index] = viewData;
-        return preVal;
-      });
-      handleCancel();
-      setSelectedView({});
-    }
-  };
+		const sheetData = {
+			name: viewTable.name,
+			url: viewTable.url,
+			sheetIndex: viewTable.sheetIndex,
+		};
+		const data = await loadSheetAPI(sheetData);
 
-  async function checkUserEmail(col) {
-    // REMOVE LATER
-    // ^ matches the start of the string
-    // [a-z0-9] matches any lowercase letter or digit
-    // (\.?[a-z0-9]){4,28} matches 4 to 28 occurrences of an optional dot followed by a lowercase letter or digit
-    // [a-z0-9] matches any lowercase letter or digit
-    // @ matches the "@" symbol
-    // [a-z0-9]+\. matches one or more lowercase letters or digits followed by a dot
-    // [a-z]{2,} matches two or more lowercase letters representing the domain name (e.g., com, org, net, etc.)
-    // $ matches the end of the string
+		console.log(data);
+		let emailIndex = -1;
+		const headerRow = data[0];
+		for (let i = 0; i < headerRow.length; i++) {
+			if (headerRow[i] === col.name) {
+				emailIndex = i;
+				break;
+			}
+		}
 
-    const emailRegex =
-      /^[a-z0-9](\.?[a-z0-9]){4,28}[a-z0-9]@[a-z0-9]+\.[a-z]{2,}$/i; // regular expression for email format
+		const emails = [];
+		for (let i = 1; i < data.length; i++) {
+			const row = data[i];
+			console.log(row);
+		}
 
-    const sheetData = {
-      name: viewTable.name,
-      url: viewTable.url,
-      sheetIndex: viewTable.sheetIndex,
-    };
-    const data = await loadSheetAPI(sheetData);
+		const invalidEmails = emails.filter((email) => !emailRegex.test(email));
+		console.log(invalidEmails);
+		return !(invalidEmails.length > 0);
+	}
 
-    console.log(data);
-    let emailIndex = -1;
-    const headerRow = data[0];
-    for (let i = 0; i < headerRow.length; i++) {
-      if (headerRow[i] === col.name) {
-        emailIndex = i;
-        break;
-      }
-    }
+	const deleteViewList = () => {
+		setViewDataList((preVal) => {
+			const res = preVal.filter((item) => item._id !== selectedView._id);
+			return res;
+		});
+		handleCancel();
+	};
 
-    const emails = [];
-    for (let i = 1; i < data.length; i++) {
-      const row = data[i];
-      console.log(row);
-    }
+	const handleSelectTable = (e) => {
+		const table = userTables?.find((item) => item?._id === e.target.value);
+		setViewTable(table);
+		setSelectedTableId(e.target.value);
 
-    const invalidEmails = emails.filter((email) => !emailRegex.test(email));
-    console.log(invalidEmails);
-    return !(invalidEmails.length > 0);
-  }
+		if (e.target.value) {
+			const selectedTableColumns = userTables?.find(
+				(userTable) => userTable?._id === e.target.value
+			)?.columns;
+			setColumns(selectedTableColumns);
+		} else {
+			setColumns([]);
+		}
+	};
 
-  const deleteViewList = () => {
-    setViewDataList((preVal) => {
-      const res = preVal.filter((item) => item._id !== selectedView._id);
-      return res;
-    });
-    handleCancel();
-  };
+	const handleEditCheckboxChange = (e, column) => {
+		const { name, checked } = e.target;
+		if (checked) {
+			setSelectedEditColumns([...selectedEditColumns, name]);
+		} else {
+			setSelectedEditColumns(
+				selectedEditColumns.filter((column) => column !== name)
+			);
+		}
+	};
 
-  const handleSelectTable = (e) => {
-    const table = userTables?.find((item) => item?._id === e.target.value);
-    setViewTable(table);
-    setSelectedTableId(e.target.value);
+	const handleUserFilterCheckboxChange = (e) => {
+		const { checked } = e.target;
+		if (checked) {
+			// Filter config objects where type is email
+			const textConfigs = columns.filter(
+				(columns) => columns.type === 'string'
+			);
+			// go through columns if email then push to emailConfigs
+			for (let i = 0; i < textConfigs.length; i++) {
+				if (checkUserEmail(textConfigs[i])) emailConfigs.push(textConfigs[i]);
+			}
+			if (emailConfigs.length > 0) setEmailConfigs(emailConfigs);
+			else {
+				return window.alert('There are no columns with emails');
+			}
+		} else {
+			// Clear the bool configs from state
+			setEmailConfigs([]);
+			setUserFilter('');
+			console.log(viewData);
+		}
+	};
 
-    if (e.target.value) {
-      const selectedTableColumns = userTables?.find(
-        (userTable) => userTable?._id === e.target.value
-      )?.columns;
-      setColumns(selectedTableColumns);
-    } else {
-      setColumns([]);
-    }
-  };
+	const handleFilterCheckboxChange = (e) => {
+		const { checked } = e.target;
+		if (checked) {
+			// Filter config objects where type is bool
+			const boolConfigs = columns.filter((columns) => columns.type === 'bool');
+			// Set the filtered bool configs to state
+			setBoolConfigs(boolConfigs);
+		} else {
+			// Clear the bool configs from state
+			setBoolConfigs([]);
+			setFilter('');
+		}
+	};
 
-  const handleEditCheckboxChange = (e, column) => {
-    const { name, checked } = e.target;
-    if (checked) {
-      setSelectedEditColumns([...selectedEditColumns, name]);
-    } else {
-      setSelectedEditColumns(
-        selectedEditColumns.filter((column) => column !== name)
-      );
-    }
-  };
+	const handleEditFilterCheckboxChange = (e) => {
+		const { checked } = e.target;
+		if (checked) {
+			// Filter config objects where type is bool
+			const boolConfigs = columns.filter((columns) => columns.type === 'bool');
+			// Set the filtered bool configs to state
+			setBoolConfigs(boolConfigs);
+		} else {
+			// Clear the bool configs from state
+			setBoolConfigs([]);
+			setEditFilter('');
+			//console.log(viewData);
+		}
+	};
 
-  const handleUserFilterCheckboxChange = (e) => {
-    const { checked } = e.target;
-    if (checked) {
-      // Filter config objects where type is email
-      const textConfigs = columns.filter(
-        (columns) => columns.type === "string"
-      );
-      // go through columns if email then push to emailConfigs
-      for (let i = 0; i < textConfigs.length; i++) {
-        if (checkUserEmail(textConfigs[i])) emailConfigs.push(textConfigs[i]);
-      }
-      if (emailConfigs.length > 0) setEmailConfigs(emailConfigs);
-      else {
-        return window.alert("There are no columns with emails");
-      }
-    } else {
-      // Clear the bool configs from state
-      setEmailConfigs([]);
-      setUserFilter("");
-      console.log(viewData);
-    }
-  };
+	const handleFilterButtonChange = (e, name) => {
+		console.log(name);
+		setFilter(name);
+		console.log(viewData);
+	};
 
-  const handleFilterCheckboxChange = (e) => {
-    const { checked } = e.target;
-    if (checked) {
-      // Filter config objects where type is bool
-      const boolConfigs = columns.filter((columns) => columns.type === "bool");
-      // Set the filtered bool configs to state
-      setBoolConfigs(boolConfigs);
-    } else {
-      // Clear the bool configs from state
-      setBoolConfigs([]);
-      setFilter("");
-    }
-  };
+	const handleUserFilterButtonChange = (e, name) => {
+		console.log(name);
+		setUserFilter(name);
+	};
 
-  const handleEditFilterCheckboxChange = (e) => {
-    const { checked } = e.target;
-    if (checked) {
-      // Filter config objects where type is bool
-      const boolConfigs = columns.filter((columns) => columns.type === "bool");
-      // Set the filtered bool configs to state
-      setBoolConfigs(boolConfigs);
-    } else {
-      // Clear the bool configs from state
-      setBoolConfigs([]);
-      setEditFilter("");
-      //console.log(viewData);
-    }
-  };
+	const handleEditFilterButtonChange = (e, name) => {
+		// console.log(name);
+		setEditFilter(name);
+		// console.log(viewData);
+	};
 
-  const handleFilterButtonChange = (e, name) => {
-    console.log(name);
-    setFilter(name);
-    console.log(viewData);
-  };
+	const handleTableView = (e) => {
+		setViewType(e.target.value);
+		setEditFilter('');
+	};
 
-  const handleUserFilterButtonChange = (e, name) => {
-    console.log(name);
-    setUserFilter(name);
-  };
+	const handleDetailView = (e) => {
+		setViewType(e.target.value);
+		setFilter('');
+		setUserFilter('');
+	};
 
-  const handleEditFilterButtonChange = (e, name) => {
-    // console.log(name);
-    setEditFilter(name);
-    // console.log(viewData);
-  };
+	return (
+		<form
+			ref={formElement}
+			onSubmit={handleCreateView}
+			className="card"
+			style={{
+				margin: '10px auto',
+				width: '480px',
+				maxWidth: '100%',
+			}}
+		>
+			<div className="form-group">
+				<label>View Name</label>
+				<input
+					value={viewName}
+					onChange={(e) => setViewName(e.target.value)}
+					type="text"
+					className="form-control"
+				/>
+			</div>
+			<div className="form-group">
+				<label>Table</label>
+				<select onChange={(e) => handleSelectTable(e)} className="form-control">
+					<option value="">Select Table</option>
+					{userTables?.map((table) => (
+						<option
+							selected={
+								selectedView.selectedTableId || selectedView.table === table._id
+									? true
+									: false
+							}
+							key={table._id}
+							value={table._id}
+						>
+							{table.name}
+						</option>
+					))}
+				</select>
+			</div>
+			<div>
+				<div className="form-group">
+					<label>Columns</label>
+					{columns.map((column) => (
+						<div key={column._id}>
+							<input
+								checked={selectedColumns.includes(column.name)}
+								type="checkbox"
+								id={`checkbox-${column.name}`}
+								name={column.name}
+								value={column.name}
+								onChange={(e) => handleCheckboxChange(e)}
+							/>
+							<label htmlFor={`checkbox-${column.name}`}>{column.name}</label>
+						</div>
+					))}
+				</div>
+				<p>Selected Columns: {selectedColumns.join(', ')}</p>
+			</div>
+			<div className="form-group">
+				<label className="can_btn">View Type</label>{' '}
+				<input
+					checked={viewType === 'Table' ? true : false}
+					onChange={(e) => {
+						setAllowAction([]);
+						setViewType(e.target.value);
+					}}
+					type="radio"
+					id="Table"
+					name="view_type"
+					value="Table"
+				/>
+				<label htmlFor="Table">Table</label>
+				<input
+					checked={viewType === 'Detail' ? true : false}
+					onChange={(e) => {
+						setAllowAction([]);
+						setViewType(e.target.value);
+					}}
+					type="radio"
+					id="Detail"
+					name="view_type"
+					value="Detail"
+				/>
+				<label htmlFor="Detail">Detail</label>
+			</div>
+			<div className="form-group">
+				<label>Allowed Actions</label>
+				{viewType === 'Table'
+					? ['Add Record', 'Delete Record'].map((record) => (
+							<div key={record}>
+								<input
+									checked={allowedAction.includes(record)}
+									type="checkbox"
+									id={`checkbox-${record}`}
+									name={record}
+									value={record}
+									onChange={(e) => handleAllowedActionCheckboxChange(e)}
+								/>
+								<label htmlFor={`checkbox-${record}`}>{record}</label>
+							</div>
+					  ))
+					: ['Edit Record', 'delete record'].map((record) => (
+							<div key={record}>
+								<input
+									checked={allowedAction.includes(record)}
+									type="checkbox"
+									id={`checkbox-${record}`}
+									name={record}
+									value={record}
+									onChange={(e) => handleAllowedActionCheckboxChange(e)}
+								/>
+								<label
+									style={{ textTransform: 'capitalize' }}
+									htmlFor={`checkbox-${record}`}
+								>
+									{record}
+								</label>
+							</div>
+					  ))}
+			</div>
 
-  const handleTableView = (e) => {
-    setViewType(e.target.value);
-    setEditFilter("");
-  };
+			<div className="form-group">
+				<label>Filters</label>
+				{viewType === 'Table' ? (
+					<div>
+						<div>
+							<input
+								type="checkbox"
+								id="checkbox-filter"
+								name="filter"
+								onChange={(e) => handleFilterCheckboxChange(e)}
+							/>
+							<label htmlFor="checkbox-filter">Filter</label>
+							{boolConfigs.map((config) => (
+								<div key={config.name}>
+									<input
+										type="radio"
+										id={`radio-${config.name}`}
+										name="filterOption"
+										value={config.name}
+										onChange={(e) => handleFilterButtonChange(e, config.name)}
+									/>
+									<label htmlFor={`radio-${config.name}`}>{config.name}</label>
+								</div>
+							))}
+						</div>
 
-  const handleDetailView = (e) => {
-    setViewType(e.target.value);
-    setFilter("");
-    setUserFilter("");
-  };
+						<div>
+							<input
+								type="checkbox"
+								id="checkbox-user-filter"
+								name="userFilter"
+								onChange={(e) => handleUserFilterCheckboxChange(e)}
+							/>
+							<label htmlFor="checkbox-user-filter">User Filter</label>
+							{emailConfigs.map((config) => (
+								<div key={config.name}>
+									<input
+										type="radio"
+										id={`radio-${config.name}`}
+										name="filterOption"
+										value={config.name}
+										onChange={(e) => handleFilterButtonChange(e, config.name)}
+									/>
+									<label htmlFor={`radio-${config.name}`}>{config.name}</label>
+								</div>
+							))}
+						</div>
+					</div>
+				) : (
+					<div>
+						<input
+							type="checkbox"
+							id="checkbox-edit-filter"
+							name="editFilter"
+							onChange={(e) => handleEditFilterCheckboxChange(e)}
+						/>
+						<label htmlFor="checkbox-edit-filter">Edit Filter</label>
+						{boolConfigs.map((config) => (
+							<div key={config.name}>
+								<input
+									type="radio"
+									id={`radio-${config.name}`}
+									name="filterOption"
+									value={config.name}
+									onChange={(e) => handleEditFilterButtonChange(e, config.name)}
+								/>
+								<label htmlFor={`radio-${config.name}`}>{config.name}</label>
+							</div>
+						))}
 
-  return (
-    <form
-      ref={formElement}
-      onSubmit={handleCreateView}
-      className="card"
-      style={{
-        margin: "10px auto",
-        width: "480px",
-        maxWidth: "100%",
-      }}
-    >
-      <div className="form-group">
-        <label>View Name</label>
-        <input
-          value={viewName}
-          onChange={(e) => setViewName(e.target.value)}
-          type="text"
-          className="form-control"
-        />
-      </div>
-      <div className="form-group">
-        <label>Table</label>
-        <select onChange={(e) => handleSelectTable(e)} className="form-control">
-          <option value="">Select Table</option>
-          {userTables?.map((table) => (
-            <option
-              selected={
-                selectedView.selectedTableId || selectedView.table === table._id
-                  ? true
-                  : false
-              }
-              key={table._id}
-              value={table._id}
-            >
-              {table.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <div className="form-group">
-          <label>Columns</label>
-          {columns.map((column) => (
-            <div key={column._id}>
-              <input
-                checked={selectedColumns.includes(column.name)}
-                type="checkbox"
-                id={`checkbox-${column.name}`}
-                name={column.name}
-                value={column.name}
-                onChange={(e) => handleCheckboxChange(e)}
-              />
-              <label htmlFor={`checkbox-${column.name}`}>{column.name}</label>
-            </div>
-          ))}
-        </div>
-        <p>Selected Columns: {selectedColumns.join(", ")}</p>
-      </div>
-      <div className="form-group">
-        <label className="can_btn">View Type</label>{" "}
-        <input
-          checked={viewType === "Table" ? true : false}
-          onChange={(e) => {
-            setAllowAction([]);
-            setViewType(e.target.value);
-          }}
-          type="radio"
-          id="Table"
-          name="view_type"
-          value="Table"
-        />
-        <label htmlFor="Table">Table</label>
-        <input
-          checked={viewType === "Detail" ? true : false}
-          onChange={(e) => {
-            setAllowAction([]);
-            setViewType(e.target.value);
-          }}
-          type="radio"
-          id="Detail"
-          name="view_type"
-          value="Detail"
-        />
-        <label htmlFor="Detail">Detail</label>
-      </div>
-      <div className="form-group">
-        <label>Allowed Actions</label>
-        {viewType === "Table"
-          ? ["Add Record", "Delete Record"].map((record) => (
-              <div key={record}>
-                <input
-                  checked={allowedAction.includes(record)}
-                  type="checkbox"
-                  id={`checkbox-${record}`}
-                  name={record}
-                  value={record}
-                  onChange={(e) => handleAllowedActionCheckboxChange(e)}
-                />
-                <label htmlFor={`checkbox-${record}`}>{record}</label>
-              </div>
-            ))
-          : ["Edit Record", "delete record"].map((record) => (
-              <div key={record}>
-                <input
-                  checked={allowedAction.includes(record)}
-                  type="checkbox"
-                  id={`checkbox-${record}`}
-                  name={record}
-                  value={record}
-                  onChange={(e) => handleAllowedActionCheckboxChange(e)}
-                />
-                <label
-                  style={{ textTransform: "capitalize" }}
-                  htmlFor={`checkbox-${record}`}
-                >
-                  {record}
-                </label>
-              </div>
-            ))}
-      </div>
+						<div className="form-group">
+							<label>Editable Columns</label>
+							{columns?.map((column) => (
+								<div key={column._id}>
+									<input
+										checked={selectedEditColumns.includes(column.name)}
+										type="checkbox"
+										id={`editcheckbox-${column.name}`}
+										name={column.name}
+										onChange={(e) => handleEditCheckboxChange(e, column.name)}
+									/>
+									<label htmlFor={`editcheckbox-${column.name}`}>
+										{column.name}
+									</label>
+								</div>
+							))}
+						</div>
 
-      <div className="form-group">
-        <label>Filters</label>
-        {viewType === "Table" ? (
-          <div>
-            <div>
-              <input
-                type="checkbox"
-                id="checkbox-filter"
-                name="filter"
-                onChange={(e) => handleFilterCheckboxChange(e)}
-              />
-              <label htmlFor="checkbox-filter">Filter</label>
-              {boolConfigs.map((config) => (
-                <div key={config.name}>
-                  <input
-                    type="radio"
-                    id={`radio-${config.name}`}
-                    name="filterOption"
-                    value={config.name}
-                    onChange={(e) => handleFilterButtonChange(e, config.name)}
-                  />
-                  <label htmlFor={`radio-${config.name}`}>{config.name}</label>
-                </div>
-              ))}
-            </div>
+						<p>Selected Editable Columns: {selectedEditColumns.join(', ')}</p>
+					</div>
+				)}
+			</div>
 
-            <div>
-              <input
-                type="checkbox"
-                id="checkbox-user-filter"
-                name="userFilter"
-                onChange={(e) => handleUserFilterCheckboxChange(e)}
-              />
-              <label htmlFor="checkbox-user-filter">User Filter</label>
-              {emailConfigs.map((config) => (
-                <div key={config.name}>
-                  <input
-                    type="radio"
-                    id={`radio-${config.name}`}
-                    name="filterOption"
-                    value={config.name}
-                    onChange={(e) => handleFilterButtonChange(e, config.name)}
-                  />
-                  <label htmlFor={`radio-${config.name}`}>{config.name}</label>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div>
-            <input
-              type="checkbox"
-              id="checkbox-edit-filter"
-              name="editFilter"
-              onChange={(e) => handleEditFilterCheckboxChange(e)}
-            />
-            <label htmlFor="checkbox-edit-filter">Edit Filter</label>
-            {boolConfigs.map((config) => (
-              <div key={config.name}>
-                <input
-                  type="radio"
-                  id={`radio-${config.name}`}
-                  name="filterOption"
-                  value={config.name}
-                  onChange={(e) => handleEditFilterButtonChange(e, config.name)}
-                />
-                <label htmlFor={`radio-${config.name}`}>{config.name}</label>
-              </div>
-            ))}
+			<div className="form-group">
+				<label>Roles</label>
+				{viewRole[0]?.map((roles, ind) => (
+					<div key={ind}>
+						<input
+							checked={role.includes(roles)}
+							type="checkbox"
+							id={`checkbox-${roles}`}
+							name={roles}
+							value={roles}
+							onChange={(e) => handleRoleChange(e)}
+						/>
+						<label htmlFor={`checkbox-${roles}`}>{roles}</label>
+					</div>
+				))}
+				<p>Selected Roles: {role.join(', ')}</p>
+			</div>
 
-            <div className="form-group">
-              <label>Editable Columns</label>
-              {columns?.map((column) => (
-                <div key={column._id}>
-                  <input
-                    checked={selectedEditColumns.includes(column.name)}
-                    type="checkbox"
-                    id={`editcheckbox-${column.name}`}
-                    name={column.name}
-                    onChange={(e) => handleEditCheckboxChange(e, column.name)}
-                  />
-                  <label htmlFor={`editcheckbox-${column.name}`}>
-                    {column.name}
-                  </label>
-                </div>
-              ))}
-            </div>
-
-            <p>Selected Editable Columns: {selectedEditColumns.join(", ")}</p>
-          </div>
-        )}
-      </div>
-
-      <div className="form-group">
-        <label>Roles</label>
-        {viewRole[0]?.map((roles, ind) => (
-          <div key={ind}>
-            <input
-              checked={role.includes(roles)}
-              type="checkbox"
-              id={`checkbox-${roles}`}
-              name={roles}
-              value={roles}
-              onChange={(e) => handleRoleChange(e)}
-            />
-            <label htmlFor={`checkbox-${roles}`}>{roles}</label>
-          </div>
-        ))}
-        <p>Selected Roles: {role.join(", ")}</p>
-      </div>
-
-      {selectedView.viewName || selectedView.name ? (
-        <div className="text-right">
-          <button
-            type="button"
-            onClick={deleteViewList}
-            className="btn btn-danger can_btn"
-          >
-            Delete
-          </button>
-          <button
-            type="button"
-            className="btn btn-info"
-            onClick={updateViewList}
-          >
-            Save
-          </button>
-        </div>
-      ) : (
-        <div className="text-right">
-          <button
-            onClick={handleCancel}
-            type="reset"
-            className="btn btn-danger can_btn"
-          >
-            Cancel
-          </button>
-          <button type="submit" className="btn btn-info">
-            Create
-          </button>
-        </div>
-      )}
-    </form>
-  );
+			{selectedView.viewName || selectedView.name ? (
+				<div className="text-right">
+					<button
+						type="button"
+						onClick={deleteViewList}
+						className="btn btn-danger can_btn"
+					>
+						Delete
+					</button>
+					<button
+						type="button"
+						className="btn btn-info"
+						onClick={updateViewList}
+					>
+						Save
+					</button>
+				</div>
+			) : (
+				<div className="text-right">
+					<button
+						onClick={handleCancel}
+						type="reset"
+						className="btn btn-danger can_btn"
+					>
+						Cancel
+					</button>
+					<button type="submit" className="btn btn-info">
+						Create
+					</button>
+				</div>
+			)}
+		</form>
+	);
 }
 
 export { ViewConfig };

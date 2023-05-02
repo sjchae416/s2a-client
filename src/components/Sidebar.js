@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
 	createAppAPI,
-	// updateAppAPI,
 	createViewAPI,
 	deleteViewAPI,
 	updateAppAPI,
-	// updateUserAPI,
 } from '../api';
 import Modal from '@mui/material/Modal';
 
@@ -15,6 +13,7 @@ const Sidebar = ({
 	setView,
 	app,
 	setAppData,
+	selectedApp,
 	setSelectedApp,
 	viewDatas,
 	setViewDatas,
@@ -33,7 +32,19 @@ const Sidebar = ({
 		setIsModalVisible(false);
 	};
 
-	const saveViews = async (viewDatas) => {
+	function checkTableView(views) {
+		if (views !== null) {
+			for (let i = 0; i < views.length; i++) {
+				if (views[i].viewType === 'Table') {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	const saveNewViews = async (viewDatas) => {
 		try {
 			const newViews = await Promise.all(
 				viewDatas?.map(async (viewData) => {
@@ -48,7 +59,7 @@ const Sidebar = ({
 		}
 	};
 
-	const saveApp = async (appData, savedViews) => {
+	const saveNewApp = async (appData, savedViews) => {
 		try {
 			const newViewsIds = savedViews.map((savedView) => savedView._id);
 			appData.views = newViewsIds;
@@ -71,26 +82,30 @@ const Sidebar = ({
 		}
 	};
 
-	function checkTableView(viewDatas) {
-		for (let i = 0; i < viewDatas.length; i++) {
-			if (viewDatas[i].viewType === 'Table') {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	const handleSaveApp = async () => {
-		if (viewDatas && checkTableView(viewDatas)) {
+		if (checkTableView(viewDatas) || checkTableView(selectedApp.createdViews)) {
 			try {
-				// if (selectedAppId) {
-				//  // TODO if there are new viewDdta, save Views
-				// 	// TODO pass selected App's id to update its fields
-				// 	await updateAppAPI(selectedAppId);
-				// } else {
-				const savedViews = await saveViews(viewDatas);
-				await saveApp(app, savedViews);
-				// }
+				if (selectedApp) {
+					if (viewDatas !== null) {
+						const savedViews = await saveNewViews(viewDatas);
+						const newViewsIds = savedViews.map((savedView) => savedView._id);
+						app.views = [...selectedApp.views, newViewsIds];
+					} else {
+						app.views = [selectedApp.views];
+					}
+
+					const now = new Date();
+					const nycTimeString = now.toLocaleString('en-US', {
+						timeZone: 'America/New_York',
+					});
+					app.lastModifiedDate = nycTimeString;
+
+					const update = app;
+					await updateAppAPI(selectedApp._id, update);
+				} else {
+					const savedViews = await saveNewViews(viewDatas);
+					await saveNewApp(app, savedViews);
+				}
 				setAppData(null);
 				setViewDatas(null);
 				setReloadApp(true);
@@ -106,11 +121,21 @@ const Sidebar = ({
 		}
 	};
 
+	const handleUnpublish = () => {
+		if (app && (viewDatas || viewDataList.length !== 0)) {
+			app.published = false;
+			setAppData(app);
+		}
+
+		setIsPublishModalVisible(false);
+	};
+
 	const handlePublish = () => {
 		if (app && (viewDatas || viewDataList.length !== 0)) {
 			app.published = true;
 			setAppData(app);
 		}
+
 		setIsPublishModalVisible(false);
 	};
 
@@ -189,10 +214,7 @@ const Sidebar = ({
 						under in development and will not be available to users.
 					</h5>
 
-					<button
-						onClick={() => setIsPublishModalVisible(false)}
-						className="btn btn-danger"
-					>
+					<button onClick={() => handleUnpublish} className="btn btn-danger">
 						No
 					</button>
 					<button onClick={handlePublish} className="btn btn-success">

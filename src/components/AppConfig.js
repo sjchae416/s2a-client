@@ -17,7 +17,7 @@ export default function AppConfig({
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
 	const [roleData, setRoleData] = useState([]);
 	const roleKey = roleData.length > 0 ? roleData[0] : [];
-	const [sheetIndex, setSheetIndex] = useState("");
+	const [sheetIndex, setSheetIndex] = useState('');
 
 	const now = new Date();
 	const nycTimeString = now.toLocaleString('en-US', {
@@ -52,7 +52,13 @@ export default function AppConfig({
 			setRoleMembershipSheet(selectedApp.roleMembershipSheet);
 			setSheetIndex(selectedApp.sheetIndex);
 			appData.views = selectedApp.createdViews;
-		} else {
+		}
+		// else if (appData) {
+		// 	setName(appData.name);
+		// 	setRoleMembershipSheet(appData.roleMembershipSheet);
+		// 	setSheetIndex(appData.sheetIndex);
+		// }
+		else {
 			setName('');
 			setRoleMembershipSheet('');
 			setSheetIndex('');
@@ -60,12 +66,14 @@ export default function AppConfig({
 	}, [app, selectedApp]);
 
 	const handleNameOnChange = (e) => {
+		// setSelectedApp(null);
 		setName(e.target.value);
 		// if (selectedApp !== null) {
 		// 	appData.name = name;
 		// }
 	};
 	const handleRoleOnChange = (e) => {
+		// setSelectedApp(null);
 		setRoleMembershipSheet(e.target.value);
 		// if (selectedApp !== null) {
 		// 	appData.name = name;
@@ -159,7 +167,7 @@ export default function AppConfig({
 			<div className="form-group">
 				<label>Sheet Index</label>
 				<input
-				    required
+					required
 					type="text"
 					value={sheetIndex}
 					className="form-control"
@@ -212,10 +220,10 @@ export default function AppConfig({
 					<br />
 
 					{selectedApp && (
-						<button 
-            className="btn btn-danger"
-            onClick={() => handleDeleteApp(selectedApp._id)}
-            >
+						<button
+							className="btn btn-danger"
+							onClick={() => handleDeleteApp(selectedApp._id)}
+						>
 							DELETE
 						</button>
 					)}
