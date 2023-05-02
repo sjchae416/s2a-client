@@ -443,7 +443,7 @@ export default function ViewConfig({
                 <label htmlFor={`checkbox-${record}`}>{record}</label>
               </div>
             ))
-          : ["Edit Record", "delete record"].map((record) => (
+          : ["Edit Record", "Delete Record"].map((record) => (
               <div key={record}>
                 <input
                   checked={allowedAction.includes(record)}

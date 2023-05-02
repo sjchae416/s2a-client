@@ -401,7 +401,7 @@ const App = () => {
 						}
 					/> */}
 					<Route
-						path="/runnable-appIds/:name/:id"
+						path="/runnable-appIds/:id"
 						element={
 							user ? (
 								<RunnableAppPage runnableApps={runnableApps} />
