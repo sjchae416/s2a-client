@@ -183,7 +183,9 @@ export default function AppConfig({
 			</div>
 			<div className="text-right">
 				<button onClick={handleLoad} className="btn btn-info">
-					Load Role Membership Table
+					{roleData.length === 0 && showTable
+						? 'Reload to apply any changes'
+						: 'Load Role Membership Table'}
 				</button>
 			</div>
 
