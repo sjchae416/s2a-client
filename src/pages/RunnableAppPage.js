@@ -31,7 +31,7 @@ export default function RunnableAppPage({runnableApps}) {
 					<TableViewSidebar views={views} onSelectView={handleSelectView} />
 				</div>
 				<div className="main-container">
-					{selectedView && <TableView view={selectedView} listViews={views} />}
+					{selectedView && <TableView view={selectedView} listViews={views} user = {user} />}
 				</div>
 			</div>
 		</div>

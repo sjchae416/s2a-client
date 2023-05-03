@@ -404,7 +404,7 @@ const App = () => {
 						path="/runnable-appIds/:id"
 						element={
 							user ? (
-								<RunnableAppPage runnableApps={runnableApps} />
+								<RunnableAppPage runnableApps={runnableApps}/>
 							) : (
 								<LoginPage />
 							)

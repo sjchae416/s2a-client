@@ -6,7 +6,7 @@ import DetailView from "./DetailView";
 import { readTableAPI } from "../api";
 import { loadSheetAPI, updateSheetAPI } from "../api";
 
-export default function TableView({ view, listViews }) {
+export default function TableView({ view, listViews, user }) {
   const [tableData, setTableData] = useState([]);
   const [tableViewObjArr, settableViewObjArr] = useState([]);
   const [open, setOpen] = useState(false);
@@ -62,6 +62,7 @@ export default function TableView({ view, listViews }) {
       url: data.url,
       sheetIndex: data.sheetIndex,
     };
+
     const tableData = await loadSheetAPI(sheetData);
     //gets the array of the data except for the name of the column
 
@@ -74,10 +75,10 @@ export default function TableView({ view, listViews }) {
     });
     settableViewObjArr(result);
 
-    const filteredResult = tableViewObjArr.filter((row) => row[viewFilter] === "TRUE");
+    let filteredResult = tableViewObjArr.filter((row) => row[viewFilter] === "TRUE");
+    filteredResult = filteredResult.filter((row) => row[userFilter] === user.email);
     setFilteredtableViewObjArr(filteredResult);
 
-    console.log(result);
     console.log(filteredResult);
 
   };
