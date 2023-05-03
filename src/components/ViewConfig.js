@@ -143,26 +143,26 @@ export default function ViewConfig({
 		}
 	};
 
-  const handleCheckboxChange = (e, column) => {
-    const { name, checked } = e.target;
-    let newSelectedColumns;
-    if (checked) {
-        newSelectedColumns = [...selectedColumns, name];
-    } else {
-        newSelectedColumns = selectedColumns.filter((col) => col !== name);
-    }
-    handleColumnsOrder(newSelectedColumns);
-  };
+	const handleCheckboxChange = (e, column) => {
+		const { name, checked } = e.target;
+		let newSelectedColumns;
+		if (checked) {
+			newSelectedColumns = [...selectedColumns, name];
+		} else {
+			newSelectedColumns = selectedColumns.filter((col) => col !== name);
+		}
+		handleColumnsOrder(newSelectedColumns);
+	};
 
-  function handleColumnsOrder(selectedColumns){
-    const orderedColumns = [];
-    for (let column of columns) {
-      if (selectedColumns.includes(column.name)) {
-        orderedColumns.push(column.name);
-      }
-    }
-    setSelectedColumns(orderedColumns);
-  }
+	function handleColumnsOrder(selectedColumns) {
+		const orderedColumns = [];
+		for (let column of columns) {
+			if (selectedColumns.includes(column.name)) {
+				orderedColumns.push(column.name);
+			}
+		}
+		setSelectedColumns(orderedColumns);
+	}
 
 	const handleAllowedActionCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
@@ -434,126 +434,122 @@ export default function ViewConfig({
 		// console.log(viewData);
 	};
 
-  return (
-    <form
-      ref={formElement}
-      onSubmit={handleCreateView}
-      className="card"
-      style={{
-        margin: "10px auto",
-        width: "480px",
-        maxWidth: "100%",
-      }}
-    >
-      <div className="form-group">
-        <label>View Name</label>
-        <input
-          value={viewName}
-          onChange={(e) => setViewName(e.target.value)}
-          type="text"
-          className="form-control"
-        />
-      </div>
-      <div className="form-group">
-        <label>Table</label>
-        <select onChange={(e) => handleSelectTable(e)} className="form-control">
-          <option value="">Select Table</option>
-          {userTables?.map((table) => (
-            <option
-              selected={
-                selectedView.selectedTableId || selectedView.table === table._id
-                  ? true
-                  : false
-              }
-              key={table._id}
-              value={table._id}
-            >
-              {table.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-      <div className="form-group">
-        <label>Columns</label>
-        {columns.map((column) => (
-            <div key={column._id}>
-            <input
-                checked={selectedColumns.includes(column.name)}
-                type="checkbox"
-                id={`checkbox-${column.name}`}
-                name={column.name}
-                value={column.name}
-                onChange={(e) => handleCheckboxChange(e)}
-            />
-            <label htmlFor={`checkbox-${column.name}`}>{column.name}</label>
-            </div>
-        ))}
-        </div>
-        <p>Selected Columns: {selectedColumns.join(", ")}</p>
-      </div>
-      <div className="form-group">
-        <label className="can_btn">View Type</label>{" "}
-        <input
-          checked={viewType === "Table" ? true : false}
-          onChange={(e) => {
-            setAllowAction([]);
-            setViewType(e.target.value);
-          }}
-          type="radio"
-          id="Table"
-          name="view_type"
-          value="Table"
-        />
-        <label htmlFor="Table">Table</label>
-        <input
-          checked={viewType === "Detail" ? true : false}
-          onChange={(e) => {
-            setAllowAction([]);
-            setViewType(e.target.value);
-          }}
-          type="radio"
-          id="Detail"
-          name="view_type"
-          value="Detail"
-        />
-        <label htmlFor="Detail">Detail</label>
-      </div>
-      <div className="form-group">
-        <label>Allowed Actions</label>
-        {viewType === "Table"
-          ? ["Add Record", "Delete Record"].map((record) => (
-              <div key={record}>
-                <input
-                  checked={allowedAction.includes(record)}
-                  type="checkbox"
-                  id={`checkbox-${record}`}
-                  name={record}
-                  value={record}
-                  onChange={(e) => handleAllowedActionCheckboxChange(e)}
-                />
-                <label htmlFor={`checkbox-${record}`}>{record}</label>
-              </div>
-            ))
-          : ["Edit Record", "Delete Record"].map((record) => (
-              <div key={record}>
-                <input
-                  checked={allowedAction.includes(record)}
-                  type="checkbox"
-                  id={`checkbox-${record}`}
-                  name={record}
-                  value={record}
-                  onChange={(e) => handleAllowedActionCheckboxChange(e)}
-                />
-                <label
-                  style={{ textTransform: "capitalize" }}
-                  htmlFor={`checkbox-${record}`}
-                >
-                  {record}
-                </label>
-              </div>
-            ))}
-      </div>
+	return (
+		<form
+			ref={formElement}
+			onSubmit={handleCreateView}
+			className="card"
+			style={{
+				margin: '10px auto',
+				width: '480px',
+				maxWidth: '100%',
+			}}
+		>
+			<div className="form-group">
+				<label>View Name</label>
+				<input
+					value={viewName}
+					onChange={(e) => handleViewName(e)}
+					type="text"
+					className="form-control"
+				/>
+			</div>
+			<div className="form-group">
+				<label>Table</label>
+				<select onChange={(e) => handleSelectTable(e)} className="form-control">
+					<option value="">Select Table</option>
+					{userTables?.map((table) => (
+						<option
+							selected={selectedView.table === table._id ? true : false}
+							key={table._id}
+							value={table._id}
+						>
+							{table.name}
+						</option>
+					))}
+				</select>
+			</div>
+			<div>
+				<div className="form-group">
+					<label>Columns</label>
+					{columns.map((column) => (
+						<div key={column._id}>
+							<input
+								checked={selectedColumns.includes(column.name)}
+								type="checkbox"
+								id={`checkbox-${column.name}`}
+								name={column.name}
+								value={column.name}
+								onChange={(e) => handleCheckboxChange(e)}
+							/>
+							<label htmlFor={`checkbox-${column.name}`}>{column.name}</label>
+						</div>
+					))}
+				</div>
+				<p>Selected Columns: {selectedColumns.join(', ')}</p>
+			</div>
+			<div className="form-group">
+				<label className="can_btn">View Type</label>{' '}
+				<input
+					checked={viewType === 'Table' ? true : false}
+					onChange={(e) => {
+						setAllowAction([]);
+						setViewType(e.target.value);
+					}}
+					type="radio"
+					id="Table"
+					name="view_type"
+					value="Table"
+				/>
+				<label htmlFor="Table">Table</label>
+				<input
+					checked={viewType === 'Detail' ? true : false}
+					onChange={(e) => {
+						setAllowAction([]);
+						setViewType(e.target.value);
+					}}
+					type="radio"
+					id="Detail"
+					name="view_type"
+					value="Detail"
+				/>
+				<label htmlFor="Detail">Detail</label>
+			</div>
+			<div className="form-group">
+				<label>Allowed Actions</label>
+				{viewType === 'Table'
+					? ['Add Record', 'Delete Record'].map((record) => (
+							<div key={record}>
+								<input
+									checked={allowedAction.includes(record)}
+									type="checkbox"
+									id={`checkbox-${record}`}
+									name={record}
+									value={record}
+									onChange={(e) => handleAllowedActionCheckboxChange(e)}
+								/>
+								<label htmlFor={`checkbox-${record}`}>{record}</label>
+							</div>
+					  ))
+					: ['Edit Record', 'Delete Record'].map((record) => (
+							<div key={record}>
+								<input
+									checked={allowedAction.includes(record)}
+									type="checkbox"
+									id={`checkbox-${record}`}
+									name={record}
+									value={record}
+									onChange={(e) => handleAllowedActionCheckboxChange(e)}
+								/>
+								<label
+									style={{ textTransform: 'capitalize' }}
+									htmlFor={`checkbox-${record}`}
+								>
+									{record}
+								</label>
+							</div>
+					  ))}
+			</div>
 
 			<div className="form-group">
 				<label>Filters</label>
@@ -581,49 +577,51 @@ export default function ViewConfig({
 							))}
 						</div>
 
-            <div>
-              <input
-                type="checkbox"
-                id="checkbox-user-filter"
-                name="userFilter"
-                onChange={(e) => handleUserFilterCheckboxChange(e)}
-              />
-              <label htmlFor="checkbox-user-filter">User Filter</label>
-              {emailConfigs.map((config) => (
-                <div key={config.name}>
-                  <input
-                    type="radio"
-                    id={`radio-${config.name}`}
-                    name="filterOption"
-                    value={config.name}
-                    onChange={(e) => handleUserFilterButtonChange(e, config.name)}
-                  />
-                  <label htmlFor={`radio-${config.name}`}>{config.name}</label>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div>
-            <input
-              type="checkbox"
-              id="checkbox-edit-filter"
-              name="editFilter"
-              onChange={(e) => handleEditFilterCheckboxChange(e)}
-            />
-            <label htmlFor="checkbox-edit-filter">Edit Filter</label>
-            {boolConfigs.map((config) => (
-              <div key={config.name}>
-                <input
-                  type="radio"
-                  id={`radio-${config.name}`}
-                  name="filterOption"
-                  value={config.name}
-                  onChange={(e) => handleEditFilterButtonChange(e, config.name)}
-                />
-                <label htmlFor={`radio-${config.name}`}>{config.name}</label>
-              </div>
-            ))}
+						<div>
+							<input
+								type="checkbox"
+								id="checkbox-user-filter"
+								name="userFilter"
+								onChange={(e) => handleUserFilterCheckboxChange(e)}
+							/>
+							<label htmlFor="checkbox-user-filter">User Filter</label>
+							{emailConfigs.map((config) => (
+								<div key={config.name}>
+									<input
+										type="radio"
+										id={`radio-${config.name}`}
+										name="filterOption"
+										value={config.name}
+										onChange={(e) =>
+											handleUserFilterButtonChange(e, config.name)
+										}
+									/>
+									<label htmlFor={`radio-${config.name}`}>{config.name}</label>
+								</div>
+							))}
+						</div>
+					</div>
+				) : (
+					<div>
+						<input
+							type="checkbox"
+							id="checkbox-edit-filter"
+							name="editFilter"
+							onChange={(e) => handleEditFilterCheckboxChange(e)}
+						/>
+						<label htmlFor="checkbox-edit-filter">Edit Filter</label>
+						{boolConfigs.map((config) => (
+							<div key={config.name}>
+								<input
+									type="radio"
+									id={`radio-${config.name}`}
+									name="filterOption"
+									value={config.name}
+									onChange={(e) => handleEditFilterButtonChange(e, config.name)}
+								/>
+								<label htmlFor={`radio-${config.name}`}>{config.name}</label>
+							</div>
+						))}
 
 						<div className="form-group">
 							<label>Editable Columns</label>
