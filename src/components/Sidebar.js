@@ -35,7 +35,7 @@ const Sidebar = ({
 
 	function checkTableView(views) {
 		if (views !== null) {
-			for (let i = 0; i < views.length; i++) {
+			for (let i = 0; i < views?.length; i++) {
 				if (views[i].viewType === 'Table') {
 					return true;
 				}
@@ -84,7 +84,7 @@ const Sidebar = ({
 	};
 
 	const handleSaveApp = async () => {
-		if (checkTableView(viewDatas) || checkTableView(selectedApp.createdViews)) {
+		if (checkTableView(viewDatas) || checkTableView(selectedApp?.createdViews)) {
 			try {
 				if (selectedApp) {
 					const currViewIds = viewDataList.map((view) => {
@@ -158,6 +158,7 @@ const Sidebar = ({
 	};
 
 	const handleDiscard = () => {
+		// TODO restore all edit/delete View
 		setAppData(null);
 		setViewDatas(null);
 		setViewDataList(null);

@@ -115,25 +115,6 @@ export default function ViewConfig({
 		}
 	}, [addView]);
 
-	const handleCreateView = async (e) => {
-		e.preventDefault();
-
-		if (!viewName) {
-			return window.alert('Enter View name!11111111111');
-		} else if (!selectedTableId) {
-			return window.alert('Select table!');
-		} else if (selectedColumns.length === 0) {
-			return window.alert('Choose columns!');
-		} else if (role.length === 0) {
-			return window.alert('Choose role!');
-		} else {
-			setViewDatas((prev) =>
-				prev === null ? [viewToSave] : [...prev, viewToSave]
-			);
-			handleCancel();
-		}
-	};
-
 	const handleRoleChange = (e) => {
 		const { value, checked } = e.target;
 		if (checked) {
@@ -145,12 +126,24 @@ export default function ViewConfig({
 
 	const handleCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
+		let newSelectedColumns;
 		if (checked) {
-			setSelectedColumns([...selectedColumns, name]);
+			newSelectedColumns = [...selectedColumns, name];
 		} else {
-			setSelectedColumns(selectedColumns.filter((column) => column !== name));
+			newSelectedColumns = selectedColumns.filter((col) => col !== name);
 		}
+		handleColumnsOrder(newSelectedColumns);
 	};
+
+	function handleColumnsOrder(selectedColumns) {
+		const orderedColumns = [];
+		for (let column of columns) {
+			if (selectedColumns.includes(column.name)) {
+				orderedColumns.push(column.name);
+			}
+		}
+		setSelectedColumns(orderedColumns);
+	}
 
 	const handleAllowedActionCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
@@ -178,6 +171,27 @@ export default function ViewConfig({
 		formElement.current.reset();
 	};
 
+	// TODO keep a track of created Views to restore when Discard
+	const handleCreateView = async (e) => {
+		e.preventDefault();
+
+		if (!viewName) {
+			return window.alert('Enter View name!');
+		} else if (!selectedTableId) {
+			return window.alert('Select table!');
+		} else if (selectedColumns.length === 0) {
+			return window.alert('Choose columns!');
+		} else if (role.length === 0) {
+			return window.alert('Choose role!');
+		} else {
+			setViewDatas((prev) =>
+				prev === null ? [viewToSave] : [...prev, viewToSave]
+			);
+			handleCancel();
+		}
+	};
+
+	// TODO keep a track of edited Views to restore when Discard
 	const handleUpdateView = async () => {
 		if (!viewName) {
 			return window.alert('Enter View name!');
@@ -231,48 +245,7 @@ export default function ViewConfig({
 		}
 	};
 
-	//   async function checkUserEmail(col) {
-	//   // REMOVE LATER
-	//   // ^ matches the start of the string
-	//   // [a-z0-9] matches any lowercase letter or digit
-	//   // (\.?[a-z0-9]){4,28} matches 4 to 28 occurrences of an optional dot followed by a lowercase letter or digit
-	//   // [a-z0-9] matches any lowercase letter or digit
-	//   // @ matches the "@" symbol
-	//   // [a-z0-9]+\. matches one or more lowercase letters or digits followed by a dot
-	//   // [a-z]{2,} matches two or more lowercase letters representing the domain name (e.g., com, org, net, etc.)
-	//   // $ matches the end of the string
-
-	//   const emailRegex =
-	//     /^[a-z0-9](\.?[a-z0-9]){4,28}[a-z0-9]@[a-z0-9]+\.[a-z]{2,}$/i; // regular expression for email format
-
-	//   const sheetData = {
-	//     name: viewTable.name,
-	//     url: viewTable.url,
-	//     sheetIndex: viewTable.sheetIndex,
-	//   };
-	//   const data = await loadSheetAPI(sheetData);
-
-	//   console.log(data);
-	//   let emailIndex = -1;
-	//   const headerRow = data[0];
-	//   for (let i = 0; i < headerRow.length; i++) {
-	//     if (headerRow[i] === col.name) {
-	//       emailIndex = i;
-	//       break;
-	//     }
-	//   }
-
-	//   const emails = [];
-	//   for (let i = 1; i < data.length; i++) {
-	//     const row = data[i];
-	//     console.log(row);
-	//   }
-
-	//   const invalidEmails = emails.filter((email) => !emailRegex.test(email));
-	//   console.log(invalidEmails);
-	//   return !(invalidEmails.length > 0);
-	// }
-
+	// TODO keep a track of deleted Views to restore when Discard
 	const handleDeleteView = async (selectedViewId) => {
 		if (isObjectInArray(selectedView, viewDataList)) {
 			const viewIdToBeDeleted = selectedViewId;
@@ -395,20 +368,6 @@ export default function ViewConfig({
 		console.log(viewData);
 	};
 
-	// FIXME delete if not planning to use somewhere else
-	const handleTableView = (e) => {
-		setViewType(e.target.value);
-		setEditFilter('');
-	};
-
-	// FIXME delete if not planning to use somewhere else
-	const handleDetailView = (e) => {
-		setViewType(e.target.value);
-		setFilter('');
-		setUserFilter('');
-	};
-
-	// FIXME delete if not planning to use somewhere else
 	const handleUserFilterButtonChange = (e, name) => {
 		console.log(name);
 		setUserFilter(name);
@@ -537,8 +496,6 @@ export default function ViewConfig({
 					  ))}
 			</div>
 
-			{/* NOTE */}
-
 			<div className="form-group">
 				<label>Filters</label>
 				{viewType === 'Table' ? (
@@ -580,7 +537,9 @@ export default function ViewConfig({
 										id={`radio-${config.name}`}
 										name="filterOption"
 										value={config.name}
-										onChange={(e) => handleFilterButtonChange(e, config.name)}
+										onChange={(e) =>
+											handleUserFilterButtonChange(e, config.name)
+										}
 									/>
 									<label htmlFor={`radio-${config.name}`}>{config.name}</label>
 								</div>
