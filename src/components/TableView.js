@@ -27,7 +27,7 @@ export default function TableView({ view, listViews, user }) {
   // States to store the position of the row delete in the sheet
   const [deleteRowPosition, setDeleteRowPosition] = useState({});
 
-  const [filteredtableViewObjArr, setFilteredtableViewObjArr] = useState([...tableViewObjArr]);
+  const [filteredtableViewObjArr, setFilteredtableViewObjArr] = useState(null);
 
   const detailApps = listViews.filter((view) => view.viewType === "Detail");
   // console.log('detailApps', detailApps);
@@ -48,6 +48,10 @@ export default function TableView({ view, listViews, user }) {
     getTableData();
   }, []);
 
+  useEffect(() => {
+    console.log(tableViewObjArr);
+  }, [tableViewObjArr]);
+
   // useEffect(() => {
   //   console.log("tableViewObjArr in useEffect", tableViewObjArr);
   // }, [tableViewObjArr]);
@@ -55,7 +59,6 @@ export default function TableView({ view, listViews, user }) {
   const getTableData = async () => {
     const data = await readTableAPI(view.table);
     setTableData(data);
-
 
     const sheetData = {
       name: data.name,
@@ -70,11 +73,18 @@ export default function TableView({ view, listViews, user }) {
       sheetTableData[0].forEach((key, index) => {
         obj[key] = row[index];
       });
-      return obj;
+      if(obj.length != 0)
+        return obj;
+      else  
+        return null;  
     });
-    settableViewObjArr(result);
 
-    let filteredResult = tableViewObjArr.filter((row) => row[viewFilter] === "TRUE");
+    if(result)
+      settableViewObjArr(result);
+    else
+      settableViewObjArr(null);
+
+    let filteredResult = result?.filter((row) => row[viewFilter] === "TRUE");
     filteredResult = filteredResult.filter((row) => row[userFilter] === user.email);
     setFilteredtableViewObjArr(filteredResult);
 
@@ -331,7 +341,7 @@ export default function TableView({ view, listViews, user }) {
           </tr>
         </thead>
         <tbody>
-          {filteredtableViewObjArr.map((row) => (
+          {filteredtableViewObjArr?.map((row) => (
             <tr key={row.Name} onClick={() => handleRowClick(row)}>
               {col.map((column) => (
                 <td key={column}>{row[column]}</td>

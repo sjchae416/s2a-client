@@ -14,21 +14,21 @@ export default function ViewConfig({
 	addView,
 	setAddView,
 }) {
-	const [viewName, setViewName] = useState('');
-	const [selectedColumns, setSelectedColumns] = useState([]);
-	const [viewType, setViewType] = useState('Table');
-	const [allowedAction, setAllowAction] = useState([]);
-	const [role, setRole] = useState([]);
-	const [filter, setFilter] = useState('');
-	const [userFilter, setUserFilter] = useState('');
-	const [editFilter, setEditFilter] = useState('');
-	const [boolConfigs, setBoolConfigs] = useState([]);
-	const [emailConfigs, setEmailConfigs] = useState([]);
-	const [editableCols, setEditableCol] = useState([]);
-	const [selectedEditColumns, setSelectedEditColumns] = useState([]);
-	const [columns, setColumns] = useState([]);
-	const [selectedTableId, setSelectedTableId] = useState('');
-	const [viewTable, setViewTable] = useState(null);
+  const [viewName, setViewName] = useState("");
+  const [selectedColumns, setSelectedColumns] = useState([]);
+  const [viewType, setViewType] = useState("Table");
+  const [allowedAction, setAllowAction] = useState([]);
+  const [role, setRole] = useState([]);
+  const [filter, setFilter] = useState("");
+  const [userFilter, setUserFilter] = useState("");
+  const [editFilter, setEditFilter] = useState("");
+  const [boolConfigs, setBoolConfigs] = useState([]);
+  const [emailConfigs, setEmailConfigs] = useState([]);
+  const [editableCols, setEditableCol] = useState([]);
+  const [selectedEditColumns, setSelectedEditColumns] = useState([]);
+  const [columns, setColumns] = useState([]);
+  const [selectedTableId, setSelectedTableId] = useState("");
+  const [viewTable, setViewTable] = useState(null);
 
 	const formElement = useRef();
 
@@ -145,24 +145,12 @@ export default function ViewConfig({
 
   const handleCheckboxChange = (e, column) => {
     const { name, checked } = e.target;
-    let newSelectedColumns;
     if (checked) {
-        newSelectedColumns = [...selectedColumns, name];
+      setSelectedColumns([...selectedColumns, name]);
     } else {
-        newSelectedColumns = selectedColumns.filter((col) => col !== name);
+      setSelectedColumns(selectedColumns.filter((column) => column !== name));
     }
-    handleColumnsOrder(newSelectedColumns);
   };
-
-  function handleColumnsOrder(selectedColumns){
-    const orderedColumns = [];
-    for (let column of columns) {
-      if (selectedColumns.includes(column.name)) {
-        orderedColumns.push(column.name);
-      }
-    }
-    setSelectedColumns(orderedColumns);
-  }
 
 	const handleAllowedActionCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
@@ -190,7 +178,6 @@ export default function ViewConfig({
 		formElement.current.reset();
 	};
 
-	// TODO keep a track of edited Views to restore when Discard
 	const handleUpdateView = async () => {
 		if (!viewName) {
 			return window.alert('Enter View name!');
@@ -286,7 +273,6 @@ export default function ViewConfig({
 	//   return !(invalidEmails.length > 0);
 	// }
 
-	// TODO keep a track of deleted Views to restore when Discard
 	const handleDeleteView = async (selectedViewId) => {
 		if (isObjectInArray(selectedView, viewDataList)) {
 			const viewIdToBeDeleted = selectedViewId;
@@ -474,21 +460,21 @@ export default function ViewConfig({
         </select>
       </div>
       <div>
-      <div className="form-group">
-        <label>Columns</label>
-        {columns.map((column) => (
+        <div className="form-group">
+          <label>Columns</label>
+          {columns.map((column) => (
             <div key={column._id}>
-            <input
+              <input
                 checked={selectedColumns.includes(column.name)}
                 type="checkbox"
                 id={`checkbox-${column.name}`}
                 name={column.name}
                 value={column.name}
                 onChange={(e) => handleCheckboxChange(e)}
-            />
-            <label htmlFor={`checkbox-${column.name}`}>{column.name}</label>
+              />
+              <label htmlFor={`checkbox-${column.name}`}>{column.name}</label>
             </div>
-        ))}
+          ))}
         </div>
         <p>Selected Columns: {selectedColumns.join(", ")}</p>
       </div>
@@ -596,7 +582,7 @@ export default function ViewConfig({
                     id={`radio-${config.name}`}
                     name="filterOption"
                     value={config.name}
-                    onChange={(e) => handleUserFilterButtonChange(e, config.name)}
+                    onChange={(e) => handleFilterButtonChange(e, config.name)}
                   />
                   <label htmlFor={`radio-${config.name}`}>{config.name}</label>
                 </div>
