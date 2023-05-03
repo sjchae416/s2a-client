@@ -406,10 +406,12 @@ const App = () => {
 					<Route
 						path="/runnable-appIds/:id"
 						element={
-							user ? (
+							(user && runnableApps )? (
 								<RunnableAppPage runnableApps={runnableApps} />
 							) : (
-								<LoginPage />
+								<div>
+									<h1>Loading App...</h1>
+								</div>
 							)
 						}
 					/>
