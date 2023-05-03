@@ -41,7 +41,8 @@ const App = () => {
 		try {
 			const url =
 				'https://docs.google.com/spreadsheets/d/1CC5H2MVbGg0tm8OyouoR7f2ARR0CK1kqHFNeKYyYtL4/edit#gid=0';
-			const sheetIndex = await getFirstSheetNameAPI({ url: url });
+			const sheetIndex = 'Sheet1';
+			//await getFirstSheetNameAPI({ url: url });
 			const sheetData = {
 				name: 'Global Developer List',
 				url: url,

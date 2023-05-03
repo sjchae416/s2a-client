@@ -200,17 +200,23 @@ export default function TableView({ view, listViews }) {
       values[i] = "";
     }
 
+    if (index !== -1) {
+      const updatedtableViewObjArr = [...tableViewObjArr];
+      updatedtableViewObjArr.splice(index, 1);
+      settableViewObjArr(updatedtableViewObjArr);
+      setFilteredtableViewObjArr(updatedtableViewObjArr);
+      console.log("updatedtableViewObjArr", updatedtableViewObjArr);
+    }
+
    
     const sheetData = {
       url: tableData.url,
       range: sheetIdx,
       values: [values],
     };
-    console.log('tableData.url', tableData.url);
-    console.log('sheetIdx', sheetIdx);
-    console.log('values', values);
+   
 
-    await updateSheetAPI(sheetData);
+    // await updateSheetAPI(sheetData);
 
     // const sheetData = {
     //   url: "https://docs.google.com/spreadsheets/d/190mGZY2-lVzsT9W95nJxYMwIuc6OSSkdfT8dqIuHnpY/edit#gid=0",
@@ -233,25 +239,18 @@ export default function TableView({ view, listViews }) {
     // setDeleteRowPosition(resource);
 
     //Remove row from tableViewObjArr array
-    if (index !== -1) {
-      const updatedtableViewObjArr = [...tableViewObjArr];
-      updatedtableViewObjArr.splice(index, 1);
-      settableViewObjArr(updatedtableViewObjArr);
-      setFilteredtableViewObjArr(updatedtableViewObjArr);
-      console.log("updatedtableViewObjArr", updatedtableViewObjArr);
-    }
+
     handleClose();
   };
 
   const handleRowClick = (row) => {
-    const foundRow = tableViewObjArr.find((tableViewObjArrRow) => tableViewObjArrRow.Name === row.Name);
-    setSelectedRow(foundRow);
+    // const foundRow = tableViewObjArr.find((tableViewObjArrRow) => tableViewObjArrRow.Name === row.Name);
+    setSelectedRow(row);
 
     const foundRowIndex = tableViewObjArr.findIndex(
-      (tableViewObjArrRow) => tableViewObjArrRow.Name === row.Name
+      (tableViewObjArrRow) => tableViewObjArrRow === row
     );
     setSelectedRowPosition(foundRowIndex);
-    // console.log(foundRowIndex);
     // console.log(tableViewObjArr);
   };
 
@@ -320,6 +319,9 @@ export default function TableView({ view, listViews }) {
             onSelectedRowChange={setSelectedRow}
             editPosition={setEditRowPosition}
             deleteRowPosition={setDeleteRowPosition}
+            tableData={tableData}
+            tableViewObjArr={tableViewObjArr}
+            settableViewObjArr={settableViewObjArr}
           />
         </Modal>
       )}
