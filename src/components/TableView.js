@@ -44,6 +44,8 @@ export default function TableView({ view, listViews }) {
   allowedActions = view.allowedActions;
   role = view.roles;
 
+  let newRowDataKeyVal = "";
+
   useEffect(() => {
     getTableData();
 
@@ -67,13 +69,17 @@ export default function TableView({ view, listViews }) {
     const sheetTableData = await loadSheetAPI(sheetData);
     //gets the array of the data except for the name of the column
 
-    const result = sheetTableData.slice(1).map((row) => {
+    let result = sheetTableData.slice(1).map((row) => {
       const obj = {};
       sheetTableData[0].forEach((key, index) => {
         obj[key] = row[index];
       });
       return obj;
     });
+
+    
+
+    console.log('result', result);
 
     settableViewObjArr(result);
   };
@@ -104,14 +110,14 @@ export default function TableView({ view, listViews }) {
     for (let i = 0; i < tableViewObjArr.length; i++) {
       keys.push(tableViewObjArr[i][keyColumn]);
     }
-    let newRowDataKeyVal = newRowData[keyColumn].toString();
+    newRowDataKeyVal = newRowData[keyColumn].toString();
     return !keys.includes(newRowDataKeyVal);
   };
 
   const handleAddRow = async () => {
     //check if the fields are empty and type correctness
     if (!checkKeyIntegrity()) {
-      alert("Input a unique key. Key already exists!");
+      alert(`Input a unique key. Key: "${newRowDataKeyVal}" already exists!`);
       return;
     }
     if (newRowData.Name && typeof newRowData.Name !== "string") {

@@ -92,6 +92,8 @@ export default function TableConfig({
     config: config,
   };
 
+ 
+
   useEffect(() => {
     if (tableDataArray.length > 0) {
       setKeys(tableDataArray[0]);
@@ -121,6 +123,7 @@ export default function TableConfig({
           label: false,
           reference: "false",
           type: "string",
+          initialValue: "",  
         }))
       );
     }
@@ -173,6 +176,7 @@ export default function TableConfig({
       return;
     }
 
+    console.log("tableData", tableData);
     const createdTable = await createTableAPI(tableData);
     if (createdTable && !createdTable.error) {
       // console.log(createdTable);
@@ -234,6 +238,7 @@ export default function TableConfig({
           label: false,
           reference: "none",
           type: "string",
+          initialValue: "",
         };
         newConfig.name = key;
         if (field === "label" || field === "key") {
@@ -246,6 +251,7 @@ export default function TableConfig({
       return updatedConfig;
     });
   };
+
 
   const handleInputChangesss = (event, key, field) => {
     const result = config.map((item) => item.name);
@@ -274,6 +280,12 @@ export default function TableConfig({
         }
       });
     } else if (field === "type") {
+      result.forEach((item) => {
+        if (item._id === name) {
+          item.type = value;
+        }
+      });
+    } else if (field === "initialValue") {
       result.forEach((item) => {
         if (item._id === name) {
           item.type = value;
@@ -394,6 +406,7 @@ export default function TableConfig({
                 <th>Label</th>
                 <th>Reference</th>
                 <th>Type</th>
+                <th>Initial value</th>
               </tr>
             </thead>
             <tbody>
@@ -460,6 +473,14 @@ export default function TableConfig({
                           <option value="bool">Boolean</option>
                           <option value="url">URL</option>
                         </select>
+                      </td>
+                      <td>
+                        <input 
+                          type="text"
+                          onChange={(event) =>
+                            handleInputChange(event, key, "initialValue")
+                          }
+                        />
                       </td>
                     </tr>
                   ))}
