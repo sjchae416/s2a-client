@@ -17,7 +17,7 @@ export default function AppConfig({
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
 	const [roleData, setRoleData] = useState([]);
 	const roleKey = roleData.length > 0 ? roleData[0] : [];
-	const [sheetIndex, setSheetIndex] = useState("");
+	const [sheetIndex, setSheetIndex] = useState('');
 
 	const now = new Date();
 	const nycTimeString = now.toLocaleString('en-US', {
@@ -47,12 +47,20 @@ export default function AppConfig({
 			setName(app.name);
 			setRoleMembershipSheet(app.roleMembershipSheet);
 			setSheetIndex(app.sheetIndex);
-		} else if (app === null && selectedApp !== null) {
+		} else if (selectedApp !== null) {
 			setName(selectedApp.name);
 			setRoleMembershipSheet(selectedApp.roleMembershipSheet);
 			setSheetIndex(selectedApp.sheetIndex);
 			appData.views = selectedApp.createdViews;
-		} else {
+		}
+		// REVIEW backup
+		// else if (appData) {
+		// 	setName(appData.name);
+		// 	setRoleMembershipSheet(appData.roleMembershipSheet);
+		// 	setSheetIndex(appData.sheetIndex);
+		// }
+		// REVIEW backup
+		else {
 			setName('');
 			setRoleMembershipSheet('');
 			setSheetIndex('');
@@ -60,24 +68,33 @@ export default function AppConfig({
 	}, [app, selectedApp]);
 
 	const handleNameOnChange = (e) => {
+		// REVIEW backup
+		// setSelectedApp(null);
+		// REVIEW backup
 		setName(e.target.value);
+		// REVIEW backup
 		// if (selectedApp !== null) {
 		// 	appData.name = name;
 		// }
+		// REVIEW backup
 	};
 	const handleRoleOnChange = (e) => {
+		// REVIEW backup
+		// setSelectedApp(null);
+		// REVIEW backup
 		setRoleMembershipSheet(e.target.value);
+		// REVIEW backup
 		// if (selectedApp !== null) {
 		// 	appData.name = name;
 		// }
+		// REVIEW backup
 	};
 
 	// FN create and fill in App document & and load Table data
 	const loadRoleTable = async () => {
-		if (name && roleMembershipSheet) {
+		if (name && roleMembershipSheet && sheetIndex) {
 			const sheetData = {
 				url: roleMembershipSheet,
-				//NOTE - In order for sheetIndex to always choose the first sheet index, the metadata must be used. May add it later.
 				sheetIndex: sheetIndex,
 			};
 			const dataArray = await loadSheetAPI(sheetData);
@@ -157,7 +174,7 @@ export default function AppConfig({
 			<div className="form-group">
 				<label>Sheet Index</label>
 				<input
-				    required
+					required
 					type="text"
 					value={sheetIndex}
 					className="form-control"
@@ -210,10 +227,10 @@ export default function AppConfig({
 					<br />
 
 					{selectedApp && (
-						<button 
-            className="btn btn-danger"
-            onClick={() => handleDeleteApp(selectedApp._id)}
-            >
+						<button
+							className="btn btn-danger"
+							onClick={() => handleDeleteApp(selectedApp._id)}
+						>
 							DELETE
 						</button>
 					)}

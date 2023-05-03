@@ -64,12 +64,12 @@ export default function TableView({ view, listViews }) {
       url: data.url,
       sheetIndex: data.sheetIndex,
     };
-    const tableData = await loadSheetAPI(sheetData);
+    const sheetTableData = await loadSheetAPI(sheetData);
     //gets the array of the data except for the name of the column
 
-    const result = tableData.slice(1).map((row) => {
+    const result = sheetTableData.slice(1).map((row) => {
       const obj = {};
-      tableData[0].forEach((key, index) => {
+      sheetTableData[0].forEach((key, index) => {
         obj[key] = row[index];
       });
       return obj;
@@ -116,6 +116,44 @@ export default function TableView({ view, listViews }) {
     if(!checkKeyIntegrity()){
       alert("Input a unique key. Key already exists!");
       return;
+    }
+    if (newRowData.Name && typeof newRowData.Name !== "string") {
+      return window.alert(`Name must be string only!`);
+    } else if (
+      newRowData["Allergen 1"] &&
+      !["true", "false"].includes(newRowData["Allergen 1"].toLowerCase())
+    ) {
+      return window.alert(`Allergen 1 must be bool only!`);
+    } else if (
+      newRowData["Allergen 2"] &&
+      !["true", "false"].includes(newRowData["Allergen 2"].toLowerCase())
+    ) {
+      return window.alert(`Allergen 2 must be bool only!`);
+    } else if (
+      newRowData["Allergen 3"] &&
+      !["true", "false"].includes(newRowData["Allergen 3"].toLowerCase())
+    ) {
+      return window.alert(`Allergen 3 must be bool only!`);
+    } else if (
+      newRowData["Allergen 4"] &&
+      !["true", "false"].includes(newRowData["Allergen 4"].toLowerCase())
+    ) {
+      return window.alert(`Allergen 4 must be bool only!`);
+    } else if (newRowData.Student && typeof newRowData.Student !== "string") {
+      return window.alert(`Student must be string only!`);
+    } else if (newRowData.Classes && typeof newRowData.Classes !== "string") {
+      return window.alert(`Classes must be string only!`);
+    } else if (newRowData.Grades && typeof newRowData.Grades !== "string") {
+      return window.alert(`Grades must be string only!`);
+    } else if (newRowData.ID && isNaN(newRowData.ID)) {
+      return window.alert(`ID must be number only!`);
+    }
+
+    for (let i = 0; i < col.length; i++) {
+      if (!newRowData[col[i]]) {
+        alert("Please fill in all fields");
+        return;
+      }
     }
 
     for (let i = 0; i < col.length; i++) {

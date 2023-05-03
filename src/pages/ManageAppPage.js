@@ -21,8 +21,9 @@ export default function ManageAppPage({
 	const { user, setUser } = useContext(UserContext);
 	const [view, setView] = useState('app');
 	const [viewRole, setViewRole] = useState([]);
-	const [viewDataList, setViewDataList] = useState([]);
-	const [selectedView, setSelectedView] = useState({});
+	// NOTE viewDataList will store existing Views
+	const [viewDataList, setViewDataList] = useState(null);
+	const [selectedView, setSelectedView] = useState(null);
 	const [addView, setAddView] = useState(false);
 	// REVIEW not uesd at all, only changes the state
 	// const [addApp, setAddApp] = useState(false);
@@ -33,7 +34,11 @@ export default function ManageAppPage({
 	useEffect(() => {
 		if (selectedApp !== null) {
 			setViewDataList(selectedApp.createdViews);
+		} else {
+			setSelectedView(null);
+			setViewDataList(null);
 		}
+		setViewDatas(null);
 	}, [selectedApp]);
 
 	const handleAddApp = () => {
@@ -41,9 +46,14 @@ export default function ManageAppPage({
 		setSelectedApp(null);
 		setShowTable(false);
 		setReloadApp(false);
-    setViewDataList([]);
-    //setAddApp(true);
-    setSelectedView({});
+		setViewDataList(null);
+		//setAddApp(true);
+		setSelectedView(null);
+	};
+
+	const handleAddView = () => {
+		setSelectedView(null);
+		setAddView(true);
 	};
 
 	return (
@@ -60,10 +70,12 @@ export default function ManageAppPage({
 							setView={setView}
 							app={app}
 							setAppData={setAppData}
+							selectedApp={selectedApp}
 							setSelectedApp={setSelectedApp}
 							viewDatas={viewDatas}
 							setViewDatas={setViewDatas}
 							viewDataList={viewDataList}
+							setViewDataList={setViewDataList}
 						/>
 
 						<div className="col-1 border-right text-center">
@@ -101,14 +113,7 @@ export default function ManageAppPage({
 
 							{view === 'view' && app && (
 								<>
-									<button
-										onClick={() => {
-											setSelectedView({});
-											setAddView(true);
-										}}
-									>
-										Add View
-									</button>
+									<button onClick={handleAddView}>Add View</button>
 									<List
 										type="view"
 										viewDatas={viewDatas}
@@ -142,6 +147,7 @@ export default function ManageAppPage({
 										userTables={userTables}
 										viewDatas={viewDatas}
 										setViewDatas={setViewDatas}
+										viewDataList={viewDataList}
 										setViewDataList={setViewDataList}
 										selectedView={selectedView}
 										setSelectedView={setSelectedView}
