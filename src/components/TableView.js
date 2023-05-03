@@ -27,7 +27,9 @@ export default function TableView({ view, listViews }) {
   // States to store the position of the row delete in the sheet
   const [deleteRowPosition, setDeleteRowPosition] = useState({});
 
-  const [filteredtableViewObjArr, setFilteredtableViewObjArr] = useState([...tableViewObjArr]);
+  const [filteredtableViewObjArr, setFilteredtableViewObjArr] = useState([
+    ...tableViewObjArr,
+  ]);
 
   const detailApps = listViews.filter((view) => view.viewType === "Detail");
   // console.log('detailApps', detailApps);
@@ -47,7 +49,6 @@ export default function TableView({ view, listViews }) {
 
     const result = tableViewObjArr.filter((row) => row[viewFilter]);
     setFilteredtableViewObjArr(result);
-
   }, []);
 
   useEffect(() => {
@@ -57,7 +58,6 @@ export default function TableView({ view, listViews }) {
   const getTableData = async () => {
     const data = await readTableAPI(view.table);
     setTableData(data);
-
 
     const sheetData = {
       name: data.name,
@@ -76,7 +76,6 @@ export default function TableView({ view, listViews }) {
     });
 
     settableViewObjArr(result);
-
   };
 
   const handleOpen = () => {
@@ -96,24 +95,22 @@ export default function TableView({ view, listViews }) {
   const checkKeyIntegrity = () => {
     let keyColumn = "";
     // Find Key Column
-    for(let i = 0; i < tableData.columns.length; i++){
-      if(tableData.columns[i].key){
+    for (let i = 0; i < tableData.columns.length; i++) {
+      if (tableData.columns[i].key) {
         keyColumn = tableData.columns[i].name;
       }
     }
     let keys = [];
-    for(let i = 0; i < tableViewObjArr.length; i++){
+    for (let i = 0; i < tableViewObjArr.length; i++) {
       keys.push(tableViewObjArr[i][keyColumn]);
-
     }
     let newRowDataKeyVal = newRowData[keyColumn].toString();
     return !keys.includes(newRowDataKeyVal);
-  }
-
+  };
 
   const handleAddRow = async () => {
     //check if the fields are empty and type correctness
-    if(!checkKeyIntegrity()){
+    if (!checkKeyIntegrity()) {
       alert("Input a unique key. Key already exists!");
       return;
     }
@@ -188,7 +185,7 @@ export default function TableView({ view, listViews }) {
     for (let key in newRow) {
       newValues.push(newRow[key]);
     }
-    
+
     const sheetData = {
       url: tableData.url,
       range: sheetIdx,
@@ -227,56 +224,37 @@ export default function TableView({ view, listViews }) {
 
     let sheetIdx =
       tableData.sheetIndex +
-      "!A" +
-      (index + 2) +
-      ":" +
+      "!A2:" +
       String.fromCharCode(64 + Object.keys(deletedRow).length) +
-      (index + 2);
-    let values = [];
-
-    for (let i = 0; i < Object.keys(deletedRow).length; i++) {
-      values[i] = "";
-    }
+      (tableViewObjArr.length + 1).toString();
 
     if (index !== -1) {
       const updatedtableViewObjArr = [...tableViewObjArr];
       updatedtableViewObjArr.splice(index, 1);
       settableViewObjArr(updatedtableViewObjArr);
       setFilteredtableViewObjArr(updatedtableViewObjArr);
-      console.log("updatedtableViewObjArr", updatedtableViewObjArr);
     }
 
-   
+    let values = [];
+
+    for (let i = 0; i < Object.keys(deletedRow).length; i++) {
+      values[i] = "";
+    }
+
+    let arr2D = tableViewObjArr.map((obj) => Object.values(obj));
+    arr2D.splice(index, 1);
+
+    arr2D.push(values);
+
     const sheetData = {
       url: tableData.url,
       range: sheetIdx,
-      values: [values],
+      values: arr2D,
     };
-   
 
-    // await updateSheetAPI(sheetData);
+    console.log("sheetData", sheetData);
 
-    // const sheetData = {
-    //   url: "https://docs.google.com/spreadsheets/d/190mGZY2-lVzsT9W95nJxYMwIuc6OSSkdfT8dqIuHnpY/edit#gid=0",
-    //   range: "Sheet1!A10:D10",
-    //   values: [
-    //     ["", "", "", ""],
-    //   ],
-    // };
-    // await updateSheetAPI(sheetData);
-
-    // let resource = {
-    //     data:[
-    //         {
-    //             range: sheetIdx,
-    //             values :''
-    //         }
-    //     ]
-    // };
-
-    // setDeleteRowPosition(resource);
-
-    //Remove row from tableViewObjArr array
+    await updateSheetAPI(sheetData);
 
     handleClose();
   };
@@ -293,7 +271,9 @@ export default function TableView({ view, listViews }) {
   };
 
   const updateRecord = (data) => {
-    const index = filteredtableViewObjArr.findIndex((item) => item.Email === data.Email);
+    const index = filteredtableViewObjArr.findIndex(
+      (item) => item.Email === data.Email
+    );
     filteredtableViewObjArr[index] = data;
   };
 
