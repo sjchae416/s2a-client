@@ -36,9 +36,9 @@ export default function TableConfig({
       setKeys(selectedTable.columns);
       setShowTable(false);
     } else {
-      setName("");
-      setUrl("");
-      setSheetIndex("");
+      // setName("");
+      // setUrl("");
+      // setSheetIndex("");
     }
   }, [selectedTable]);
 
@@ -92,8 +92,6 @@ export default function TableConfig({
     config: config,
   };
 
- 
-
   useEffect(() => {
     if (tableDataArray.length > 0) {
       setKeys(tableDataArray[0]);
@@ -123,7 +121,7 @@ export default function TableConfig({
           label: false,
           reference: "false",
           type: "string",
-          initialValue: "",  
+          initialValue: "",
         }))
       );
     }
@@ -134,18 +132,19 @@ export default function TableConfig({
       if (selectedTable) {
         return setShowTable(true);
       }
-      if (!isNameUnique()) {
-        alert(
-          "This table name already exists. Please choose a different name."
-        );
-        return;
-      }
+      // if (!isNameUnique()) {
+      //   alert(
+      //     "This table name already exists. Please choose a different name."
+      //   );
+      //   return;
+      // }
       const sheetData = {
         url: tableData.url,
         sheetIndex: tableData.sheetIndex,
       };
       const tableRows = await loadSheetAPI(sheetData);
       if (tableRows && !tableRows.error) {
+        console.log(tableRows);
         setTableDataArray(tableRows);
         setShowTable(true);
       } else {
@@ -247,13 +246,14 @@ export default function TableConfig({
           newConfig[field] = value;
         }
         updatedConfig.push(newConfig);
+        console.log(updatedConfig);
       }
+
       return updatedConfig;
     });
   };
 
-
-  const handleInputChangesss = (event, key, field) => {
+  const handleUpdateConfig = (event, key, field) => {
     const result = config.map((item) => item.name);
     const { value, type, name, checked } = event.target;
 
@@ -276,7 +276,7 @@ export default function TableConfig({
     } else if (field === "reference") {
       result.forEach((item) => {
         if (item._id === name) {
-          item.reference = value;
+          item.reference = value === "None" ? "false" : value;
         }
       });
     } else if (field === "type") {
@@ -287,8 +287,8 @@ export default function TableConfig({
       });
     } else if (field === "initialValue") {
       result.forEach((item) => {
-        if (item._id === name) {
-          item.type = value;
+        if (item._id === key._id) {
+          item.initialValue = value;
         }
       });
     }
@@ -373,7 +373,15 @@ export default function TableConfig({
           type="text"
           className="form-control"
           value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          onChange={(e) => {
+            if (showTable) {
+              setShowTable(false);
+              setSelectedTable(null);
+              setUrl(e.target.value);
+            } else {
+              setUrl(e.target.value);
+            }
+          }}
         />
       </div>
       <div className="form-group">
@@ -412,7 +420,7 @@ export default function TableConfig({
             <tbody>
               {showSelectedTable ? (
                 <SelectedTableConfig
-                  handleInputChangesss={handleInputChangesss}
+                  handleUpdateConfig={handleUpdateConfig}
                   keys={keys}
                   userTables={userTables}
                 />
@@ -475,7 +483,7 @@ export default function TableConfig({
                         </select>
                       </td>
                       <td>
-                        <input 
+                        <input
                           type="text"
                           onChange={(event) =>
                             handleInputChange(event, key, "initialValue")
