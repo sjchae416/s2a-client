@@ -158,6 +158,7 @@ const Sidebar = ({
 	};
 
 	const handleDiscard = () => {
+		// TODO restore all edit/delete View
 		setAppData(null);
 		setViewDatas(null);
 		setViewDataList(null);
