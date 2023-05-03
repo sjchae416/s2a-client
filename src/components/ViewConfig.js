@@ -190,6 +190,7 @@ export default function ViewConfig({
 		formElement.current.reset();
 	};
 
+	// TODO keep a track of edited Views to restore when Discard
 	const handleUpdateView = async () => {
 		if (!viewName) {
 			return window.alert('Enter View name!');
@@ -285,6 +286,7 @@ export default function ViewConfig({
 	//   return !(invalidEmails.length > 0);
 	// }
 
+	// TODO keep a track of deleted Views to restore when Discard
 	const handleDeleteView = async (selectedViewId) => {
 		if (isObjectInArray(selectedView, viewDataList)) {
 			const viewIdToBeDeleted = selectedViewId;
