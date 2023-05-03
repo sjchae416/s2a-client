@@ -329,36 +329,36 @@ export default function TableView({ view, listViews, user }) {
           />
         </Modal>
       )}
-      <Modal open={open} onClose={handleClose}>
-        <div className="modal-content">
-          <h2>ADD ROW</h2>
-          {col.map((columnName) => (
-            <div key={columnName}>
-              <TextField
-                name={columnName}
-                label={columnName}
-                value={newRowData[columnName] || ""}
-                onChange={handleModalInputChange}
-              />
-              <br />
-              <br />
-            </div>
-          ))}
-          <br />
-          <div>
-            <Button variant="contained" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button
-              className="btn btn-danger "
-              variant="contained"
-              onClick={handleAddRow}
-            >
-              Add
-            </Button>
+     <Modal open={open} onClose={handleClose}>
+      <div className="modal-content" style={{ maxHeight: "80vh", overflowY: "auto" }}>
+        <h2>ADD ROW</h2>
+        {col.map((columnName) => (
+          <div key={columnName}>
+            <TextField
+              name={columnName}
+              label={columnName}
+              value={newRowData[columnName] || ""}
+              onChange={handleModalInputChange}
+            />
+            <br />
+            <br />
           </div>
+        ))}
+        <br />
+        <div>
+          <Button variant="contained" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button
+            className="btn btn-danger "
+            variant="contained"
+            onClick={handleAddRow}
+          >
+            Add
+          </Button>
         </div>
-      </Modal>
+      </div>
+    </Modal>
       <Modal open={openDelete} onClose={handleClose}>
         <div className="modal-content">
           <h2>Delete Row</h2>
