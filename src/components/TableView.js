@@ -33,8 +33,7 @@ export default function TableView({ view, listViews }) {
   // console.log('detailApps', detailApps);
 
   let name, table, col, type, allowedActions, role;
-  let viewFilter = "",
-    userFilter = "";
+  let viewFilter = "", userFilter = "";
   name = view.name;
   table = view.table;
   col = view.columns;
@@ -42,17 +41,16 @@ export default function TableView({ view, listViews }) {
   allowedActions = view.allowedActions;
   role = view.roles;
 
+  if (view.filter != "") viewFilter = view.filter;
+   if (view.userFilter != "") userFilter = view.userFilter;
+
   useEffect(() => {
     getTableData();
-
-    const result = tableViewObjArr.filter((row) => row[viewFilter]);
-    setFilteredtableViewObjArr(result);
-
   }, []);
 
-  useEffect(() => {
-    console.log("tableViewObjArr in useEffect", tableViewObjArr);
-  }, [tableViewObjArr]);
+  // useEffect(() => {
+  //   console.log("tableViewObjArr in useEffect", tableViewObjArr);
+  // }, [tableViewObjArr]);
 
   const getTableData = async () => {
     const data = await readTableAPI(view.table);
@@ -74,8 +72,13 @@ export default function TableView({ view, listViews }) {
       });
       return obj;
     });
-
     settableViewObjArr(result);
+
+    const filteredResult = tableViewObjArr.filter((row) => row[viewFilter] === "TRUE");
+    setFilteredtableViewObjArr(filteredResult);
+
+    console.log(result);
+    console.log(filteredResult);
 
   };
 
@@ -260,6 +263,8 @@ export default function TableView({ view, listViews }) {
     filteredtableViewObjArr[index] = data;
   };
 
+
+
   return (
     <div>
       <h2>{name}</h2>
@@ -289,7 +294,7 @@ export default function TableView({ view, listViews }) {
           </tr>
         </thead>
         <tbody>
-          {tableViewObjArr.map((row) => (
+          {filteredtableViewObjArr.map((row) => (
             <tr key={row.Name} onClick={() => handleRowClick(row)}>
               {col.map((column) => (
                 <td key={column}>{row[column]}</td>
