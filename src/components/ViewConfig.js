@@ -24,7 +24,6 @@ export default function ViewConfig({
   const [boolConfigs, setBoolConfigs] = useState([]);
   const [emailConfigs, setEmailConfigs] = useState([]);
   const [editableCols, setEditableCol] = useState([]);
-  const [selectedEditColumns, setSelectedEditColumns] = useState([]);
   const [columns, setColumns] = useState([]);
   const [selectedTableId, setSelectedTableId] = useState("");
   const [viewTable, setViewTable] = useState(null);
@@ -100,12 +99,24 @@ export default function ViewConfig({
 
   const handleCheckboxChange = (e, column) => {
     const { name, checked } = e.target;
+    let newSelectedColumns;
     if (checked) {
-      setSelectedColumns([...selectedColumns, name]);
+        newSelectedColumns = [...selectedColumns, name];
     } else {
-      setSelectedColumns(selectedColumns.filter((column) => column !== name));
+        newSelectedColumns = selectedColumns.filter((col) => col !== name);
     }
+    handleColumnsOrder(newSelectedColumns);
   };
+
+  function handleColumnsOrder(selectedColumns){
+    const orderedColumns = [];
+    for (let column of columns) {
+      if (selectedColumns.includes(column.name)) {
+        orderedColumns.push(column.name);
+      }
+    }
+    setSelectedColumns(orderedColumns);
+  }
 
   const handleAllowedActionCheckboxChange = (e, column) => {
     const { name, checked } = e.target;
@@ -384,21 +395,21 @@ export default function ViewConfig({
         </select>
       </div>
       <div>
-        <div className="form-group">
-          <label>Columns</label>
-          {columns.map((column) => (
+      <div className="form-group">
+        <label>Columns</label>
+        {columns.map((column) => (
             <div key={column._id}>
-              <input
+            <input
                 checked={selectedColumns.includes(column.name)}
                 type="checkbox"
                 id={`checkbox-${column.name}`}
                 name={column.name}
                 value={column.name}
                 onChange={(e) => handleCheckboxChange(e)}
-              />
-              <label htmlFor={`checkbox-${column.name}`}>{column.name}</label>
+            />
+            <label htmlFor={`checkbox-${column.name}`}>{column.name}</label>
             </div>
-          ))}
+        ))}
         </div>
         <p>Selected Columns: {selectedColumns.join(", ")}</p>
       </div>
