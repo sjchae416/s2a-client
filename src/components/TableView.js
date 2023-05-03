@@ -85,8 +85,15 @@ export default function TableView({ view, listViews, user }) {
     else
       settableViewObjArr(null);
 
-    let filteredResult = result.filter((row) => row[viewFilter] === "TRUE");
-    filteredResult = filteredResult.filter((row) => row[userFilter] === user.email);
+    let filteredResult = {};
+    if(viewFilter == "" && userFilter == ""){
+      filteredResult = result;
+    }
+    else{
+      filteredResult = result.filter((row) => row[viewFilter] === "TRUE");
+      filteredResult = filteredResult.filter((row) => row[userFilter] === user.email);
+    }
+    
     setFilteredtableViewObjArr(filteredResult);
 
     console.log(filteredResult);
