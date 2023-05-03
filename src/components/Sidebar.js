@@ -141,6 +141,7 @@ const Sidebar = ({
 		if (app && (viewDatas || viewDataList)) {
 			app.published = false;
 			setAppData(app);
+			window.alert('The status of the App is now Unpublished!');
 		}
 
 		setIsPublishModalVisible(false);
@@ -150,7 +151,7 @@ const Sidebar = ({
 		if (app && (viewDatas || viewDataList)) {
 			app.published = true;
 			setAppData(app);
-			window.alert('Your app has been published! Now it is time to Save it.');
+			window.alert('The status of the App is now Published!');
 		}
 
 		setIsPublishModalVisible(false);
@@ -223,7 +224,7 @@ const Sidebar = ({
 						under in development and will not be available to users.
 					</h5>
 
-					<button onClick={() => handleUnpublish} className="btn btn-danger">
+					<button onClick={handleUnpublish} className="btn btn-danger">
 						No
 					</button>
 					<button onClick={handlePublish} className="btn btn-success">

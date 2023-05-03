@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { readViewAPI } from '../api';
 
 const List = ({
 	type,
+	userTables,
+	setSelectedTable,
 	setAppData,
 	setShowTable,
-	userTables,
-	viewDatas,
-	viewDataList,
-	setSelectedView,
-	setSelectedTable,
-	unpublishedApps,
-	publishedApps,
 	appType,
-	app,
+	publishedApps,
+	unpublishedApps,
 	setSelectedApp,
+	viewDataList,
+	viewDatas,
+	setSelectedView,
 }) => {
-	// TODO restore viewsToDisplay state
 	const [viewsToDisplay, setViewsToDisplay] = useState(null);
 
 	useEffect(() => {
@@ -35,7 +32,6 @@ const List = ({
 		setAppData(null);
 		setShowTable(false);
 		setSelectedApp(app);
-		setSelectedView(null);
 	};
 
 	const handleSelectView = (view) => {
@@ -45,12 +41,6 @@ const List = ({
 	const handleSelectTable = (table) => {
 		setSelectedTable(table);
 	};
-
-	// useEffect(() => {
-	//   if (selectedApp !== null) {
-	//     loadAppViews(selectedApp);
-	//   }
-	// }, [selectedApp]);
 
 	return (
 		<div>
@@ -91,7 +81,7 @@ const List = ({
 								onClick={() => handleSelectView(view)}
 							>
 								<hr />
-								{view.viewName || view.name}
+								{view.name}
 							</div>
 						)
 				)
