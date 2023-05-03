@@ -14,21 +14,21 @@ export default function ViewConfig({
 	addView,
 	setAddView,
 }) {
-  const [viewName, setViewName] = useState("");
-  const [selectedColumns, setSelectedColumns] = useState([]);
-  const [viewType, setViewType] = useState("Table");
-  const [allowedAction, setAllowAction] = useState([]);
-  const [role, setRole] = useState([]);
-  const [filter, setFilter] = useState("");
-  const [userFilter, setUserFilter] = useState("");
-  const [editFilter, setEditFilter] = useState("");
-  const [boolConfigs, setBoolConfigs] = useState([]);
-  const [emailConfigs, setEmailConfigs] = useState([]);
-  const [editableCols, setEditableCol] = useState([]);
-  const [selectedEditColumns, setSelectedEditColumns] = useState([]);
-  const [columns, setColumns] = useState([]);
-  const [selectedTableId, setSelectedTableId] = useState("");
-  const [viewTable, setViewTable] = useState(null);
+	const [viewName, setViewName] = useState('');
+	const [selectedColumns, setSelectedColumns] = useState([]);
+	const [viewType, setViewType] = useState('Table');
+	const [allowedAction, setAllowAction] = useState([]);
+	const [role, setRole] = useState([]);
+	const [filter, setFilter] = useState('');
+	const [userFilter, setUserFilter] = useState('');
+	const [editFilter, setEditFilter] = useState('');
+	const [boolConfigs, setBoolConfigs] = useState([]);
+	const [emailConfigs, setEmailConfigs] = useState([]);
+	const [editableCols, setEditableCol] = useState([]);
+	const [selectedEditColumns, setSelectedEditColumns] = useState([]);
+	const [columns, setColumns] = useState([]);
+	const [selectedTableId, setSelectedTableId] = useState('');
+	const [viewTable, setViewTable] = useState(null);
 
 	const formElement = useRef();
 
@@ -191,8 +191,7 @@ export default function ViewConfig({
 		}
 	};
 
-
-
+	// TODO keep a track of edited Views to restore when Discard
 	const handleUpdateView = async () => {
 		if (!viewName) {
 			return window.alert('Enter View name!');
