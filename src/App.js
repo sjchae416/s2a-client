@@ -408,7 +408,10 @@ const App = () => {
 						path="/runnable-appIds/:id"
 						element={
 							user && runnableApps ? (
-								<RunnableAppPage runnableApps={runnableApps} />
+								<RunnableAppPage
+									runnableApps={runnableApps}
+									userTables={userTables}
+								/>
 							) : (
 								<div>
 									<h1>Loading App...</h1>
