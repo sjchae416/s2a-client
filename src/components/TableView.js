@@ -6,7 +6,7 @@ import DetailView from "./DetailView";
 import { readTableAPI } from "../api";
 import { loadSheetAPI, updateSheetAPI } from "../api";
 
-export default function TableView({ view, listViews }) {
+export default function TableView({ view, listViews, user }) {
   const [tableData, setTableData] = useState([]);
   const [tableViewObjArr, settableViewObjArr] = useState([]);
   const [open, setOpen] = useState(false);
@@ -33,8 +33,7 @@ export default function TableView({ view, listViews }) {
   // console.log('detailApps', detailApps);
 
   let name, table, col, type, allowedActions, role;
-  let viewFilter = "",
-    userFilter = "";
+  let viewFilter = "", userFilter = "";
   name = view.name;
   table = view.table;
   col = view.columns;
@@ -42,17 +41,16 @@ export default function TableView({ view, listViews }) {
   allowedActions = view.allowedActions;
   role = view.roles;
 
+  if (view.filter != "") viewFilter = view.filter;
+   if (view.userFilter != "") userFilter = view.userFilter;
+
   useEffect(() => {
     getTableData();
-
-    const result = tableViewObjArr.filter((row) => row[viewFilter]);
-    setFilteredtableViewObjArr(result);
-
   }, []);
 
-  useEffect(() => {
-    console.log("tableViewObjArr in useEffect", tableViewObjArr);
-  }, [tableViewObjArr]);
+  // useEffect(() => {
+  //   console.log("tableViewObjArr in useEffect", tableViewObjArr);
+  // }, [tableViewObjArr]);
 
   const getTableData = async () => {
     const data = await readTableAPI(view.table);
@@ -74,8 +72,13 @@ export default function TableView({ view, listViews }) {
       });
       return obj;
     });
-
     settableViewObjArr(result);
+
+    let filteredResult = tableViewObjArr.filter((row) => row[viewFilter] === "TRUE");
+    filteredResult = filteredResult.filter((row) => row[userFilter] === user.email);
+    setFilteredtableViewObjArr(filteredResult);
+
+    console.log(filteredResult);
 
   };
 
@@ -297,6 +300,8 @@ export default function TableView({ view, listViews }) {
     filteredtableViewObjArr[index] = data;
   };
 
+
+
   return (
     <div>
       <h2>{name}</h2>
@@ -326,7 +331,7 @@ export default function TableView({ view, listViews }) {
           </tr>
         </thead>
         <tbody>
-          {tableViewObjArr.map((row) => (
+          {filteredtableViewObjArr.map((row) => (
             <tr key={row.Name} onClick={() => handleRowClick(row)}>
               {col.map((column) => (
                 <td key={column}>{row[column]}</td>
@@ -363,36 +368,36 @@ export default function TableView({ view, listViews }) {
           />
         </Modal>
       )}
-      <Modal open={open} onClose={handleClose}>
-        <div className="modal-content">
-          <h2>ADD ROW</h2>
-          {col.map((columnName) => (
-            <div key={columnName}>
-              <TextField
-                name={columnName}
-                label={columnName}
-                value={newRowData[columnName] || ""}
-                onChange={handleModalInputChange}
-              />
-              <br />
-              <br />
-            </div>
-          ))}
-          <br />
-          <div>
-            <Button variant="contained" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button
-              className="btn btn-danger "
-              variant="contained"
-              onClick={handleAddRow}
-            >
-              Add
-            </Button>
+     <Modal open={open} onClose={handleClose}>
+      <div className="modal-content" style={{ maxHeight: "80vh", overflowY: "auto" }}>
+        <h2>ADD ROW</h2>
+        {col.map((columnName) => (
+          <div key={columnName}>
+            <TextField
+              name={columnName}
+              label={columnName}
+              value={newRowData[columnName] || ""}
+              onChange={handleModalInputChange}
+            />
+            <br />
+            <br />
           </div>
+        ))}
+        <br />
+        <div>
+          <Button variant="contained" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button
+            className="btn btn-danger "
+            variant="contained"
+            onClick={handleAddRow}
+          >
+            Add
+          </Button>
         </div>
-      </Modal>
+      </div>
+    </Modal>
       <Modal open={openDelete} onClose={handleClose}>
         <div className="modal-content">
           <h2>Delete Row</h2>
