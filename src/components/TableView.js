@@ -61,6 +61,7 @@ export default function TableView({ view, listViews, user }) {
     const data = await readTableAPI(view.table);
     setTableData(data);
 
+
     const sheetData = {
       name: data.name,
       url: data.url,
@@ -80,10 +81,12 @@ export default function TableView({ view, listViews, user }) {
         return null;  
     });
 
+
     if(result)
       settableViewObjArr(result);
     else
       settableViewObjArr(null);
+    
 
     let filteredResult = {};
     if(viewFilter == "" && userFilter == ""){
@@ -91,7 +94,8 @@ export default function TableView({ view, listViews, user }) {
     }
     else{
       filteredResult = result.filter((row) => row[viewFilter] === "TRUE");
-      filteredResult = filteredResult.filter((row) => row[userFilter] === user.email);
+      if(userFilter)
+        filteredResult = filteredResult.filter((row) => row[userFilter] == user.email);
     }
     
     setFilteredtableViewObjArr(filteredResult);
