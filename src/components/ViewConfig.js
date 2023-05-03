@@ -188,6 +188,12 @@ export default function ViewConfig({
 				prev === null ? [viewToSave] : [...prev, viewToSave]
 			);
 			handleCancel();
+
+      setBoolConfigs([]);
+      setFilter("");
+      setEmailConfigs([]);
+      setUserFilter("");
+      setEditFilter("");
 		}
 	};
 
