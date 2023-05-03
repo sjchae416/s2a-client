@@ -1,58 +1,64 @@
-import React, { useState, useContext } from 'react';
-import { TableConfig, List, NavigationBar } from '../components';
-import UserContext from '../UserContext';
+import React, { useState, useContext } from "react";
+import { TableConfig, List, NavigationBar } from "../components";
+import UserContext from "../UserContext";
 
 export default function ManageTablePage({ tableIds, userTables, setTables }) {
-	const { user, setUser } = useContext(UserContext);
-	const [selectedTable, setSelectedTable] = useState(null);
-	const [addTable, setAddTable] = useState(false);
+  const { user, setUser } = useContext(UserContext);
+  const [selectedTable, setSelectedTable] = useState(null);
+  const [addTable, setAddTable] = useState(false);
 
-	return (
-		<div>
-			<br />
-			<br />
-			<div className="container">
-				<NavigationBar user={user} />
-				<br />
-				<h3>Create New Table</h3>
-				<div className="card p-0">
-					<div className="row no-gutters mt-2">
-						{/* <div className="col-1 border-right text-center">
+  // console.log("selectedTable", selectedTable);
+
+  return (
+    <div>
+      <br />
+      <br />
+      <div className="container">
+        <NavigationBar
+          user={user}
+          setAddTable={setAddTable}
+          addTable={addTable}
+        />
+        <br />
+        <h3>Create New Table</h3>
+        <div className="card p-0">
+          <div className="row no-gutters mt-2">
+            {/* <div className="col-1 border-right text-center">
               <button>Table</button>
             </div> */}
-						<div className="col-1 border-right text-center">
-							<button
-								onClick={() => {
-									setSelectedTable(null);
-									setAddTable(!addTable);
-								}}
-							>
-								Add Table
-							</button>
-							<List
-								type="table"
-								userTables={userTables}
-								setSelectedTable={setSelectedTable}
-							/>
-						</div>
-						<div className="col-auto">
-							<TableConfig
+            <div className="col-1 border-right text-center">
+              <button
+                onClick={() => {
+                  setSelectedTable(null);
+                  setAddTable(!addTable);
+                }}
+              >
+                Add Table
+              </button>
+              <List
+                type="table"
+                userTables={userTables}
+                setSelectedTable={setSelectedTable}
+              />
+            </div>
+            <div className="col-auto">
+              <TableConfig
                 setTables={setTables}
-								user={user}
-								setUser={setUser}
-								tableIds={tableIds}
-								userTables={userTables}
-								selectedTable={selectedTable}
-								setSelectedTable={setSelectedTable}
-								addTable={addTable}
-							/>
-						</div>
-					</div>
-				</div>
-				<br />
-				<br />
-				<br />
-			</div>
-		</div>
-	);
+                user={user}
+                setUser={setUser}
+                tableIds={tableIds}
+                userTables={userTables}
+                selectedTable={selectedTable}
+                setSelectedTable={setSelectedTable}
+                addTable={addTable}
+              />
+            </div>
+          </div>
+        </div>
+        <br />
+        <br />
+        <br />
+      </div>
+    </div>
+  );
 }
