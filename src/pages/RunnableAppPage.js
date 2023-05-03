@@ -3,11 +3,11 @@ import { useParams, useLocation } from 'react-router-dom';
 import { NavigationBar, TableView, TableViewSidebar } from '../components';
 import UserContext from '../UserContext';
 
-export default function RunnableAppPage({runnableApps}) {
+export default function RunnableAppPage({ runnableApps, userTables }) {
 	const { id } = useParams();
 
 	// find app in runnableApps with same ID
-	const runnableApp = runnableApps.find(app => app.app._id === id);
+	const runnableApp = runnableApps.find((app) => app.app._id === id);
 
 	// get accessible views
 	const views = runnableApp.app.accessibleViews;
@@ -30,7 +30,14 @@ export default function RunnableAppPage({runnableApps}) {
 					<TableViewSidebar views={views} onSelectView={handleSelectView} />
 				</div>
 				<div className="main-container">
-					{selectedView && <TableView view={selectedView} listViews={views} user = {user} />}
+					{selectedView && (
+						<TableView
+							view={selectedView}
+							listViews={views}
+							userTables={userTables}
+							user={user}
+						/>
+					)}
 				</div>
 			</div>
 		</div>

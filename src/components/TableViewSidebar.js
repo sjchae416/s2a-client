@@ -1,24 +1,22 @@
-import React from "react";
-// import { Link } from "react-router-dom";
+import React from 'react';
 
 const TableViewSidebar = ({ views, onSelectView }) => {
-  const tableApps = views.filter((view) => view.viewType === "Table");
-  const tableLinks = tableApps.map((view) => (
-    <button
-      key={view.name}
-      onClick={() => onSelectView(view)}
-      className="button-link"
-    >
-      {view.name}
-    </button>
-  ));
+	const tableViews = views.filter((view) => view.viewType === 'Table');
 
-  return (
-    <div className="sidebar">
-      <h3>Table Views</h3>
-      <ul className="no-bullets">{tableLinks}</ul>
-    </div>
-  );
+	return (
+		<div className="sidebar">
+			<h3>Table Views</h3>
+			<ul className="no-bullets">
+				{tableViews.map((view) => (
+					<li key={view.name}>
+						<button onClick={() => onSelectView(view)} className="button-link">
+							{view.name}
+						</button>
+					</li>
+				))}
+			</ul>
+		</div>
+	);
 };
 
 export default TableViewSidebar;
