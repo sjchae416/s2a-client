@@ -5,9 +5,10 @@ import UserContext from '../UserContext';
 import { Margin } from '@mui/icons-material';
 
 export default function DashboardPage({
+	isDeveloper,
+	userTables,
 	setAppData,
 	setReloadApp,
-	isDeveloper,
 	runnableApps,
 }) {
 	const { user, setUser } = useContext(UserContext);
@@ -49,30 +50,37 @@ export default function DashboardPage({
 								<div className="col-auto">
 									{isDeveloper ? (
 										<div>
-                      <p>
-											<Link to="/add-table">
-												<button className="btn btn-info create_table_btn">
-													Manage Table
-												</button>
-											</Link>
-                      </p>
-                      <p>
-                        <Link to="/manage-app">
-												<button
-													className="btn btn-info"
-													onClick={handleManageButton}
-												>
-													Manage App
-												</button>
-											</Link>
-                      </p>
+											{userTables ? (
+												<div>
+													<Link to="/add-table">
+														<button className="btn btn-info create_table_btn">
+															Manage Table
+														</button>
+													</Link>
+												</div>
+											) : (
+												<div>Loading Tables...</div>
+											)}
+
+											{runnableApps ? (
+												<div>
+													<Link to="/manage-app">
+														<button
+															className="btn btn-info"
+															onClick={handleManageButton}
+														>
+															Manage App
+														</button>
+													</Link>
+												</div>
+											) : (
+												<div>Loading Manageable Apps...</div>
+											)}
 										</div>
 									) : (
 										<div>
-											<p>
-												You have no access to Manage the App and the Table. Ask
-												Deployer to add you as a Global Developer
-											</p>
+											<p>You have no access Managing Apps and Tables</p>
+											<p>Ask Deployer to add you as a Global Developer</p>
 										</div>
 									)}
 								</div>
@@ -82,12 +90,16 @@ export default function DashboardPage({
 						<div className="box_two">
 							<h2>Runnable Apps</h2>
 							<div className="row">
-								{runnableApps?.map((runnableApp) => (
-									<DashboardApp
-										key={runnableApp.app._id}
-										runnableApp={runnableApp.app}
-									/>
-								))}
+								{runnableApps ? (
+									runnableApps?.map((runnableApp) => (
+										<DashboardApp
+											key={runnableApp.app._id}
+											runnableApp={runnableApp.app}
+										/>
+									))
+								) : (
+									<h1>Loading Runnable Apps...</h1>
+								)}
 							</div>
 						</div>
 					</div>

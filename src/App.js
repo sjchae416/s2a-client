@@ -347,9 +347,10 @@ const App = () => {
 						element={
 							user ? (
 								<DashboardPage
+									isDeveloper={isDeveloper}
+									userTables={userTables}
 									setAppData={setAppData}
 									setReloadApp={setReloadApp}
-									isDeveloper={isDeveloper}
 									runnableApps={runnableApps}
 								/>
 							) : (
@@ -383,7 +384,7 @@ const App = () => {
 						element={
 							user ? (
 								<ManageTablePage
-                  setTables={setTables}
+									setTables={setTables}
 									tableIds={tableIds}
 									userTables={userTables}
 									// developerApps={developerApps}
@@ -406,7 +407,7 @@ const App = () => {
 					<Route
 						path="/runnable-appIds/:id"
 						element={
-							(user && runnableApps )? (
+							user && runnableApps ? (
 								<RunnableAppPage runnableApps={runnableApps} />
 							) : (
 								<div>
