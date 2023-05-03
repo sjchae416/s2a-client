@@ -495,7 +495,7 @@ export default function ViewConfig({
                     id={`radio-${config.name}`}
                     name="filterOption"
                     value={config.name}
-                    onChange={(e) => handleFilterButtonChange(e, config.name)}
+                    onChange={(e) => handleUserFilterButtonChange(e, config.name)}
                   />
                   <label htmlFor={`radio-${config.name}`}>{config.name}</label>
                 </div>
