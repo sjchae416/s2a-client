@@ -25,7 +25,6 @@ export default function ViewConfig({
 	const [boolConfigs, setBoolConfigs] = useState([]);
 	const [emailConfigs, setEmailConfigs] = useState([]);
 	const [editableCols, setEditableCol] = useState([]);
-	const [selectedEditColumns, setSelectedEditColumns] = useState([]);
 	const [columns, setColumns] = useState([]);
 	const [selectedTableId, setSelectedTableId] = useState('');
 	const [viewTable, setViewTable] = useState(null);
@@ -132,7 +131,7 @@ export default function ViewConfig({
 		} else {
 			newSelectedColumns = selectedColumns.filter((col) => col !== name);
 		}
-		handleColumnsOrder(newSelectedColumns);
+		setSelectedColumns(handleColumnsOrder(newSelectedColumns));
 	};
 
 	function handleColumnsOrder(selectedColumns) {
@@ -142,7 +141,7 @@ export default function ViewConfig({
 				orderedColumns.push(column.name);
 			}
 		}
-		setSelectedColumns(orderedColumns);
+		return orderedColumns;
 	}
 
 	const handleAllowedActionCheckboxChange = (e, column) => {
@@ -300,11 +299,14 @@ export default function ViewConfig({
 
 	const handleEditCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
+		let newSelectedColumns;
 		if (checked) {
-			setEditableCol([...editableCols, name]);
+			newSelectedColumns = [...editableCols, name];
 		} else {
-			setEditableCol(editableCols.filter((column) => column !== name));
+			newSelectedColumns = editableCols.filter((column) => column !== name);
 		}
+		setEditableCol(handleColumnsOrder(newSelectedColumns));
+
 	};
 
 	const handleUserFilterCheckboxChange = (e) => {
