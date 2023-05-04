@@ -83,7 +83,7 @@ export default function ViewConfig({
 			setAllowAction(selectedView.allowedActions);
 			setRole(selectedView.roles);
 			setFilter(selectedView.filter);
-			setUserFilter(selectedView.userFilters);
+			setUserFilter(selectedView.userFilter);
 			setEditFilter(selectedView.editfilter);
 			setEditableCol(selectedView.editableCols);
 
