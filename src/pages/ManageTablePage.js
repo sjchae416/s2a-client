@@ -36,6 +36,7 @@ export default function ManageTablePage({ tableIds, userTables, setTables }) {
                 Add Table
               </button>
               <List
+                tableIds={tableIds}
                 type="table"
                 userTables={userTables}
                 setSelectedTable={setSelectedTable}
