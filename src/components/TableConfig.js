@@ -76,6 +76,15 @@ export default function TableConfig({
     return false;
   };
 
+  const isLabelChosen = () => {
+    for (let i = 0; i < config.length; i++) {
+      if (config[i].label) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const isNameUnique = () => {
     for (let i = 0; i < userTables?.length; i++) {
       if (userTables[i]?.name === name) {
@@ -175,8 +184,8 @@ export default function TableConfig({
       return;
     }
 
-    if(!validInitialValue()){
-      alert("Please enter a valid Google Sheets forumla");
+    if (!isLabelChosen()) {
+      alert("Please choose a key for at least one row");
       return;
     }
 
@@ -494,7 +503,7 @@ export default function TableConfig({
                         >
                           <option value="none">None</option>
                           {userTables?.map((table) => (
-                            <option key={table._id} value={table.name}>
+                            <option key={table._id} value={table._id}>
                               {table.name}
                             </option>
                           ))}

@@ -28,7 +28,7 @@ const SelectedTableConfig = ({ keys, userTables, handleUpdateConfig }) => {
           <td>
             <label>
               <input
-                type="checkbox"
+                type="radio"
                 name={`radio-col2${key._id}`}
                 checked={key.label}
                 value={key._id}
