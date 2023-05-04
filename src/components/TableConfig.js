@@ -442,11 +442,11 @@ export default function TableConfig({
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Initial Value</th>
                 <th>Key</th>
                 <th>Label</th>
                 <th>Reference</th>
                 <th>Type</th>
+                <th>Initial Value</th>
               </tr>
             </thead>
             <tbody>
@@ -461,14 +461,6 @@ export default function TableConfig({
                   {keys.map((key) => (
                     <tr key={key}>
                       <td>{key}</td>
-                      <td>
-                        <input 
-                          type="text"
-                          onChange={(event) =>
-                            handleInputChange(event, key, "initialValue")
-                          }
-                        />
-                      </td>
                       <td>
                         <label>
                           <input
@@ -521,6 +513,14 @@ export default function TableConfig({
                           <option value="bool">Boolean</option>
                           <option value="url">URL</option>
                         </select>
+                      </td>
+                      <td>
+                        <input 
+                          type="text"
+                          onChange={(event) =>
+                            handleInputChange(event, key, "initialValue")
+                          }
+                        />
                       </td>
                     </tr>
                   ))}
