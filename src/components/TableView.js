@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import DetailView from "./DetailView";
 import { readTableAPI } from "../api";
 import { loadSheetAPI, updateSheetAPI } from "../api";
+import { setRef } from "@mui/material";
 
 export default function TableView({ view, listViews, user }) {
   const [tableData, setTableData] = useState([]);
@@ -29,11 +30,14 @@ export default function TableView({ view, listViews, user }) {
 
   const [filteredtableViewObjArr, setFilteredtableViewObjArr] = useState(null);
 
+  let referenceTable = null;
+
   const detailApps = listViews.filter((view) => view.viewType === "Detail");
   // console.log('detailApps', detailApps);
 
   let name, table, col, type, allowedActions, role;
-  let viewFilter = "", userFilter = "";
+  let viewFilter = "",
+    userFilter = "";
   name = view.name;
   table = view.table;
   col = view.columns;
@@ -43,24 +47,59 @@ export default function TableView({ view, listViews, user }) {
   let newRowDataKeyVal = "";
 
   if (view.filter != "") viewFilter = view.filter;
-   if (view.userFilter != "") userFilter = view.userFilter;
+  if (view.userFilter != "") userFilter = view.userFilter;
 
   useEffect(() => {
+    console.log("getTableData Called");
     getTableData();
   }, []);
 
   useEffect(() => {
-    console.log(tableViewObjArr);
+    console.log("tableViewObjArr in useEffect", tableViewObjArr);
   }, [tableViewObjArr]);
 
-  // useEffect(() => {
-  //   console.log("tableViewObjArr in useEffect", tableViewObjArr);
-  // }, [tableViewObjArr]);
+  const findLabelValues = (referenceSheetTableData, input) => {
+    let keyColumn, labelColumn;
+    for (let column of referenceTable.columns) {
+      if (column.key === true) keyColumn = column.name;
+      if (column.label === true) labelColumn = column.name;
+    }
+
+    // find the column indices in the referenceSheetTableData
+    let keyColumnIndex = referenceSheetTableData[0].indexOf(keyColumn);
+    let labelColumnIndex = referenceSheetTableData[0].indexOf(labelColumn);
+
+    // check if the key and label column indices are valid
+    if (keyColumnIndex === -1 || labelColumnIndex === -1) {
+      console.error("Invalid key or label column");
+      return;
+    }
+
+    // search for the user input in the key column and return the corresponding label value
+    for (let i = 1; i < referenceSheetTableData.length; i++) {
+      if (referenceSheetTableData[i][keyColumnIndex] === input) {
+        return referenceSheetTableData[i][labelColumnIndex];
+      }
+    }
+
+    console.log("No matching value found");
+    return;
+  };
 
   const getTableData = async () => {
+    let referenceColumn = { name: "", reference: "false" };
     const data = await readTableAPI(view.table);
     setTableData(data);
+    for (let i = 0; i < data.columns.length; i++) {
+      if (data.columns[i].reference !== "false") {
+        referenceColumn.name = data.columns[i].name;
+        referenceColumn.reference = data.columns[i].reference;
+      }
+    }
 
+    if (referenceColumn.reference !== "false") {
+      referenceTable = await readTableAPI(referenceColumn.reference);
+    }
 
     const sheetData = {
       name: data.name,
@@ -68,40 +107,53 @@ export default function TableView({ view, listViews, user }) {
       sheetIndex: data.sheetIndex,
     };
     const sheetTableData = await loadSheetAPI(sheetData);
-    //gets the array of the data except for the name of the column
+
+    if (referenceTable) {
+      const referenceSheetData = {
+        name: referenceTable.name,
+        url: referenceTable.url,
+        sheetIndex: referenceTable.sheetIndex,
+      };
+      let referenceSheetTableData = await loadSheetAPI(referenceSheetData);
+
+      let columnIndex = sheetTableData[0].indexOf(referenceColumn.name);
+      if (columnIndex === -1) {
+        console.log("Column not found");
+      } else {
+        for (let i = 1; i < sheetTableData.length; i++) {
+          let labelValue = findLabelValues(
+            referenceSheetTableData,
+            sheetTableData[i][columnIndex]
+          );
+          sheetTableData[i][columnIndex] = labelValue;
+        }
+      }
+    }
 
     let result = sheetTableData.slice(1).map((row) => {
       const obj = {};
       sheetTableData[0].forEach((key, index) => {
         obj[key] = row[index];
       });
-      if(obj.length != 0)
-        return obj;
-      else  
-        return null;  
+      if (obj.length != 0) return obj;
+      else return null;
     });
 
-
-    if(result)
-      settableViewObjArr(result);
-    else
-      settableViewObjArr(null);
-    
+    if (result) settableViewObjArr(result);
+    else settableViewObjArr(null);
 
     let filteredResult = {};
-    if(viewFilter == "" && userFilter == ""){
+    if (viewFilter == "" && userFilter == "") {
       filteredResult = result;
-    }
-    else{
+    } else {
       filteredResult = result.filter((row) => row[viewFilter] === "TRUE");
-      if(userFilter)
-        filteredResult = filteredResult.filter((row) => row[userFilter] == user.email);
+      if (userFilter)
+        filteredResult = filteredResult.filter(
+          (row) => row[userFilter] == user.email
+        );
     }
-    
+
     setFilteredtableViewObjArr(filteredResult);
-
-    console.log(filteredResult);
-
   };
 
   const handleOpen = () => {
@@ -217,11 +269,10 @@ export default function TableView({ view, listViews, user }) {
       range: sheetIdx,
       values: [newValues],
     };
-    // console.log('tableData.url', tableData.url);
-    // console.log('sheetIdx', sheetIdx);
-    // console.log('newValues', newValues);
+
     await updateSheetAPI(sheetData);
 
+    await getTableData();
     handleClose();
   };
 
@@ -239,7 +290,6 @@ export default function TableView({ view, listViews, user }) {
     col.forEach((columnName) => {
       deletedRow[columnName] = selectedRowData[columnName];
     });
-    // console.log("Deleted Row:", deletedRow);
 
     // Find index of row to delete
     const index = tableViewObjArr.findIndex((row) => {
@@ -247,6 +297,14 @@ export default function TableView({ view, listViews, user }) {
         return row[key] === selectedRowData[key];
       });
     });
+
+    console.log("index", index);
+
+    let sheetTableData = await loadSheetAPI({
+      url: tableData.url,
+      sheetIndex: tableData.sheetIndex,
+    });
+    sheetTableData.splice(index + 1, 1);
 
     let sheetIdx =
       tableData.sheetIndex +
@@ -267,18 +325,19 @@ export default function TableView({ view, listViews, user }) {
       values[i] = "";
     }
 
-    let arr2D = tableViewObjArr.map((obj) => Object.values(obj));
-    arr2D.splice(index, 1);
-
-    arr2D.push(values);
+    sheetTableData.push(values);
+    sheetTableData.splice(0, 1);
+    console.log("sheetTableData", sheetTableData);
 
     const sheetData = {
       url: tableData.url,
       range: sheetIdx,
-      values: arr2D,
+      values: sheetTableData,
     };
 
-    console.log("sheetData", sheetData);
+    console.log("url", tableData.url);
+    console.log("sheetIdx", sheetIdx);
+    console.log("values", sheetTableData);
 
     await updateSheetAPI(sheetData);
 
@@ -293,7 +352,6 @@ export default function TableView({ view, listViews, user }) {
       (tableViewObjArrRow) => tableViewObjArrRow === row
     );
     setSelectedRowPosition(foundRowIndex);
-    // console.log(tableViewObjArr);
   };
 
   const updateRecord = (data) => {
@@ -302,8 +360,6 @@ export default function TableView({ view, listViews, user }) {
     );
     filteredtableViewObjArr[index] = data;
   };
-
-
 
   return (
     <div>
@@ -371,36 +427,39 @@ export default function TableView({ view, listViews, user }) {
           />
         </Modal>
       )}
-     <Modal open={open} onClose={handleClose}>
-      <div className="modal-content" style={{ maxHeight: "80vh", overflowY: "auto" }}>
-        <h2>ADD ROW</h2>
-        {col.map((columnName) => (
-          <div key={columnName}>
-            <TextField
-              name={columnName}
-              label={columnName}
-              value={newRowData[columnName] || ""}
-              onChange={handleModalInputChange}
-            />
-            <br />
-            <br />
+      <Modal open={open} onClose={handleClose}>
+        <div
+          className="modal-content"
+          style={{ maxHeight: "80vh", overflowY: "auto" }}
+        >
+          <h2>ADD ROW</h2>
+          {col.map((columnName) => (
+            <div key={columnName}>
+              <TextField
+                name={columnName}
+                label={columnName}
+                value={newRowData[columnName] || ""}
+                onChange={handleModalInputChange}
+              />
+              <br />
+              <br />
+            </div>
+          ))}
+          <br />
+          <div>
+            <Button variant="contained" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button
+              className="btn btn-danger "
+              variant="contained"
+              onClick={handleAddRow}
+            >
+              Add
+            </Button>
           </div>
-        ))}
-        <br />
-        <div>
-          <Button variant="contained" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button
-            className="btn btn-danger "
-            variant="contained"
-            onClick={handleAddRow}
-          >
-            Add
-          </Button>
         </div>
-      </div>
-    </Modal>
+      </Modal>
       <Modal open={openDelete} onClose={handleClose}>
         <div className="modal-content">
           <h2>Delete Row</h2>
