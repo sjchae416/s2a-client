@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { updateSheetAPI } from "../api";
+import { updateSheetAPI, loadSheetAPI } from "../api";
 
 const DetailView = ({
   row,
@@ -14,6 +14,7 @@ const DetailView = ({
   tableData,
   tableViewObjArr,
   settableViewObjArr,
+  setFilteredtableViewObjArr,
 }) => {
   const [selectedView, setSelectedView] = useState(null);
   const [name, setName] = useState("");
@@ -54,7 +55,6 @@ const DetailView = ({
   // Event handler for save button click
   const handleSaveClick = async () => {
     const updatedRow = { ...editingRow, ...editingFields };
-  
 
     // get the sheet index and the values into array
     // row position is the position in table that was edited
@@ -75,7 +75,7 @@ const DetailView = ({
       range: sheetIdx,
       values: [newValues],
     };
-    
+
     await updateSheetAPI(sheetData);
 
     const updatedTableViewObjArr = tableViewObjArr;
@@ -110,30 +110,57 @@ const DetailView = ({
     setOpenDelete(false);
   };
 
-  const handleConfirmDelete = () => {
-    console.log("Row to delete:", rowToDelete);
+  const handleConfirmDelete = async () => {
+    let selectedRowData = rowToDelete;
+    const deletedRow = {};
+    col.forEach((columnName) => {
+      deletedRow[columnName] = selectedRowData[columnName];
+    });
+
+    // Find index of row to delete
+    const index = tableViewObjArr.findIndex((row) => {
+      return Object.keys(row).every((key) => {
+        return row[key] === selectedRowData[key];
+      });
+    });
+
+    let sheetTableData = await loadSheetAPI({
+      url: tableData.url,
+      sheetIndex: tableData.sheetIndex,
+    });
+    sheetTableData.splice(index + 1, 1);
 
     let sheetIdx =
-      table.sheetIndex +
-      "!A" +
-      rowPosition +
-      ":" +
-      String.fromCharCode(64 + Object.keys(rowToDelete).length) +
-      rowPosition;
+      tableData.sheetIndex +
+      "!A2:" +
+      String.fromCharCode(64 + Object.keys(deletedRow).length) +
+      (tableViewObjArr.length + 1).toString();
+
+    if (index !== -1) {
+      const updatedtableViewObjArr = [...tableViewObjArr];
+      updatedtableViewObjArr.splice(index, 1);
+      settableViewObjArr(updatedtableViewObjArr);
+      setFilteredtableViewObjArr(updatedtableViewObjArr);
+    }
+
     let values = [];
 
-    for (let i = 0; i < Object.keys(rowToDelete).length; i++) {
+    for (let i = 0; i < Object.keys(deletedRow).length; i++) {
       values[i] = "";
     }
-    let resource = {
-      data: [
-        {
-          range: sheetIdx,
-          values: "",
-        },
-      ],
+
+    sheetTableData.push(values);
+    sheetTableData.splice(0, 1);
+
+    const sheetData = {
+      url: tableData.url,
+      range: sheetIdx,
+      values: sheetTableData,
     };
-    deleteRowPosition(resource);
+
+    await updateSheetAPI(sheetData);
+
+    // deleteRowPosition(resource);
 
     setOpenDelete(false);
     onSelectedRowChange(null);

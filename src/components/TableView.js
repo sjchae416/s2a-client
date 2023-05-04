@@ -50,7 +50,6 @@ export default function TableView({ view, listViews, user }) {
   if (view.userFilter != "") userFilter = view.userFilter;
 
   useEffect(() => {
-    console.log("getTableData Called");
     getTableData();
   }, []);
 
@@ -71,7 +70,7 @@ export default function TableView({ view, listViews, user }) {
 
     // check if the key and label column indices are valid
     if (keyColumnIndex === -1 || labelColumnIndex === -1) {
-      console.error("Invalid key or label column");
+      console.log("Invalid key or label column");
       return;
     }
 
@@ -298,8 +297,6 @@ export default function TableView({ view, listViews, user }) {
       });
     });
 
-    console.log("index", index);
-
     let sheetTableData = await loadSheetAPI({
       url: tableData.url,
       sheetIndex: tableData.sheetIndex,
@@ -327,17 +324,12 @@ export default function TableView({ view, listViews, user }) {
 
     sheetTableData.push(values);
     sheetTableData.splice(0, 1);
-    console.log("sheetTableData", sheetTableData);
 
     const sheetData = {
       url: tableData.url,
       range: sheetIdx,
       values: sheetTableData,
     };
-
-    console.log("url", tableData.url);
-    console.log("sheetIdx", sheetIdx);
-    console.log("values", sheetTableData);
 
     await updateSheetAPI(sheetData);
 
@@ -424,6 +416,7 @@ export default function TableView({ view, listViews, user }) {
             tableData={tableData}
             tableViewObjArr={tableViewObjArr}
             settableViewObjArr={settableViewObjArr}
+            setFilteredtableViewObjArr={setFilteredtableViewObjArr}
           />
         </Modal>
       )}
