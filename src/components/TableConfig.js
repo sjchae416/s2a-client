@@ -228,7 +228,7 @@ export default function TableConfig({
     }
 
     if (!isLabelChosen()) {
-      alert("Please choose a key for at least one row");
+      alert("Please choose a label for at least one row");
       return;
     }
 
@@ -291,6 +291,21 @@ export default function TableConfig({
       };
       return preVal;
     });
+
+    if (!isTypeColumnValid()) {
+      alert("Please select a type for all rows");
+      return;
+    }
+
+    if (!isKeyChosen()) {
+      alert("Please choose a key for at least one row");
+      return;
+    }
+
+    if (!isLabelChosen()) {
+      alert("Please choose a label for at least one row");
+      return;
+    }
 
     setSelectedTablesss(false);
     clearForms();
