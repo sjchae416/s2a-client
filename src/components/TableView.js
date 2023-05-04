@@ -9,6 +9,7 @@ import { setRef } from "@mui/material";
 
 export default function TableView({ view, listViews, user }) {
   const [tableData, setTableData] = useState([]);
+  const [tableConfig, setTableConfig] = useState([]);
   const [tableViewObjArr, settableViewObjArr] = useState([]);
   const [open, setOpen] = useState(false);
   const [openDelete, setDeleteOpen] = useState(false);
@@ -89,13 +90,14 @@ export default function TableView({ view, listViews, user }) {
     let referenceColumn = { name: "", reference: "false" };
     const data = await readTableAPI(view.table);
     setTableData(data);
+    setTableConfig(data.columns)
+    
     for (let i = 0; i < data.columns.length; i++) {
       if (data.columns[i].reference !== "false") {
         referenceColumn.name = data.columns[i].name;
         referenceColumn.reference = data.columns[i].reference;
       }
     }
-
     if (referenceColumn.reference !== "false") {
       referenceTable = await readTableAPI(referenceColumn.reference);
     }
@@ -228,22 +230,35 @@ export default function TableView({ view, listViews, user }) {
         alert("Please fill in all fields");
         return;
       }
-    }
-
-    for (let i = 0; i < col.length; i++) {
-      if (!newRowData[col[i]]) {
-        alert("Please fill in all fields");
-        return;
-      }
       if (typeof newRowData[col[i]] !== "string") {
         return window.alert(`${newRowData[col[i]]} must be string only!`);
       }
+
     }
 
     const newRow = {};
-    col.forEach((column) => {
-      newRow[column] = newRowData[column] || "";
-    });
+    for(let i = 0; i < tableConfig.length; i ++){
+        if(col.includes(tableConfig[i].name)){
+            newRow[tableConfig[i].name] = newRowData[tableConfig[i].name];
+        }
+        else{ 
+            if(tableConfig[i].initialValue){ //if there is initial value then set equal
+                console.log(tableConfig[i].initialValue);
+                if(tableConfig[i].initialValue === "=ADDED_BY();")
+                    newRow[tableConfig[i].name] = user.email;
+                else{
+                    newRow[tableConfig[i].name] = tableConfig[i].initialValue;
+                }
+                
+            }
+            else
+                newRow[tableConfig[i].name] = "";
+        }
+    }
+
+    // col.forEach((column) => {
+    //     newRow[column] = newRowData[column] || "";
+    // });
     const updatedtableViewObjArr = [...tableViewObjArr, newRow];
     settableViewObjArr(updatedtableViewObjArr);
     setFilteredtableViewObjArr([...filteredtableViewObjArr, newRow]);

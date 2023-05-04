@@ -196,6 +196,7 @@ const DetailView = ({
           ))}
       </div>
       <div className="detail-main-container">
+        {views.length == 0 && <h4>You do not have access to any detail views</h4>}
         {selectedView && !openDelete && <h3>{name}</h3>}
         {selectedView && !openDelete && !isEditing && (
           <Button

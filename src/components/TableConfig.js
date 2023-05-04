@@ -175,6 +175,11 @@ export default function TableConfig({
       return;
     }
 
+    if(!validInitialValue()){
+      alert("Please enter a valid Google Sheets forumla");
+      return;
+    }
+
     console.log("tableData", tableData);
     const createdTable = await createTableAPI(tableData);
     if (createdTable && !createdTable.error) {
@@ -187,6 +192,23 @@ export default function TableConfig({
           : "Error creating table.";
       alert(errorMessage);
       return;
+    }
+
+    console.log(config);
+
+    function validInitialValue(){
+      for(let i  = 0; i < config.length; i++){
+        console.log(config[i].initialValue);
+        if ( config[i].initialValue !== "" && config[i].initialValue !== "=ADDED_BY();") {
+          if (config[i].initialValue.charAt(0) !== "=") {
+            return false;
+          }
+          else{
+            // TODO check if it is a valid google sheets formula
+          }
+        }
+      }
+      return true;
     }
 
     const newTableIds =
@@ -225,7 +247,8 @@ export default function TableConfig({
             // );
             updatedConfig[configIndex][field] = event.target.value;
           }
-        } else {
+        } 
+        else {
           // If not a radio button, update field value directly
           updatedConfig[configIndex][field] = value;
         }
@@ -410,11 +433,11 @@ export default function TableConfig({
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Initial Value</th>
                 <th>Key</th>
                 <th>Label</th>
                 <th>Reference</th>
                 <th>Type</th>
-                <th>Initial value</th>
               </tr>
             </thead>
             <tbody>
@@ -429,6 +452,14 @@ export default function TableConfig({
                   {keys.map((key) => (
                     <tr key={key}>
                       <td>{key}</td>
+                      <td>
+                        <input 
+                          type="text"
+                          onChange={(event) =>
+                            handleInputChange(event, key, "initialValue")
+                          }
+                        />
+                      </td>
                       <td>
                         <label>
                           <input
@@ -481,14 +512,6 @@ export default function TableConfig({
                           <option value="bool">Boolean</option>
                           <option value="url">URL</option>
                         </select>
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          onChange={(event) =>
-                            handleInputChange(event, key, "initialValue")
-                          }
-                        />
                       </td>
                     </tr>
                   ))}

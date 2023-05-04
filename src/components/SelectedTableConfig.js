@@ -8,6 +8,13 @@ const SelectedTableConfig = ({ keys, userTables, handleUpdateConfig }) => {
         <tr key={key._id}>
           <td>{key.name}</td>
           <td>
+            <input 
+              type="text"
+              onChange={(event) => handleInputChangesss(event, key, "initialValue")
+              }
+            />
+          </td>
+          <td>
             <label>
               <input
                 type="radio"
