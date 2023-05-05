@@ -52,10 +52,42 @@ const DetailView = ({
     setEditingFields({});
   };
 
+
+  function isUrl(input) {
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+		const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+		return (urlRegex.test(input) || gmailRegex.test(input));
+	};
+
+  
   // Event handler for save button click
   const handleSaveClick = async () => {
     const updatedRow = { ...editingRow, ...editingFields };
+    const editingFieldsArray = Object.keys(editingFields);
 
+    //Type Corectness HERE
+    const tableConfig = tableData.columns;
+    for (let k = 0; k < tableConfig.length; k++) {
+      for (let i = 0; i < editingFieldsArray.length; i++) {
+
+        if (tableConfig[k].name === editingFieldsArray[i]) {
+          if (tableConfig[k].type === "int" && isNaN(editingFields[editingFieldsArray[i]])) {
+            return window.alert(`${editingFieldsArray[i]} input must be a number!`);
+          }
+          else if (tableConfig[k].type === "bool" && !['true', 'false'].includes(editingFields[editingFieldsArray[i]].toLowerCase())) {
+            return window.alert(`${editingFieldsArray[i]} input must be a boolean value!`); 
+          }
+          else if (tableConfig[k].type === "url" && !isUrl(editingFields[editingFieldsArray[i]])) {
+            return window.alert(`${editingFieldsArray[i]} input must be a url value!`); 
+          }
+          else if (typeof editingFields[editingFieldsArray[i]] !== 'string'){
+            return window.alert(`${editingFieldsArray[i]} must be a string!`);
+          }
+        }
+      }
+    }
+
+    
     // get the sheet index and the values into array
     // row position is the position in table that was edited
     let sheetIdx =
