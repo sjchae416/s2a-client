@@ -607,7 +607,7 @@ export default function ViewConfig({
             {boolConfigs.map((config) => (
               <div key={config.name}>
                 <input
-                  defaultChecked={config.name}
+                  checked={editFilter === config.name}
                   type="radio"
                   id={`radio-${config.name}`}
                   name="filterOptionqqqqqq"
