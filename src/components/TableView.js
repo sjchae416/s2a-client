@@ -51,7 +51,6 @@ export default function TableView({ view, listViews, userTables, user }) {
 
     if(detailApps.length > 0)
         addRowCol = detailApps[0].editableCols;
-    console.log(addRowCol);
 
 	if (view.filter != '') viewFilter = view.filter;
 	if (view.userFilter != '') userFilter = view.userFilter;
@@ -195,11 +194,33 @@ export default function TableView({ view, listViews, userTables, user }) {
 		for (let i = 0; i < tableViewObjArr.length; i++) {
 			keys.push(tableViewObjArr[i][keyColumn]);
 		}
-		newRowDataKeyVal = newRowData[keyColumn].toString();
-		return !keys.includes(newRowDataKeyVal);
+		if(newRowData[keyColumn] !== null){
+			newRowDataKeyVal = newRowData[keyColumn].toString();
+			return !keys.includes(newRowDataKeyVal);
+		}
+		return true;
 	};
 
 	const handleAddRow = async () => {
+		const newRow = {};
+		for (let i = 0; i < tableConfig.length; i++) {
+			if (col.includes(tableConfig[i].name)) {
+				newRow[tableConfig[i].name] = newRowData[tableConfig[i].name];
+			} else {
+				if (tableConfig[i].initialValue) {
+					//if there is initial value then set equal
+					//console.log(tableConfig[i].initialValue);
+					if (tableConfig[i].initialValue === '=ADDED_BY();')
+						newRow[tableConfig[i].name] = user.email;
+					else {
+						newRow[tableConfig[i].name] = tableConfig[i].initialValue;
+					}
+				} else newRow[tableConfig[i].name] = '';
+			}
+		}
+
+		console.log(newRow);
+
 		//check if the fields are empty and type correctness
 		if (!checkKeyIntegrity()) {
 			alert(`Input a unique key. Key: "${newRowDataKeyVal}" already exists!`);
@@ -237,30 +258,13 @@ export default function TableView({ view, listViews, userTables, user }) {
 			return window.alert(`ID must be number only!`);
 		}
 
-		for (let i = 0; i < col.length; i++) {
-			if (!newRowData[col[i]]) {
+		for (let i = 0; i < addRowCol.length; i++) {
+			if (!newRowData[addRowCol[i]]) {
 				alert('Please fill in all fields');
 				return;
 			}
-			if (typeof newRowData[col[i]] !== 'string') {
-				return window.alert(`${newRowData[col[i]]} must be string only!`);
-			}
-		}
-
-		const newRow = {};
-		for (let i = 0; i < tableConfig.length; i++) {
-			if (col.includes(tableConfig[i].name)) {
-				newRow[tableConfig[i].name] = newRowData[tableConfig[i].name];
-			} else {
-				if (tableConfig[i].initialValue) {
-					//if there is initial value then set equal
-					console.log(tableConfig[i].initialValue);
-					if (tableConfig[i].initialValue === '=ADDED_BY();')
-						newRow[tableConfig[i].name] = user.email;
-					else {
-						newRow[tableConfig[i].name] = tableConfig[i].initialValue;
-					}
-				} else newRow[tableConfig[i].name] = '';
+			if (typeof newRowData[addRowCol[i]] !== 'string') {
+				return window.alert(`${newRowData[addRowCol[i]]} must be string only!`);
 			}
 		}
 
