@@ -13,6 +13,8 @@ export default function RunnableAppPage({ runnableApps, userTables }) {
 	const views = runnableApp.app.accessibleViews;
 	console.log(views);
 
+	const userRoles = runnableApp.userRoles;
+
 	const [selectedView, setSelectedView] = useState(null);
 	const { user, setUser } = useContext(UserContext);
 	const handleSelectView = (view) => {
@@ -36,6 +38,7 @@ export default function RunnableAppPage({ runnableApps, userTables }) {
 							listViews={views}
 							userTables={userTables}
 							user={user}
+							userRoles={userRoles}
 						/>
 					)}
 				</div>
