@@ -43,7 +43,7 @@ const App = () => {
 	// 	app_id: 1,
 	// 	app_name: "table",
 	// 	log: [{
-	//		view_name: "test", 
+	//		view_name: "test",
 	// 		function:"add",
 	//		row_index: "",
 	// 		change: ""}
@@ -209,9 +209,8 @@ const App = () => {
 
 			if (filteredApps.length !== 0) {
 				setRunnableApps(filteredApps);
-				console.log("filtered"+filteredApps);
+				console.log('filtered' + filteredApps);
 				setUpLogs(filteredApps);
-
 			} else {
 				setRunnableApps(null);
 			}
@@ -222,17 +221,17 @@ const App = () => {
 		}
 	};
 
-	function setUpLogs(apps){
-		console.log("setting up log...");
-		if(appLog.length == 0){
-			for(let i =0; i < Object.keys(apps).length; i++){
+	function setUpLogs(apps) {
+		console.log('setting up log...');
+		if (appLog.length == 0) {
+			for (let i = 0; i < Object.keys(apps).length; i++) {
 				//get information for each app to store in log
 				let id = apps[i].app._id;
 				let name = apps[i].app.name;
 				let log = [];
 
-				//appends to the end 
-				appLog.push({app_id:id, app_name:name, log:log});
+				//appends to the end
+				appLog.push({ app_id: id, app_name: name, log: log });
 				console.log(apps[i]);
 			}
 			setAppLog(appLog);
@@ -388,7 +387,7 @@ const App = () => {
 									setAppData={setAppData}
 									setReloadApp={setReloadApp}
 									runnableApps={runnableApps}
-									appLog = {appLog}
+									appLog={appLog}
 								/>
 							) : (
 								<LoginPage />
@@ -421,6 +420,7 @@ const App = () => {
 						element={
 							user ? (
 								<ManageTablePage
+									setReloadApp={setReloadApp  }
 									setTables={setTables}
 									tableIds={tableIds}
 									userTables={userTables}
@@ -448,8 +448,7 @@ const App = () => {
 								<RunnableAppPage
 									runnableApps={runnableApps}
 									userTables={userTables}
-									appLog = {appLog}
-
+									appLog={appLog}
 								/>
 							) : (
 								<div>

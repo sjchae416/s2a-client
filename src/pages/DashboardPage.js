@@ -10,7 +10,7 @@ export default function DashboardPage({
 	setAppData,
 	setReloadApp,
 	runnableApps,
-	appLog
+	appLog,
 }) {
 	const { user, setUser } = useContext(UserContext);
 	const [showMenu, setShowMenu] = useState(false);
@@ -18,6 +18,10 @@ export default function DashboardPage({
 	console.log('🚀 ~ App ~ appLog:', appLog);
 	const toggleMenu = () => {
 		setShowMenu(!showMenu);
+	};
+
+	const handleManageTableButton = () => {
+		setReloadApp(false);
 	};
 
 	const handleManageButton = () => {
@@ -55,7 +59,10 @@ export default function DashboardPage({
 											{userTables ? (
 												<div>
 													<Link to="/add-table">
-														<button className="btn btn-info create_table_btn">
+														<button
+															className="btn btn-info create_table_btn"
+															onClick={handleManageTableButton}
+														>
 															Manage Table
 														</button>
 													</Link>
