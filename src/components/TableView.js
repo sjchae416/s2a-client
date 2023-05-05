@@ -199,6 +199,12 @@ export default function TableView({ view, listViews, userTables, user }) {
 		return true;
 	};
 
+	function isUrl(input) {
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+		const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+		return (urlRegex.test(input) || gmailRegex.test(input));
+	};
+
 	const handleAddRow = async () => {
 		const newRow = {};
 		for (let i = 0; i < tableConfig.length; i++) {
@@ -239,6 +245,9 @@ export default function TableView({ view, listViews, userTables, user }) {
           }
           else if (tableConfig[k].type === "bool" && !['true', 'false'].includes(newRowData[addRowCol[i]].toLowerCase())) {
             return window.alert(`${addRowCol[i]} input must be a boolean value!`); 
+          }
+          else if (tableConfig[k].type === "url" && !isUrl(newRowData[addRowCol[i]])) {
+            return window.alert(`${addRowCol[i]} input must be a url value!`); 
           }
           else if (typeof newRowData[addRowCol[i]] !== 'string'){
             return window.alert(`${addRowCol[i]} must be a string!`);
