@@ -28,10 +28,12 @@ export default function ViewConfig({
   const [columns, setColumns] = useState([]);
   const [selectedTableId, setSelectedTableId] = useState("");
   const [viewTable, setViewTable] = useState(null);
+  const [keyCol, setKeyCol] = useState("");
 
   // console.log("selectedView", selectedView);
 
   const formElement = useRef();
+  console.log()
 
   const viewData = {
     _id: shortid.generate(),
@@ -95,6 +97,12 @@ export default function ViewConfig({
         (userTable) => userTable?._id === selectedView.table
       )?.columns;
       setColumns(selectedTableColumns);
+
+	  	const columnWithKey = selectedTableColumns.find(obj => obj.key === true);
+		const columnName = columnWithKey.name;
+		setKeyCol(columnName);
+
+	  console.log(selectedTableColumns);
 
       // console.log("qqqqq", selectedView.userFilter);
 
@@ -203,7 +211,10 @@ export default function ViewConfig({
       return window.alert("Choose columns!");
     } else if (role.length === 0) {
       return window.alert("Choose role!");
-    } else {
+    } else if(!editableCols.includes(keyCol)){
+		return window.alert("Key column " + keyCol + " must be editable");
+	}
+		else {
       setViewDatas((prev) =>
         prev === null ? [viewToSave] : [...prev, viewToSave]
       );
@@ -227,7 +238,9 @@ export default function ViewConfig({
       return window.alert("Choose columns!");
     } else if (role.length === 0) {
       return window.alert("Choose role!");
-    } else {
+    } else if(!editableCols.includes(keyCol)){
+		return window.alert("Key column " + keyCol + " must be editable");
+	}else {
       if (isObjectInArray(selectedView, viewDataList)) {
         try {
           const updatedView = await updateViewAPI(selectedView._id, viewToSave);
