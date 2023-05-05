@@ -232,8 +232,8 @@ export default function ViewConfig({
       return window.alert("Choose columns!");
     } else if (role.length === 0) {
       return window.alert("Choose role!");
-    } else if(viewType === "Detail" && !editableCols.includes(keyCol)){
-		  return window.alert("Key column " + keyCol + " must be editable");
+    } else if(!editableCols.includes(keyCol)){
+		return window.alert("Key column " + keyCol + " must be editable");
 	}else {
       if (isObjectInArray(selectedView, viewDataList)) {
         try {
