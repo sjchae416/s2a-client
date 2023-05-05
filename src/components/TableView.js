@@ -38,7 +38,7 @@ export default function TableView({ view, listViews, userTables, user }) {
 	// console.log('detailApps', detailApps);
 
 	let name, table, col, type, allowedActions, role;
-    let addRowCol = [];
+	let addRowCol = [];
 	let viewFilter = '',
 		userFilter = '';
 	name = view.name;
@@ -49,9 +49,7 @@ export default function TableView({ view, listViews, userTables, user }) {
 	role = view.roles;
 	let newRowDataKeyVal = '';
 
-    if(detailApps.length > 0)
-        addRowCol = detailApps[0].editableCols;
-
+	if (detailApps.length > 0) addRowCol = detailApps[0].editableCols;
 	if (view.filter != '') viewFilter = view.filter;
 	if (view.userFilter != '') userFilter = view.userFilter;
 
@@ -194,7 +192,7 @@ export default function TableView({ view, listViews, userTables, user }) {
 		for (let i = 0; i < tableViewObjArr.length; i++) {
 			keys.push(tableViewObjArr[i][keyColumn]);
 		}
-		if(newRowData[keyColumn] !== null){
+		if (newRowData[keyColumn] !== null) {
 			newRowDataKeyVal = newRowData[keyColumn].toString();
 			return !keys.includes(newRowDataKeyVal);
 		}
@@ -386,7 +384,9 @@ export default function TableView({ view, listViews, userTables, user }) {
 			<Button
 				variant="contained"
 				onClick={handleOpen}
-				disabled={detailApps.length == 0 || !allowedActions.includes("Add Record")}
+				disabled={
+					detailApps.length == 0 || !allowedActions.includes('Add Record')
+				}
 			>
 				Add Record
 			</Button>
