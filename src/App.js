@@ -18,6 +18,7 @@ import {
 	getFirstSheetNameAPI,
 	readViewAPI,
 } from './api';
+import { Apps } from '@mui/icons-material';
 
 // FIXME delete if not used
 export const customHistory = createBrowserHistory();
@@ -35,6 +36,19 @@ const App = () => {
 	const [publishedApps, setPublishedApps] = useState(null);
 	const [unpublishedApps, setUnpublishedApps] = useState(null);
 	const [runnableApps, setRunnableApps] = useState(null);
+	const [appLog, setAppLog] = useState({});
+
+	//FOR REFERENCE appLog structure:
+	// const data = {
+	// 	app_id: 1,
+	// 	app_name: "table",
+	// 	log: [{
+	//		view_name: "test", 
+	// 		function:"add",
+	//		row_index: "",
+	// 		change: ""}
+	// 	]
+	// }
 
 	// NOTE TABLES
 	// TODO abstract into client API
@@ -195,6 +209,9 @@ const App = () => {
 
 			if (filteredApps.length !== 0) {
 				setRunnableApps(filteredApps);
+				console.log("filtered"+filteredApps);
+				setUpLogs(filteredApps);
+
 			} else {
 				setRunnableApps(null);
 			}
@@ -204,6 +221,23 @@ const App = () => {
 			return new Error('Error filtering runnableApps: ', error);
 		}
 	};
+
+	function setUpLogs(apps){
+		console.log("setting up log...");
+		if(Object.keys(appLog).length == 0){
+			for(let i =0; i < Object.keys(apps).length; i++){
+				//get information for each app to store in log
+				let id = apps[i].app._id;
+				let name = apps[i].app.name;
+				let log = [];
+				console.log(id);
+
+				console.log(apps[i]);
+			}
+			//appLog[Object.keys(appLog).length + 1] = {text: "here"};
+		}
+		//console.log(appLog);
+	}
 
 	const loadAllApps = async () => {
 		const allAppsInDB = await getAllAppsAPI();
