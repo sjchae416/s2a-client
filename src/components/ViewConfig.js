@@ -93,16 +93,10 @@ export default function ViewConfig({
 			setEditFilter(selectedView.editFilter);
 			setEditableCol(selectedView.editableCols);
 
-			const selectedTableColumns = userTables?.find(
-				(userTable) => userTable?._id === selectedView.table
-			)?.columns;
-			setColumns(selectedTableColumns);
-
-	  	const columnWithKey = selectedTableColumns.find(obj => obj.key === true);
-		const columnName = columnWithKey.name;
-		setKeyCol(columnName);
-
-	  console.log(selectedTableColumns);
+      const selectedTableColumns = userTables?.find(
+        (userTable) => userTable?._id === selectedView.table
+      )?.columns;
+      setColumns(selectedTableColumns);
 
       // console.log("qqqqq", selectedView.userFilter);
 
@@ -211,8 +205,8 @@ export default function ViewConfig({
       return window.alert("Choose columns!");
     } else if (role.length === 0) {
       return window.alert("Choose role!");
-    } else if(!editableCols.includes(keyCol)){
-		return window.alert("Key column " + keyCol + " must be editable");
+    } else if(viewType === "Detail" && !editableCols.includes(keyCol)){
+		  return window.alert("Key column " + keyCol + " must be editable");
 	}
 		else {
       setViewDatas((prev) =>
@@ -238,8 +232,8 @@ export default function ViewConfig({
       return window.alert("Choose columns!");
     } else if (role.length === 0) {
       return window.alert("Choose role!");
-    } else if(!editableCols.includes(keyCol)){
-		return window.alert("Key column " + keyCol + " must be editable");
+    } else if(viewType === "Detail" && !editableCols.includes(keyCol)){
+		  return window.alert("Key column " + keyCol + " must be editable");
 	}else {
       if (isObjectInArray(selectedView, viewDataList)) {
         try {
@@ -321,15 +315,20 @@ export default function ViewConfig({
 		setViewTable(table);
 		setSelectedTableId(e.target.value);
 
-		if (e.target.value) {
-			const selectedTableColumns = userTables?.find(
-				(userTable) => userTable?._id === e.target.value
-			)?.columns;
-			setColumns(selectedTableColumns);
-		} else {
-			setColumns([]);
-		}
-	};
+    if (e.target.value) {
+      const selectedTableColumns = userTables?.find(
+        (userTable) => userTable?._id === e.target.value
+      )?.columns;
+      setColumns(selectedTableColumns);
+
+      const columnWithKey = selectedTableColumns.find(obj => obj.key === true);
+      const columnName = columnWithKey.name;
+      setKeyCol(columnName);
+      console.log(columnName);
+    } else {
+      setColumns([]);
+    }
+  };
 
 	const handleEditCheckboxChange = (e, column) => {
 		const { name, checked } = e.target;
