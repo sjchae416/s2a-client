@@ -8,7 +8,7 @@ const TableViewSidebar = ({ views, onSelectView }) => {
 			<h3>Table Views</h3>
 			<ul className="no-bullets">
 				{tableViews.map((view) => (
-					<li key={view.name}>
+					<li key={view._id}>
 						<button onClick={() => onSelectView(view)} className="button-link">
 							{view.name}
 						</button>
