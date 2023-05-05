@@ -276,7 +276,7 @@ const App = () => {
 						}
 					} else {
 						console.log(
-							`The User with email: ${user.email} does not have any roles`
+							`The User with email: ${user.email} does not have any roles in this app`
 						);
 					}
 				}

@@ -23,6 +23,7 @@ export default function ManageAppPage({
 	const [viewRole, setViewRole] = useState([]);
 	// NOTE viewDataList will store existing Views
 	const [viewDataList, setViewDataList] = useState(null);
+	const [backupViews, setBackupViews] = useState(null);
 	const [selectedView, setSelectedView] = useState(null);
 	const [addView, setAddView] = useState(false);
 	// REVIEW not uesd at all, only changes the state
@@ -34,10 +35,12 @@ export default function ManageAppPage({
 	useEffect(() => {
 		if (selectedApp !== null) {
 			setViewDataList(selectedApp.createdViews);
+			setBackupViews(selectedApp.createdViews);
 		} else {
-      setViewDataList(null);
+			setViewDataList(null);
+			setBackupViews(null);
 		}
-    setSelectedView(null);
+		setSelectedView(null);
 		setViewDatas(null);
 	}, [selectedApp]);
 
@@ -61,7 +64,15 @@ export default function ManageAppPage({
 			<br />
 			<br />
 			<div className="container">
-				<NavigationBar user={user} />
+				<NavigationBar
+					user={user}
+					setAppData={setAppData}
+					setSelectedApp={setSelectedApp}
+					setViewDataList={setViewDataList}
+					viewDatas={viewDatas}
+					setViewDatas={setViewDatas}
+					setReloadApp={setReloadApp}
+				/>
 				<br />
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
@@ -76,6 +87,7 @@ export default function ManageAppPage({
 							setViewDatas={setViewDatas}
 							viewDataList={viewDataList}
 							setViewDataList={setViewDataList}
+							backupViews={backupViews}
 						/>
 
 						<div className="col-1 border-right text-center">
