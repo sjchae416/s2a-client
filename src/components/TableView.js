@@ -219,52 +219,33 @@ export default function TableView({ view, listViews, userTables, user }) {
 
 		console.log(newRow);
 
-		//check if the fields are empty and type correctness
+		//check if the fields are empty
 		if (!checkKeyIntegrity()) {
 			alert(`Input a unique key. Key: "${newRowDataKeyVal}" already exists!`);
 			return;
 		}
-		if (newRowData.Name && typeof newRowData.Name !== 'string') {
-			return window.alert(`Name must be string only!`);
-		} else if (
-			newRowData['Allergen 1'] &&
-			!['true', 'false'].includes(newRowData['Allergen 1'].toLowerCase())
-		) {
-			return window.alert(`Allergen 1 must be bool only!`);
-		} else if (
-			newRowData['Allergen 2'] &&
-			!['true', 'false'].includes(newRowData['Allergen 2'].toLowerCase())
-		) {
-			return window.alert(`Allergen 2 must be bool only!`);
-		} else if (
-			newRowData['Allergen 3'] &&
-			!['true', 'false'].includes(newRowData['Allergen 3'].toLowerCase())
-		) {
-			return window.alert(`Allergen 3 must be bool only!`);
-		} else if (
-			newRowData['Allergen 4'] &&
-			!['true', 'false'].includes(newRowData['Allergen 4'].toLowerCase())
-		) {
-			return window.alert(`Allergen 4 must be bool only!`);
-		} else if (newRowData.Student && typeof newRowData.Student !== 'string') {
-			return window.alert(`Student must be string only!`);
-		} else if (newRowData.Classes && typeof newRowData.Classes !== 'string') {
-			return window.alert(`Classes must be string only!`);
-		} else if (newRowData.Grades && typeof newRowData.Grades !== 'string') {
-			return window.alert(`Grades must be string only!`);
-		} else if (newRowData.ID && isNaN(newRowData.ID)) {
-			return window.alert(`ID must be number only!`);
-		}
 
-		for (let i = 0; i < addRowCol.length; i++) {
-			if (!newRowData[addRowCol[i]]) {
-				alert('Please fill in all fields');
-				return;
-			}
-			if (typeof newRowData[addRowCol[i]] !== 'string') {
-				return window.alert(`${newRowData[addRowCol[i]]} must be string only!`);
-			}
-		}
+    //type correctness HERE
+    for (let k = 0; k < tableConfig.length; k++) {
+      for (let i = 0; i < addRowCol.length; i++) {
+        if (!newRowData[addRowCol[i]]) {
+          alert('Please fill in all fields');
+          return;
+        }
+
+        if (tableConfig[k].name === addRowCol[i]) {
+          if (tableConfig[k].type === "int" && isNaN(newRowData[addRowCol[i]])) {
+            return window.alert(`${addRowCol[i]} input must be a number!`);
+          }
+          else if (tableConfig[k].type === "bool" && !['true', 'false'].includes(newRowData[addRowCol[i]].toLowerCase())) {
+            return window.alert(`${addRowCol[i]} input must be a boolean value!`); 
+          }
+          else if (typeof newRowData[addRowCol[i]] !== 'string'){
+            return window.alert(`${addRowCol[i]} must be a string!`);
+          }
+        }
+      }
+    }
 
 		// col.forEach((column) => {
 		//     newRow[column] = newRowData[column] || "";
