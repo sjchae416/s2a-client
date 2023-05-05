@@ -12,8 +12,6 @@ export default function ManageTablePage({
 	const [selectedTable, setSelectedTable] = useState(null);
 	const [addTable, setAddTable] = useState(false);
 
-	// console.log("selectedTable", selectedTable);
-
 	return (
 		<div>
 			<br />
@@ -28,9 +26,6 @@ export default function ManageTablePage({
 				<h3>Create New Table</h3>
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
-						{/* <div className="col-1 border-right text-center">
-              <button>Table</button>
-            </div> */}
 						<div className="col-1 border-right text-center">
 							<button
 								onClick={() => {

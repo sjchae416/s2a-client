@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { loadSheetAPI, getFirstSheetNameAPI, deleteAppAPI } from '../api';
+import { loadSheetAPI, deleteAppAPI } from '../api';
 
 export default function AppConfig({
 	user,
@@ -11,7 +11,6 @@ export default function AppConfig({
 	setSelectedApp,
 	showTable,
 	setShowTable,
-	// setAddApp,// addApp,
 }) {
 	const [name, setName] = useState('');
 	const [roleMembershipSheet, setRoleMembershipSheet] = useState('');
@@ -34,12 +33,6 @@ export default function AppConfig({
 		sheetIndex,
 	};
 
-	// useEffect(() => {
-	// 	if (addApp) {
-	// 		setAddApp(false);
-	// 	}
-	// }, [addApp]);
-
 	useEffect(() => {
 		console.log('🚀 ~ app:', app);
 		console.log('🚀 ~ selectedApp:', selectedApp);
@@ -52,15 +45,7 @@ export default function AppConfig({
 			setRoleMembershipSheet(selectedApp.roleMembershipSheet);
 			setSheetIndex(selectedApp.sheetIndex);
 			appData.views = selectedApp.createdViews;
-		}
-		// REVIEW backup
-		// else if (appData) {
-		// 	setName(appData.name);
-		// 	setRoleMembershipSheet(appData.roleMembershipSheet);
-		// 	setSheetIndex(appData.sheetIndex);
-		// }
-		// REVIEW backup
-		else {
+		} else {
 			setName('');
 			setRoleMembershipSheet('');
 			setSheetIndex('');
@@ -68,29 +53,12 @@ export default function AppConfig({
 	}, [app, selectedApp]);
 
 	const handleNameOnChange = (e) => {
-		// REVIEW backup
-		// setSelectedApp(null);
-		// REVIEW backup
 		setName(e.target.value);
-		// REVIEW backup
-		// if (selectedApp !== null) {
-		// 	appData.name = name;
-		// }
-		// REVIEW backup
 	};
 	const handleRoleOnChange = (e) => {
-		// REVIEW backup
-		// setSelectedApp(null);
-		// REVIEW backup
 		setRoleMembershipSheet(e.target.value);
-		// REVIEW backup
-		// if (selectedApp !== null) {
-		// 	appData.name = name;
-		// }
-		// REVIEW backup
 	};
 
-	// FN create and fill in App document & and load Table data
 	const loadRoleTable = async () => {
 		if (name && roleMembershipSheet && sheetIndex) {
 			const sheetData = {
@@ -122,7 +90,6 @@ export default function AppConfig({
 			const result = await deleteAppAPI(selectedAppId);
 
 			if (result) {
-				// TODO reset necessary states
 				setShowTable(false);
 				setAppData(null);
 				setSelectedApp(null);
@@ -196,34 +163,19 @@ export default function AppConfig({
 					<table>
 						<thead>
 							<tr>
-								{roleKey.map(
-									(
-										header,
-										index // Loop through the roleKey array and get the header and index
-									) => (
-										<th key={index}>{header}</th> // Use the index as the key for the header
-									)
-								)}
+								{roleKey.map((header, index) => (
+									<th key={index}>{header}</th>
+								))}
 							</tr>
 						</thead>
 						<tbody>
-							{roleData.slice(1).map(
-								(
-									rowData,
-									rowIndex // Use slice(1) to exclude the first row (header)
-								) => (
-									<tr key={rowIndex}>
-										{rowData.map(
-											(
-												value,
-												colIndex // Loop through each row and get the value and colIndex
-											) => (
-												<td key={colIndex}>{value}</td> // Use the colIndex as the key for the cell
-											)
-										)}
-									</tr>
-								)
-							)}
+							{roleData.slice(1).map((rowData, rowIndex) => (
+								<tr key={rowIndex}>
+									{rowData.map((value, colIndex) => (
+										<td key={colIndex}>{value}</td>
+									))}
+								</tr>
+							))}
 						</tbody>
 					</table>
 					<br />

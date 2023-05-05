@@ -162,7 +162,7 @@ const Sidebar = ({
 		setIsPublishModalVisible(false);
 	};
 
-	function areArraysEqual(arr1, arr2) {
+	const areArraysEqual = (arr1, arr2) => {
 		if (arr1.length !== arr2.length) return false;
 
 		return arr1.every((obj1) => {
@@ -170,9 +170,9 @@ const Sidebar = ({
 				return areObjectsEqual(obj1, obj2);
 			});
 		});
-	}
+	};
 
-	function areObjectsEqual(obj1, obj2) {
+	const areObjectsEqual = (obj1, obj2) => {
 		const keys1 = Object.keys(obj1);
 		const keys2 = Object.keys(obj2);
 
@@ -187,9 +187,9 @@ const Sidebar = ({
 
 			return obj1[key] === obj2[key];
 		});
-	}
+	};
 
-	function areArraysEqualIgnoreOrder(arr1, arr2) {
+	const areArraysEqualIgnoreOrder = (arr1, arr2) => {
 		if (arr1.length !== arr2.length) return false;
 
 		return arr1.every((elem1) => {
@@ -201,35 +201,17 @@ const Sidebar = ({
 				return elem1 === elem2;
 			});
 		});
-	}
+	};
 
 	const restoreViews = async (backupViews) => {
-		// app.views = [];
 		await Promise.all(
 			backupViews?.map(async (backupView) => {
-				// const viewToRestore = {
-				// 	name: backupView.name,
-				// 	table: backupView.table,
-				// 	columns: backupView.columns,
-				// 	viewType: backupView.viewType,
-				// 	allowedActions: backupView.allowedActions,
-				// 	roles: backupView.roles,
-				// 	filter: backupView.filter,
-				// 	userFilter: backupView.userFilter,
-				// 	editFilter: backupView.editFilter,
-				// 	editableCols: backupView.editableCols,
-				// };
-				// const update = viewToRestore;
-				// app.views.push(backupView._id);
 				await updateViewAPI(backupView._id, backupView);
 			})
 		);
-		// const update = app;
-		// await updateAppAPI(selectedApp._id, update);
 	};
 
 	const handleDiscard = () => {
-		// TODO restore all edit/delete View
 		setAppData(null);
 		setSelectedApp(null);
 

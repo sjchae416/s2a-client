@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-	updateSheetAPI,
-	getFirstSheetNameAPI,
-	addRowAPI,
-	loadSheetAPI,
-} from '../api';
+import { updateViewAPI } from '../api';
 
 export default function NavigationBar({
 	user,
 	setAppData,
 	setSelectedApp,
-  setViewDataList,
-  viewDatas,
-	setViewDatas,
+	viewDataList,
 	setReloadApp,
+	backupViews,
 }) {
 	const [showMenu, setShowMenu] = useState(false);
 	let navigate = useNavigate();
@@ -23,52 +17,70 @@ export default function NavigationBar({
 		setShowMenu(!showMenu);
 	};
 
-	const handleTest = async () => {
-		const sheetData = {
-			url: 'https://docs.google.com/spreadsheets/d/190mGZY2-lVzsT9W95nJxYMwIuc6OSSkdfT8dqIuHnpY/edit#gid=0',
-			range: 'Sheet1!A10:D10',
-			values: [['', '', '', '']],
-		};
-		await updateSheetAPI(sheetData);
-
-		// const sheetData2 = {
-		//   url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0",
-		//   sheetIndex: "Different Name",
-		// }
-
-		// const responses = await loadSheetAPI(sheetData2);
-		// console.log(responses);
-
-		// const firstSheetName = await getFirstSheetNameAPI({url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0"});
-		// console.log(firstSheetName);
-
-		// const sheetData = {
-		//   url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0",
-		//   sheetIndex: 'Sheet1',
-		//   values: [
-		//     ["New Value in A3", "New Value in B3"],
-		//   ]
-		// }
-
-		// const newData = await addRowAPI(sheetData);
-		// console.log(newData);
-	};
-
 	const handleLogout = () => {
 		localStorage.removeItem('user');
 		window.location.href = 'http://localhost:3333/auth/logout';
 	};
 
+	const areArraysEqual = (arr1, arr2) => {
+		if (arr1.length !== arr2.length) return false;
+
+		return arr1.every((obj1) => {
+			return arr2.some((obj2) => {
+				return areObjectsEqual(obj1, obj2);
+			});
+		});
+	};
+
+	const areObjectsEqual = (obj1, obj2) => {
+		const keys1 = Object.keys(obj1);
+		const keys2 = Object.keys(obj2);
+
+		if (keys1.length !== keys2.length) return false;
+
+		return keys1.every((key) => {
+			if (!keys2.includes(key)) return false;
+
+			if (Array.isArray(obj1[key]) && Array.isArray(obj2[key])) {
+				return areArraysEqualIgnoreOrder(obj1[key], obj2[key]);
+			}
+
+			return obj1[key] === obj2[key];
+		});
+	};
+
+	const areArraysEqualIgnoreOrder = (arr1, arr2) => {
+		if (arr1.length !== arr2.length) return false;
+
+		return arr1.every((elem1) => {
+			return arr2.some((elem2) => {
+				if (typeof elem1 === 'object' && typeof elem2 === 'object') {
+					return areObjectsEqual(elem1, elem2);
+				}
+
+				return elem1 === elem2;
+			});
+		});
+	};
+
+	const restoreViews = async (backupViews) => {
+		await Promise.all(
+			backupViews?.map(async (backupView) => {
+				await updateViewAPI(backupView._id, backupView);
+			})
+		);
+	};
+
 	// REVIEW should be the same or at least have all discard use case from Discard in Sidebar
 	const handleDiscardToHome = () => {
 		setAppData(null);
-    setSelectedApp(null);
-    
-		setViewDataList(null);
-		if (viewDatas) {
-			setViewDatas(null);
-    }
-    
+		setSelectedApp(null);
+
+		const isEqual = areArraysEqual(viewDataList, backupViews);
+		if (!isEqual) {
+			restoreViews(backupViews);
+		}
+
 		setReloadApp(true);
 		navigate('/');
 	};
@@ -105,23 +117,6 @@ export default function NavigationBar({
 		<div className="card text-right card_one">
 			<h1 id="save-change">S2A</h1>
 			<span className=" ml-auto">
-				<button onClick={handleTest}>Test Button</button>
-				{/* Here are the Undo-Redo and Save buttons
-				<button className="btn btn-info"> {'<'} </button>&nbsp;
-				<span className=" ml-auto" />
-				<button className="btn btn-info"> {'>'} </button>&nbsp;
-				<span className=" ml-auto" />
-
-				<button className="btn btn-info" onClick={handleSaveClick}>
-					Save
-	            </button>
-				<Modal isOpen={isModalOpen}>
-					<h2>Confirm Save</h2>
-					<p>Are you sure you want to save?</p>
-					<button onClick={handleCancelClick}>Cancel</button>
-					<button onClick={handleConfirmClick}>Confirm</button>
-				</Modal>
-				*/}
 				<span className="profile-letter ml-auto" onClick={toggleMenu}>
 					{user.email && user.email.charAt(0).toUpperCase()}
 				</span>

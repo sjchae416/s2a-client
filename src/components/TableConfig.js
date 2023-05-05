@@ -22,7 +22,7 @@ export default function TableConfig({
 	const [url, setUrl] = useState('');
 	const [sheetIndex, setSheetIndex] = useState('');
 	const [keys, setKeys] = useState([]);
-	// ====================
+
 	const [showConfig, setShowConfig] = useState(false);
 	const [selectedTablesss, setSelectedTablesss] = useState(false);
 	const [idForTable, setIdForTable] = useState('');

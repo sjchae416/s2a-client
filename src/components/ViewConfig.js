@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import shortid from 'shortid';
-import { loadSheetAPI, updateViewAPI, deleteViewAPI } from '../api';
+import { updateViewAPI, deleteViewAPI } from '../api';
 
 export default function ViewConfig({
 	viewRole,
@@ -29,8 +29,6 @@ export default function ViewConfig({
 	const [selectedTableId, setSelectedTableId] = useState('');
 	const [viewTable, setViewTable] = useState(null);
 	const [keyCol, setKeyCol] = useState('');
-
-	// console.log("selectedView", selectedView);
 
 	const formElement = useRef();
 	console.log();
@@ -199,7 +197,6 @@ export default function ViewConfig({
 		formElement.current.reset();
 	};
 
-	// TODO keep a track of created Views to restore when Discard
 	const handleCreateView = async (e) => {
 		e.preventDefault();
 
@@ -227,7 +224,6 @@ export default function ViewConfig({
 		}
 	};
 
-	// TODO keep a track of edited Views to restore when Discard
 	const handleUpdateView = async () => {
 		if (!viewName) {
 			return window.alert('Enter View name!');
@@ -283,7 +279,6 @@ export default function ViewConfig({
 		}
 	};
 
-	// TODO keep a track of deleted Views to restore when Discard
 	const handleDeleteView = async (selectedViewId) => {
 		if (isObjectInArray(selectedView, viewDataList)) {
 			const viewIdToBeDeleted = selectedViewId;
@@ -295,7 +290,6 @@ export default function ViewConfig({
 						return view?._id !== viewIdToBeDeleted;
 					});
 				});
-				// handleCancel();
 				setSelectedView(null);
 			} else {
 				window.alert('Failed to delete the View');
@@ -308,7 +302,6 @@ export default function ViewConfig({
 
 				return filtered.length === 0 ? null : filtered;
 			});
-			// handleCancel();
 			setSelectedView(null);
 		}
 	};
@@ -354,25 +347,6 @@ export default function ViewConfig({
 	const handleUserFilterCheckboxChange = (e) => {
 		const { checked } = e.target;
 		setUserFilter(checked);
-		// if (checked) {
-		//   // Filter config objects where type is email
-		//   const textConfigs = columns.filter(
-		//     (columns) => columns.type === "string"
-		//   );
-		//   // go through columns if email then push to emailConfigs
-		//   for (let i = 0; i < textConfigs.length; i++) {
-		//     if (checkUserEmail(textConfigs[i])) emailConfigs.push(textConfigs[i]);
-		//   }
-		//   if (emailConfigs.length > 0) setEmailConfigs(emailConfigs);
-		//   else {
-		//     return window.alert("There are no columns with emails");
-		//   }
-		// } else {
-		//   // Clear the bool configs from state
-		//   setEmailConfigs([]);
-		//   setUserFilter("");
-		//   console.log(viewData);
-		// }
 		if (checked) {
 			const emailConfigs = columns.filter(
 				(columns) => columns.type === 'string'
@@ -388,12 +362,9 @@ export default function ViewConfig({
 		const { checked } = e.target;
 		setFilter(checked);
 		if (checked) {
-			// Filter config objects where type is bool
 			const boolConfigs = columns.filter((columns) => columns.type === 'bool');
-			// Set the filtered bool configs to state
 			setBoolConfigs(boolConfigs);
 		} else {
-			// Clear the bool configs from state
 			setBoolConfigs([]);
 			setFilter('');
 		}
@@ -403,33 +374,24 @@ export default function ViewConfig({
 		const { checked } = e.target;
 		setEditFilter(checked);
 		if (checked) {
-			// Filter config objects where type is bool
 			const boolConfigs = columns.filter((columns) => columns.type === 'bool');
-			// Set the filtered bool configs to state
 			setBoolConfigs(boolConfigs);
 		} else {
-			// Clear the bool configs from state
 			setBoolConfigs([]);
 			setEditFilter('');
-			//console.log(viewData);
 		}
 	};
 
 	const handleFilterButtonChange = (e, name) => {
-		console.log(name);
 		setFilter(name);
-		console.log(viewData);
 	};
 
 	const handleUserFilterButtonChange = (e, name) => {
-		console.log(name);
 		setUserFilter(name);
 	};
 
 	const handleEditFilterButtonChange = (e, name) => {
-		// console.log(name);
 		setEditFilter(name);
-		// console.log(viewData);
 	};
 
 	return (

@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { DashboardApp, NavigationBar } from '../components';
 import UserContext from '../UserContext';
-import { Margin } from '@mui/icons-material';
 
 export default function DashboardPage({
 	isDeveloper,
@@ -10,15 +9,8 @@ export default function DashboardPage({
 	setAppData,
 	setReloadApp,
 	runnableApps,
-	appLog,
 }) {
 	const { user, setUser } = useContext(UserContext);
-	const [showMenu, setShowMenu] = useState(false);
-
-	console.log('🚀 ~ App ~ appLog:', appLog);
-	const toggleMenu = () => {
-		setShowMenu(!showMenu);
-	};
 
 	const handleManageTableButton = () => {
 		setReloadApp(false);
