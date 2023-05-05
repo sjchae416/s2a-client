@@ -98,12 +98,6 @@ export default function ViewConfig({
       )?.columns;
       setColumns(selectedTableColumns);
 
-	  	const columnWithKey = selectedTableColumns.find(obj => obj.key === true);
-		const columnName = columnWithKey.name;
-		setKeyCol(columnName);
-
-	  console.log(selectedTableColumns);
-
       // console.log("qqqqq", selectedView.userFilter);
 
       if (selectedView.userFilter) {
@@ -211,8 +205,8 @@ export default function ViewConfig({
       return window.alert("Choose columns!");
     } else if (role.length === 0) {
       return window.alert("Choose role!");
-    } else if(!editableCols.includes(keyCol)){
-		return window.alert("Key column " + keyCol + " must be editable");
+    } else if(viewType === "Detail" && !editableCols.includes(keyCol)){
+		  return window.alert("Key column " + keyCol + " must be editable");
 	}
 		else {
       setViewDatas((prev) =>
@@ -238,8 +232,8 @@ export default function ViewConfig({
       return window.alert("Choose columns!");
     } else if (role.length === 0) {
       return window.alert("Choose role!");
-    } else if(!editableCols.includes(keyCol)){
-		return window.alert("Key column " + keyCol + " must be editable");
+    } else if(viewType === "Detail" && !editableCols.includes(keyCol)){
+		  return window.alert("Key column " + keyCol + " must be editable");
 	}else {
       if (isObjectInArray(selectedView, viewDataList)) {
         try {
@@ -326,6 +320,11 @@ export default function ViewConfig({
         (userTable) => userTable?._id === e.target.value
       )?.columns;
       setColumns(selectedTableColumns);
+
+      const columnWithKey = selectedTableColumns.find(obj => obj.key === true);
+      const columnName = columnWithKey.name;
+      setKeyCol(columnName);
+      console.log(columnName);
     } else {
       setColumns([]);
     }
