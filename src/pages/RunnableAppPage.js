@@ -2,8 +2,9 @@ import React, { useState, useContext } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { NavigationBar, TableView, TableViewSidebar } from '../components';
 import UserContext from '../UserContext';
+import { saveAs } from 'file-saver';
 
-export default function RunnableAppPage({ runnableApps, userTables }) {
+export default function RunnableAppPage({ runnableApps, userTables, appLog }) {
 	const { id } = useParams();
 
 	// find app in runnableApps with same ID
@@ -11,7 +12,6 @@ export default function RunnableAppPage({ runnableApps, userTables }) {
 
 	// get accessible views
 	const views = runnableApp.app.accessibleViews;
-	console.log(views);
 
 	const [selectedView, setSelectedView] = useState(null);
 	const { user, setUser } = useContext(UserContext);
@@ -19,12 +19,36 @@ export default function RunnableAppPage({ runnableApps, userTables }) {
 		setSelectedView(view);
 	};
 
+	const handleDownloadLog = () => {
+		const appObj = appLog.find(obj => obj.app_id === id);
+		const csv = convertObjectToCsv(appObj);
+
+		const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    	saveAs(blob, `${appObj.app_name}.csv`);
+	};
+
+	function convertObjectToCsv(obj) {
+		const headers = Object.keys(obj);
+		const values = headers.map((header) => {
+			if (header === "log") {
+			  return JSON.stringify(obj[header]);
+			}
+			return obj[header];
+		  });
+		const csvRows = [headers.join(','), values.join(',')];
+		return csvRows.join('\n');
+	}
+
 	return (
 		<div>
 			<br />
 			<br />
 			<NavigationBar user={user} />
-			<h2>{runnableApp.app.name}</h2>
+			<div>
+				<h2>{runnableApp.app.name}</h2>
+				<button onClick={handleDownloadLog}>Download Log</button>
+			</div>
+			
 			<div className="page-container">
 				<div className="sidebar-container">
 					<TableViewSidebar views={views} onSelectView={handleSelectView} />
@@ -36,6 +60,8 @@ export default function RunnableAppPage({ runnableApps, userTables }) {
 							listViews={views}
 							userTables={userTables}
 							user={user}
+							appLog = {appLog}
+							appId = {id}
 						/>
 					)}
 				</div>

@@ -18,7 +18,7 @@ import {
 	getFirstSheetNameAPI,
 	readViewAPI,
 } from './api';
-import { Apps } from '@mui/icons-material';
+import { Apps, SettingsApplicationsOutlined } from '@mui/icons-material';
 
 // FIXME delete if not used
 export const customHistory = createBrowserHistory();
@@ -36,7 +36,7 @@ const App = () => {
 	const [publishedApps, setPublishedApps] = useState(null);
 	const [unpublishedApps, setUnpublishedApps] = useState(null);
 	const [runnableApps, setRunnableApps] = useState(null);
-	const [appLog, setAppLog] = useState({});
+	const [appLog, setAppLog] = useState([]);
 
 	//FOR REFERENCE appLog structure:
 	// const data = {
@@ -224,19 +224,21 @@ const App = () => {
 
 	function setUpLogs(apps){
 		console.log("setting up log...");
-		if(Object.keys(appLog).length == 0){
+		if(appLog.length == 0){
 			for(let i =0; i < Object.keys(apps).length; i++){
 				//get information for each app to store in log
 				let id = apps[i].app._id;
 				let name = apps[i].app.name;
 				let log = [];
-				console.log(id);
 
+				//appends to the end 
+				appLog.push({app_id:id, app_name:name, log:log});
 				console.log(apps[i]);
 			}
+			setAppLog(appLog);
 			//appLog[Object.keys(appLog).length + 1] = {text: "here"};
 		}
-		//console.log(appLog);
+		console.log(appLog);
 	}
 
 	const loadAllApps = async () => {
@@ -386,6 +388,7 @@ const App = () => {
 									setAppData={setAppData}
 									setReloadApp={setReloadApp}
 									runnableApps={runnableApps}
+									appLog = {appLog}
 								/>
 							) : (
 								<LoginPage />
@@ -445,6 +448,8 @@ const App = () => {
 								<RunnableAppPage
 									runnableApps={runnableApps}
 									userTables={userTables}
+									appLog = {appLog}
+
 								/>
 							) : (
 								<div>

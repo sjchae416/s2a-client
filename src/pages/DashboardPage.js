@@ -10,10 +10,12 @@ export default function DashboardPage({
 	setAppData,
 	setReloadApp,
 	runnableApps,
+	appLog
 }) {
 	const { user, setUser } = useContext(UserContext);
 	const [showMenu, setShowMenu] = useState(false);
 
+	console.log('🚀 ~ App ~ appLog:', appLog);
 	const toggleMenu = () => {
 		setShowMenu(!showMenu);
 	};
