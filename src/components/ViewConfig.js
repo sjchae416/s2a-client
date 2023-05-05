@@ -79,6 +79,8 @@ export default function ViewConfig({
     console.log("🚀 ~ useEffect ~ selectedView:", selectedView);
 
     if (selectedView) {
+  console.log('🚀 ~ keyCol:', keyCol)
+
       setEmailConfigs([]);
       setBoolConfigs([]);
 
@@ -98,7 +100,11 @@ export default function ViewConfig({
       )?.columns;
       setColumns(selectedTableColumns);
 
-      // console.log("qqqqq", selectedView.userFilter);
+      if (selectedColumns.length !== 0) {
+        const columnWithKey = selectedTableColumns.find(obj => obj.key === true);
+        const columnName = columnWithKey.name;
+        setKeyCol(columnName);
+      }
 
       if (selectedView.userFilter) {
         const emailConfigs = selectedTableColumns.filter(
@@ -312,6 +318,7 @@ export default function ViewConfig({
 
   const handleSelectTable = (e) => {
     const table = userTables?.find((item) => item?._id === e.target.value);
+    console.log('🚀 ~ handleSelectTable ~ table:', table)
     setViewTable(table);
     setSelectedTableId(e.target.value);
 
