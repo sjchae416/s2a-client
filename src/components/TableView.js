@@ -41,7 +41,11 @@ export default function TableView({
 
   const [filteredtableViewObjArr, setFilteredtableViewObjArr] = useState(null);
 
-  const [detailApps, setDetailApps] = useState(listViews.filter((view) => view.viewType === "Detail"));
+  const originalDetailApps = listViews.filter((view) => view.viewType === "Detail")
+
+  const [detailApps, setDetailApps] = useState(originalDetailApps);
+
+  const [referenceTableViewObjArr, setReferenceTableViewObjArr] = useState(null);
 
   let referenceTable = null;
 
@@ -128,6 +132,17 @@ export default function TableView({
     return;
   };
 
+  const array2dToObjArr = (sheetTableData) => {
+    return sheetTableData.slice(1).map((row) => {
+      const obj = {};
+      sheetTableData[0].forEach((key, index) => {
+        obj[key] = row[index];
+      });
+      if (obj.length != 0) return obj;
+      else return null;
+    });
+  }
+
   const getTableData = async () => {
     let referenceColumn = { name: "", reference: "false" };
     const data = await readTableAPI(view.table);
@@ -146,6 +161,7 @@ export default function TableView({
     }
     if (referenceColumn.reference !== "false") {
       referenceTable = await readTableAPI(referenceColumn.reference);
+      
     }
 
     const sheetData = {
@@ -162,6 +178,7 @@ export default function TableView({
         sheetIndex: referenceTable.sheetIndex,
       };
       let referenceSheetTableData = await loadSheetAPI(referenceSheetData);
+      setReferenceTableViewObjArr(array2dToObjArr(referenceSheetTableData));
 
       let columnIndex = sheetTableData[0].indexOf(referenceColumn.name);
       if (columnIndex === -1) {
@@ -177,15 +194,8 @@ export default function TableView({
       }
     }
 
-    let result = sheetTableData.slice(1).map((row) => {
-      const obj = {};
-      sheetTableData[0].forEach((key, index) => {
-        obj[key] = row[index];
-      });
-      if (obj.length != 0) return obj;
-      else return null;
-    });
-
+    let result = array2dToObjArr(sheetTableData);
+  
     console.log("result", result);
     if (result) settableViewObjArr(result);
     else settableViewObjArr(null);
@@ -440,8 +450,17 @@ export default function TableView({
         referenceColumn.reference,
         userRoles
       );
+      
+      // setSelectedRow();
+      if(referenceTableViewObjArr){
+        const labelValue = row[columnName];
+        const index = referenceTableViewObjArr.findIndex((obj) => Object.values(obj).includes(labelValue));
+        setSelectedRow(referenceTableViewObjArr[index]);
+      }
       setDetailApps([detailView]);
-    } 
+    } else {
+      setDetailApps(originalDetailApps);
+    }
 
     const foundRowIndex = tableViewObjArr.findIndex(
       (tableViewObjArrRow) => tableViewObjArrRow === row

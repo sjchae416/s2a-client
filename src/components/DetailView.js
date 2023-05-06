@@ -41,6 +41,8 @@ const DetailView = ({
     // console.log(view);
   };
 
+  console.log('row', row);
+
   const disableEditButton = editFilter && !row[editFilter];
   const [isEditing, setIsEditing] = useState(false);
   const [editingRow, setEditingRow] = useState(null);
