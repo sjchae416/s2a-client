@@ -39,9 +39,11 @@ export default function TableView({
 
   const [filteredtableViewObjArr, setFilteredtableViewObjArr] = useState(null);
 
+  const [detailApps, setDetailApps] = useState(listViews.filter((view) => view.viewType === "Detail"));
+
   let referenceTable = null;
 
-  const detailApps = listViews.filter((view) => view.viewType === "Detail");
+  // let detailApps = listViews.filter((view) => view.viewType === "Detail");
   // console.log('detailApps', detailApps);
 
   let name, table, col, type, allowedActions, role;
@@ -182,7 +184,7 @@ export default function TableView({
       else return null;
     });
 
-    console.log('result', result);
+    console.log("result", result);
     if (result) settableViewObjArr(result);
     else settableViewObjArr(null);
 
@@ -396,21 +398,21 @@ export default function TableView({
   const handleRowClick = async (row, columnName) => {
     // const foundRow = tableViewObjArr.find((tableViewObjArrRow) => tableViewObjArrRow.Name === row.Name);
     setSelectedRow(row);
-    console.log('tableData', tableData);
 
     // console.log("row: ", row);
     // console.log("referenceColumnObj: ", referenceColumnObj);
     // getDetailView(referenceColumnObj.reference, userRoles);
     const referenceColumn = tableData.columns.find(
-      (column) => column.name === columnName && column.reference !== 'false'
+      (column) => column.name === columnName && column.reference !== "false"
     );
-  
+
     if (referenceColumn) {
-      const detailView = await getDetailView(referenceColumn.reference, userRoles);
-      // Pass the detailView object to the DetailView component as a prop
-    } else {
-      // Keep the existing behavior
-    }
+      const detailView = await getDetailView(
+        referenceColumn.reference,
+        userRoles
+      );
+      setDetailApps([detailView]);
+    } 
 
     const foundRowIndex = tableViewObjArr.findIndex(
       (tableViewObjArrRow) => tableViewObjArrRow === row
@@ -457,9 +459,11 @@ export default function TableView({
         </thead>
         <tbody>
           {filteredtableViewObjArr?.map((row) => (
-            <tr key={row.Name} onClick={() => handleRowClick(row)}>
+            <tr key={row.Name}>
               {col.map((column) => (
-                <td key={column}>{row[column]}</td>
+                <td key={column} onClick={() => handleRowClick(row, column)}>
+                  {row[column]}
+                </td>
               ))}
               {showMinusButtons && (
                 <td>
@@ -494,6 +498,7 @@ export default function TableView({
           />
         </Modal>
       )}
+      {console.log('detailApps', detailApps)}
       <Modal open={open} onClose={handleClose}>
         <div
           className="modal-content"
