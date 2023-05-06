@@ -1,143 +1,163 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { updateSheetAPI, getFirstSheetNameAPI, addRowAPI, loadSheetAPI } from "../api";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { updateViewAPI } from '../api';
 
-export default function NavigationBar({ user }) {
-  const [showMenu, setShowMenu] = useState(false);
-  let navigate = useNavigate();
+export default function NavigationBar({
+	user,
+	setAppData,
+	setSelectedApp,
+	viewDataList,
+	setReloadApp,
+	backupViews,
+}) {
+	const [showMenu, setShowMenu] = useState(false);
+	let navigate = useNavigate();
 
-  const toggleMenu = () => {
-    setShowMenu(!showMenu);
-  };
+	const toggleMenu = () => {
+		setShowMenu(!showMenu);
+	};
 
-  const handleTest = async () => {
-    const sheetData = {
-      url: "https://docs.google.com/spreadsheets/d/190mGZY2-lVzsT9W95nJxYMwIuc6OSSkdfT8dqIuHnpY/edit#gid=0",
-      range: "Sheet1!A10:D10",
-      values: [
-        ["", "", "", ""],
-      ],
-    };
-    await updateSheetAPI(sheetData);
-    
-    // const sheetData2 = {
-    //   url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0",
-    //   sheetIndex: "Different Name",
-    // }
+	const handleLogout = () => {
+		localStorage.removeItem('user');
+		window.location.href = 'http://localhost:3333/auth/logout';
+	};
 
-    // const responses = await loadSheetAPI(sheetData2);
-    // console.log(responses);
+	const areArraysEqual = (arr1, arr2) => {
+		if (arr1.length !== arr2.length) return false;
 
-    // const firstSheetName = await getFirstSheetNameAPI({url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0"});
-    // console.log(firstSheetName);
+		return arr1.every((obj1) => {
+			return arr2.some((obj2) => {
+				return areObjectsEqual(obj1, obj2);
+			});
+		});
+	};
 
-    // const sheetData = {
-    //   url: "https://docs.google.com/spreadsheets/d/15PoeRhqiLuyPUF43186Lo8YVD-USsh__dU_uWNpn3kA/edit#gid=0",
-    //   sheetIndex: 'Sheet1',
-    //   values: [
-    //     ["New Value in A3", "New Value in B3"],
-    //   ]
-    // }
+	const areObjectsEqual = (obj1, obj2) => {
+		const keys1 = Object.keys(obj1);
+		const keys2 = Object.keys(obj2);
 
-    // const newData = await addRowAPI(sheetData);
-    // console.log(newData);
-  };
+		if (keys1.length !== keys2.length) return false;
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    window.location.href = "http://localhost:3333/auth/logout";
-  };
+		return keys1.every((key) => {
+			if (!keys2.includes(key)) return false;
 
-  useEffect(() => {
-    const create_app_modal_btn = document.querySelector("#save-change");
-    const create_app_modal = document.querySelector("#create-app-modals");
-    const dismiss_create_app_modal = document.querySelector(
-      "#dismiss_create_app_modal"
-    );
-    const create_app_btn = document.querySelector("#create-app-btn");
+			if (Array.isArray(obj1[key]) && Array.isArray(obj2[key])) {
+				return areArraysEqualIgnoreOrder(obj1[key], obj2[key]);
+			}
 
-    if (create_app_modal_btn) {
-      create_app_modal_btn.onclick = () => {
-        create_app_modal.style.display = "block";
-      };
-    }
+			return obj1[key] === obj2[key];
+		});
+	};
 
-    window.onclick = (event) => {
-      if (event.target === create_app_modal) {
-        create_app_modal.style.display = "none";
-      }
-    };
+	const areArraysEqualIgnoreOrder = (arr1, arr2) => {
+		if (arr1.length !== arr2.length) return false;
 
-    dismiss_create_app_modal.onclick = (event) => {
-      create_app_modal.style.display = "none";
-    };
-    create_app_btn.onclick = (event) => {
-      create_app_modal.style.display = "none";
-    };
-  }, []);
+		return arr1.every((elem1) => {
+			return arr2.some((elem2) => {
+				if (typeof elem1 === 'object' && typeof elem2 === 'object') {
+					return areObjectsEqual(elem1, elem2);
+				}
 
-  return (
-    <div className="card text-right card_one">
-      <h1 id="save-change">S2A</h1>
-      <span className=" ml-auto">
-        <button onClick={handleTest}>Test Button</button>
-        {/* Here are the Undo-Redo and Save buttons
-				<button className="btn btn-info"> {'<'} </button>&nbsp;
-				<span className=" ml-auto" />
-				<button className="btn btn-info"> {'>'} </button>&nbsp;
-				<span className=" ml-auto" />
+				return elem1 === elem2;
+			});
+		});
+	};
 
-				<button className="btn btn-info" onClick={handleSaveClick}>
-					Save
-	            </button>
-				<Modal isOpen={isModalOpen}>
-					<h2>Confirm Save</h2>
-					<p>Are you sure you want to save?</p>
-					<button onClick={handleCancelClick}>Cancel</button>
-					<button onClick={handleConfirmClick}>Confirm</button>
-				</Modal>
-				*/}
-        <span className="profile-letter ml-auto" onClick={toggleMenu}>
-          {user.email && user.email.charAt(0).toUpperCase()}
-        </span>
-        {showMenu && (
-          <div className="dropdown-menu">
-            <button className="btn-logout-dropdown" onClick={handleLogout}>
-              Log Out
-            </button>
-          </div>
-        )}
-      </span>
+	const restoreViews = async (backupViews) => {
+		await Promise.all(
+			backupViews?.map(async (backupView) => {
+				await updateViewAPI(backupView._id, backupView);
+			})
+		);
+	};
 
-      <div className="modal" id="create-app-modals">
-        <div className="modal-dialog-centered">
-          <div className="modal-content">
-            <div className="card">
-              <div className="form-group save_ur_chnage">
-                <h5>Save Changes</h5>
-                <h5>Would you like to save your changes before proceeding?</h5>
-                <button
-                  onClick={() => navigate("/")}
-                  className="btn btn-danger "
-                  id="dismiss_create_app_modal"
-                >
-                  Discard
-                </button>
-                <button
-                  onClick={() => navigate("/")}
-                  className="btn btn-success"
-                  id="create-app-btns"
-                >
-                  Save
-                </button>
-                <button className="btn btn-danger" id="create-app-btn">
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+	// REVIEW should be the same or at least have all discard use case from Discard in Sidebar
+	const handleDiscardToHome = () => {
+		setAppData(null);
+		setSelectedApp(null);
+
+		const isEqual = areArraysEqual(viewDataList, backupViews);
+		if (!isEqual) {
+			restoreViews(backupViews);
+		}
+
+		setReloadApp(true);
+		navigate('/');
+	};
+
+	useEffect(() => {
+		const create_app_modal_btn = document.querySelector('#save-change');
+		const create_app_modal = document.querySelector('#create-app-modals');
+		const dismiss_create_app_modal = document.querySelector(
+			'#dismiss_create_app_modal'
+		);
+		const create_app_btn = document.querySelector('#create-app-btn');
+
+		if (create_app_modal_btn) {
+			create_app_modal_btn.onclick = () => {
+				create_app_modal.style.display = 'block';
+			};
+		}
+
+		window.onclick = (event) => {
+			if (event.target === create_app_modal) {
+				create_app_modal.style.display = 'none';
+			}
+		};
+
+		dismiss_create_app_modal.onclick = (event) => {
+			create_app_modal.style.display = 'none';
+		};
+		create_app_btn.onclick = (event) => {
+			create_app_modal.style.display = 'none';
+		};
+	}, []);
+
+	return (
+		<div className="card text-right card_one">
+			<h1 id="save-change">S2A</h1>
+			<span className=" ml-auto">
+				<span className="profile-letter ml-auto" onClick={toggleMenu}>
+					{user.email && user.email.charAt(0).toUpperCase()}
+				</span>
+				{showMenu && (
+					<div className="dropdown-menu">
+						<button className="btn-logout-dropdown" onClick={handleLogout}>
+							Log Out
+						</button>
+					</div>
+				)}
+			</span>
+
+			<div className="modal" id="create-app-modals">
+				<div className="modal-dialog-centered">
+					<div className="modal-content">
+						<div className="card">
+							<div className="form-group save_ur_chnage">
+								<h5>Save Changes</h5>
+								<h5>Would you like to save your changes before proceeding?</h5>
+								<button
+									onClick={handleDiscardToHome}
+									className="btn btn-danger "
+									id="dismiss_create_app_modal"
+								>
+									Discard
+								</button>
+								<button
+									onClick={() => navigate('/')}
+									className="btn btn-success"
+									id="create-app-btns"
+								>
+									Save
+								</button>
+								<button className="btn btn-danger" id="create-app-btn">
+									Cancel
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }

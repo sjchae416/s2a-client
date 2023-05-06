@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { DashboardApp, NavigationBar } from '../components';
 import UserContext from '../UserContext';
-import { Margin } from '@mui/icons-material';
 
 export default function DashboardPage({
 	isDeveloper,
@@ -12,10 +11,9 @@ export default function DashboardPage({
 	runnableApps,
 }) {
 	const { user, setUser } = useContext(UserContext);
-	const [showMenu, setShowMenu] = useState(false);
 
-	const toggleMenu = () => {
-		setShowMenu(!showMenu);
+	const handleManageTableButton = () => {
+		setReloadApp(false);
 	};
 
 	const handleManageButton = () => {
@@ -53,7 +51,10 @@ export default function DashboardPage({
 											{userTables ? (
 												<div>
 													<Link to="/add-table">
-														<button className="btn btn-info create_table_btn">
+														<button
+															className="btn btn-info create_table_btn"
+															onClick={handleManageTableButton}
+														>
 															Manage Table
 														</button>
 													</Link>

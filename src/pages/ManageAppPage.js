@@ -21,12 +21,10 @@ export default function ManageAppPage({
 	const { user, setUser } = useContext(UserContext);
 	const [view, setView] = useState('app');
 	const [viewRole, setViewRole] = useState([]);
-	// NOTE viewDataList will store existing Views
 	const [viewDataList, setViewDataList] = useState(null);
+	const [backupViews, setBackupViews] = useState(null);
 	const [selectedView, setSelectedView] = useState(null);
 	const [addView, setAddView] = useState(false);
-	// REVIEW not uesd at all, only changes the state
-	// const [addApp, setAddApp] = useState(false);
 	const [appType, setAppType] = useState('published');
 	const [showTable, setShowTable] = useState(false);
 	const [selectedApp, setSelectedApp] = useState(null);
@@ -34,10 +32,12 @@ export default function ManageAppPage({
 	useEffect(() => {
 		if (selectedApp !== null) {
 			setViewDataList(selectedApp.createdViews);
+			setBackupViews(selectedApp.createdViews);
 		} else {
-      setViewDataList(null);
+			setViewDataList(null);
+			setBackupViews(null);
 		}
-    setSelectedView(null);
+		setSelectedView(null);
 		setViewDatas(null);
 	}, [selectedApp]);
 
@@ -47,7 +47,6 @@ export default function ManageAppPage({
 		setShowTable(false);
 		setReloadApp(false);
 		setViewDataList(null);
-		//setAddApp(true);
 		setSelectedView(null);
 	};
 
@@ -61,7 +60,14 @@ export default function ManageAppPage({
 			<br />
 			<br />
 			<div className="container">
-				<NavigationBar user={user} />
+				<NavigationBar
+					user={user}
+					setAppData={setAppData}
+					setSelectedApp={setSelectedApp}
+					viewDataList={viewDataList}
+					setReloadApp={setReloadApp}
+					backupViews={backupViews}
+				/>
 				<br />
 				<div className="card p-0">
 					<div className="row no-gutters mt-2">
@@ -76,6 +82,7 @@ export default function ManageAppPage({
 							setViewDatas={setViewDatas}
 							viewDataList={viewDataList}
 							setViewDataList={setViewDataList}
+							backupViews={backupViews}
 						/>
 
 						<div className="col-1 border-right text-center">
@@ -87,9 +94,6 @@ export default function ManageAppPage({
 									<select
 										defaultValue={appType}
 										onChange={(e) => {
-											// NOTE User could be just lookin through the list of the Apps while creation of App e.g. to prevent same name
-											// setAppData(null);
-											// setSelectedApp(null);
 											setAppType(e.target.value);
 										}}
 									>
@@ -135,8 +139,6 @@ export default function ManageAppPage({
 										setSelectedApp={setSelectedApp}
 										showTable={showTable}
 										setShowTable={setShowTable}
-										// addApp={addApp}
-										// setAddApp={setAddApp}
 									/>
 								) : view === 'view' && app ? (
 									<ViewConfig

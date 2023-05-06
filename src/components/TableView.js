@@ -13,6 +13,8 @@ export default function TableView({
   userTables,
   user,
   userRoles,
+  appLog, 
+  appId,
 }) {
   const [tableData, setTableData] = useState([]);
   const [tableConfig, setTableConfig] = useState([]);
@@ -330,6 +332,19 @@ export default function TableView({
 
     await updateSheetAPI(sheetData);
 
+    //UPDATE LOG
+		const appObj = appLog.find(obj => obj.app_id === appId);
+		// If the object exists, append the new log entry to its log array
+		if (appObj) {
+			appObj.log.push({
+				view_name: name,
+				function: "add",
+				row_index: sheetIdx,
+				change: newRow
+			});
+		}
+		console.log(appLog);
+
     await getTableData();
     handleClose();
   };
@@ -362,10 +377,12 @@ export default function TableView({
     });
     sheetTableData.splice(index + 1, 1);
 
+
+		//TODO FIX SHEET IDX
     let sheetIdx =
       tableData.sheetIndex +
       "!A2:" +
-      String.fromCharCode(64 + Object.keys(deletedRow).length) +
+      String.fromCharCode(64 + Object.keys(tableConfig).length) +
       (tableViewObjArr.length + 1).toString();
 
     if (index !== -1) {
@@ -377,7 +394,7 @@ export default function TableView({
 
     let values = [];
 
-    for (let i = 0; i < Object.keys(deletedRow).length; i++) {
+    for (let i = 0; i < Object.keys(tableConfig).length; i++) {
       values[i] = "";
     }
 
@@ -391,6 +408,18 @@ export default function TableView({
     };
 
     await updateSheetAPI(sheetData);
+
+    const appObj = appLog.find(obj => obj.app_id === appId);
+		// If the object exists, append the new log entry to its log array
+		if (appObj) {
+			appObj.log.push({
+				view_name: name,
+				function: "delete",
+				row_index: sheetIdx,
+				change: deletedRow
+			});
+		}
+		console.log(appLog);
 
     handleClose();
   };
@@ -495,6 +524,8 @@ export default function TableView({
             tableViewObjArr={tableViewObjArr}
             settableViewObjArr={settableViewObjArr}
             setFilteredtableViewObjArr={setFilteredtableViewObjArr}
+            appLog = {appLog}
+						appId = {appId}
           />
         </Modal>
       )}

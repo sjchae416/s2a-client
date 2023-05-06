@@ -8,7 +8,6 @@ import {
 	DashboardPage,
 	ManageAppPage,
 	ManageTablePage,
-	AdminPage,
 	RunnableAppPage,
 } from './pages';
 import {
@@ -18,7 +17,6 @@ import {
 	getFirstSheetNameAPI,
 	readViewAPI,
 } from './api';
-import { Apps } from '@mui/icons-material';
 
 // FIXME delete if not used
 export const customHistory = createBrowserHistory();
@@ -29,26 +27,12 @@ const App = () => {
 	const [tableIds, setTableIds] = useState(null);
 	const [app, setAppData] = useState(null);
 	const [userTables, setTables] = useState(null);
-	// NOTE viewDatas will store locally created Views (an array of viewToSave's)
 	const [viewDatas, setViewDatas] = useState(null);
-	// const [developers, setDevelopers] = useState([]);
 	const [isDeveloper, setIsDeveloper] = useState(false);
 	const [publishedApps, setPublishedApps] = useState(null);
 	const [unpublishedApps, setUnpublishedApps] = useState(null);
 	const [runnableApps, setRunnableApps] = useState(null);
-	const [appLog, setAppLog] = useState({});
-
-	//FOR REFERENCE appLog structure:
-	// const data = {
-	// 	app_id: 1,
-	// 	app_name: "table",
-	// 	log: [{
-	//		view_name: "test", 
-	// 		function:"add",
-	//		row_index: "",
-	// 		change: ""}
-	// 	]
-	// }
+	const [appLog, setAppLog] = useState([]);
 
 	// NOTE TABLES
 	// TODO abstract into client API
@@ -109,18 +93,18 @@ const App = () => {
 			return [];
 		}
 
-		const roles = roleSheetData[0]; // Get the roles from the first row
+		const roles = roleSheetData[0];
 		const userRoles = [];
 
 		for (let row = 1; row < roleSheetData.length; row++) {
 			for (let col = 0; col < roleSheetData[row].length; col++) {
 				if (roleSheetData[row][col] === email) {
-					userRoles.push(roles[col]); // Add the role found at the column to userRoles array
+					userRoles.push(roles[col]);
 				}
 			}
 		}
 
-		return userRoles; // Return an array of roles
+		return userRoles;
 	}
 
 	const filterPublishedApps = async (developerApps) => {
@@ -209,34 +193,31 @@ const App = () => {
 
 			if (filteredApps.length !== 0) {
 				setRunnableApps(filteredApps);
-				console.log("filtered"+filteredApps);
 				setUpLogs(filteredApps);
-
 			} else {
 				setRunnableApps(null);
 			}
 		} catch (error) {
 			console.error(error);
-			// window.alert(error);
 			return new Error('Error filtering runnableApps: ', error);
 		}
 	};
 
-	function setUpLogs(apps){
-		console.log("setting up log...");
-		if(Object.keys(appLog).length == 0){
-			for(let i =0; i < Object.keys(apps).length; i++){
-				//get information for each app to store in log
+	function setUpLogs(apps) {
+		console.log('setting up log...');
+		if (appLog.length == 0) {
+			for (let i = 0; i < Object.keys(apps).length; i++) {
 				let id = apps[i].app._id;
 				let name = apps[i].app.name;
 				let log = [];
-				console.log(id);
 
+				appLog.push({ app_id: id, app_name: name, log: log });
 				console.log(apps[i]);
 			}
+			setAppLog(appLog);
 			//appLog[Object.keys(appLog).length + 1] = {text: "here"};
 		}
-		//console.log(appLog);
+		console.log(appLog);
 	}
 
 	const loadAllApps = async () => {
@@ -275,7 +256,7 @@ const App = () => {
 						}
 					} else {
 						console.log(
-							`The User with email: ${user.email} does not have any roles`
+							`The User with email: ${user.email} does not have any roles in this app`
 						);
 					}
 				}
@@ -311,23 +292,6 @@ const App = () => {
 	useEffect(() => {
 		console.log('🚀 ~ App ~ runnableApps:', runnableApps);
 	}, [runnableApps]);
-
-	// NOTE ADMIN
-	// TODO abstract into client API
-	// const fetchDevelopers = async () => {
-	// 	try {
-	// 		const response = await fetch('http://localhost:3333/admin');
-
-	// 		if (!response.ok) {
-	// 			throw new Error(`HTTP error! status: ${response.status}`);
-	// 		}
-
-	// 		const data = await response.json();
-	// 		setDevelopers(data.developers);
-	// 	} catch (error) {
-	// 		console.error('Fetch Error:', error);
-	// 	}
-	// };
 
 	// NOTE USERS
 	// TODO abstract into client API
@@ -402,7 +366,6 @@ const App = () => {
 									unpublishedApps={unpublishedApps}
 									setReloadApp={setReloadApp}
 									app={app}
-									// developerApps={developerApps}
 									setAppData={setAppData}
 									userTables={userTables}
 									viewDatas={viewDatas}
@@ -418,26 +381,16 @@ const App = () => {
 						element={
 							user ? (
 								<ManageTablePage
+									setReloadApp={setReloadApp}
 									setTables={setTables}
 									tableIds={tableIds}
 									userTables={userTables}
-									// developerApps={developerApps}
 								/>
 							) : (
 								<LoginPage />
 							)
 						}
 					/>
-					{/* <Route
-						path="/admin"
-						element={
-							<AdminPage
-								developers={developers}
-								setDevelopers={setDevelopers}
-								fetchDevelopers={fetchDevelopers}
-							/>
-						}
-					/> */}
 					<Route
 						path="/runnable-appIds/:id"
 						element={
@@ -445,6 +398,7 @@ const App = () => {
 								<RunnableAppPage
 									runnableApps={runnableApps}
 									userTables={userTables}
+									appLog={appLog}
 								/>
 							) : (
 								<div>

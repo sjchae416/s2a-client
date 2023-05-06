@@ -5,6 +5,7 @@ import {
 	createViewAPI,
 	deleteViewAPI,
 	updateAppAPI,
+	updateViewAPI,
 } from '../api';
 import Modal from '@mui/material/Modal';
 
@@ -19,6 +20,7 @@ const Sidebar = ({
 	setViewDatas,
 	viewDataList,
 	setViewDataList,
+	backupViews,
 }) => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [isPublishModalVisible, setIsPublishModalVisible] = useState(false);
@@ -84,7 +86,10 @@ const Sidebar = ({
 	};
 
 	const handleSaveApp = async () => {
-		if (checkTableView(viewDatas) || checkTableView(selectedApp?.createdViews)) {
+		if (
+			checkTableView(viewDatas) ||
+			checkTableView(selectedApp?.createdViews)
+		) {
 			try {
 				if (selectedApp) {
 					const currViewIds = viewDataList.map((view) => {
@@ -157,12 +162,64 @@ const Sidebar = ({
 		setIsPublishModalVisible(false);
 	};
 
+	const areArraysEqual = (arr1, arr2) => {
+		if (arr1.length !== arr2.length) return false;
+
+		return arr1.every((obj1) => {
+			return arr2.some((obj2) => {
+				return areObjectsEqual(obj1, obj2);
+			});
+		});
+	};
+
+	const areObjectsEqual = (obj1, obj2) => {
+		const keys1 = Object.keys(obj1);
+		const keys2 = Object.keys(obj2);
+
+		if (keys1.length !== keys2.length) return false;
+
+		return keys1.every((key) => {
+			if (!keys2.includes(key)) return false;
+
+			if (Array.isArray(obj1[key]) && Array.isArray(obj2[key])) {
+				return areArraysEqualIgnoreOrder(obj1[key], obj2[key]);
+			}
+
+			return obj1[key] === obj2[key];
+		});
+	};
+
+	const areArraysEqualIgnoreOrder = (arr1, arr2) => {
+		if (arr1.length !== arr2.length) return false;
+
+		return arr1.every((elem1) => {
+			return arr2.some((elem2) => {
+				if (typeof elem1 === 'object' && typeof elem2 === 'object') {
+					return areObjectsEqual(elem1, elem2);
+				}
+
+				return elem1 === elem2;
+			});
+		});
+	};
+
+	const restoreViews = async (backupViews) => {
+		await Promise.all(
+			backupViews?.map(async (backupView) => {
+				await updateViewAPI(backupView._id, backupView);
+			})
+		);
+	};
+
 	const handleDiscard = () => {
-		// TODO restore all edit/delete View
 		setAppData(null);
-		setViewDatas(null);
-		setViewDataList(null);
 		setSelectedApp(null);
+
+		const isEqual = areArraysEqual(viewDataList, backupViews);
+		if (!isEqual) {
+			restoreViews(backupViews);
+		}
+
 		setReloadApp(true);
 		navigate('/');
 	};

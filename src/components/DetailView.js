@@ -15,6 +15,8 @@ const DetailView = ({
   tableViewObjArr,
   settableViewObjArr,
   setFilteredtableViewObjArr,
+  appLog, 
+  appId
 }) => {
   const [selectedView, setSelectedView] = useState(null);
   const [name, setName] = useState("");
@@ -110,6 +112,17 @@ const DetailView = ({
 
     await updateSheetAPI(sheetData);
 
+    const appObj = appLog.find(obj => obj.app_id === appId);
+		// If the object exists, append the new log entry to its log array
+		if (appObj) {
+			appObj.log.push({
+				view_name: name,
+				function: "edit",
+				row_index: sheetIdx,
+				change: updatedRow
+			});
+		}
+
     const updatedTableViewObjArr = tableViewObjArr;
     updatedTableViewObjArr[rowPosition] = updatedRow;
     settableViewObjArr(updatedTableViewObjArr);
@@ -162,10 +175,11 @@ const DetailView = ({
     });
     sheetTableData.splice(index + 1, 1);
 
+    console.log(row);
     let sheetIdx =
       tableData.sheetIndex +
       "!A2:" +
-      String.fromCharCode(64 + Object.keys(deletedRow).length) +
+      String.fromCharCode(64 + Object.keys(row).length) +
       (tableViewObjArr.length + 1).toString();
 
     if (index !== -1) {
@@ -177,7 +191,7 @@ const DetailView = ({
 
     let values = [];
 
-    for (let i = 0; i < Object.keys(deletedRow).length; i++) {
+    for (let i = 0; i < Object.keys(row).length; i++) {
       values[i] = "";
     }
 
@@ -191,6 +205,17 @@ const DetailView = ({
     };
 
     await updateSheetAPI(sheetData);
+
+    const appObj = appLog.find(obj => obj.app_id === appId);
+		// If the object exists, append the new log entry to its log array
+		if (appObj) {
+			appObj.log.push({
+				view_name: name,
+				function: "delete",
+				row_index: sheetIdx,
+				change: deletedRow
+			});
+		}
 
     // deleteRowPosition(resource);
 
