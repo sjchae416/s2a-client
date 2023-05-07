@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { NavigationBar, TableView, TableViewSidebar } from '../components';
 import UserContext from '../UserContext';
 import { saveAs } from 'file-saver';

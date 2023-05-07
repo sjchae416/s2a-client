@@ -34,8 +34,6 @@ export default function AppConfig({
 	};
 
 	useEffect(() => {
-		console.log('🚀 ~ app:', app);
-		console.log('🚀 ~ selectedApp:', selectedApp);
 		if (app !== null) {
 			setName(app.name);
 			setRoleMembershipSheet(app.roleMembershipSheet);

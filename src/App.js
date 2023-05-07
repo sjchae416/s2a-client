@@ -1,7 +1,6 @@
 import './App.css';
 import React, { useEffect, useState, useContext } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
 import UserContext from './UserContext';
 import {
 	LoginPage,
@@ -14,12 +13,8 @@ import {
 	readTableAPI,
 	loadSheetAPI,
 	getAllAppsAPI,
-	getFirstSheetNameAPI,
 	readViewAPI,
 } from './api';
-
-// FIXME delete if not used
-export const customHistory = createBrowserHistory();
 
 const App = () => {
 	const { user, setUser } = useContext(UserContext);
@@ -35,13 +30,11 @@ const App = () => {
 	const [appLog, setAppLog] = useState([]);
 
 	// NOTE TABLES
-	// TODO abstract into client API
 	const checkGlobalTable = async () => {
 		try {
 			const url =
 				'https://docs.google.com/spreadsheets/d/1CC5H2MVbGg0tm8OyouoR7f2ARR0CK1kqHFNeKYyYtL4/edit#gid=0';
 			const sheetIndex = 'Sheet1';
-			//await getFirstSheetNameAPI({ url: url });
 			const sheetData = {
 				name: 'Global Developer List',
 				url: url,
@@ -212,12 +205,9 @@ const App = () => {
 				let log = [];
 
 				appLog.push({ app_id: id, app_name: name, log: log });
-				console.log(apps[i]);
 			}
 			setAppLog(appLog);
-			//appLog[Object.keys(appLog).length + 1] = {text: "here"};
 		}
-		console.log(appLog);
 	}
 
 	const loadAllApps = async () => {
@@ -294,7 +284,6 @@ const App = () => {
 	}, [runnableApps]);
 
 	// NOTE USERS
-	// TODO abstract into client API
 	const fetchCurrentUser = async () => {
 		try {
 			const response = await fetch('http://localhost:3333/auth/authenticated', {

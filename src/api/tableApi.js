@@ -11,15 +11,6 @@ export const createTableAPI = async (tableData) => {
 			body: JSON.stringify(tableData),
 		});
 		return response.json();
-		// REVIEW below is how I only return the non null response, else an error
-		// const data = await response.json();
-
-		// if (response.ok) {
-		// 	return data;
-		// } else {
-		// 	const errorMessage = data.message;
-		// 	throw new Error(errorMessage);
-		// }
 	} catch (error) {
 		console.error(error);
 	}

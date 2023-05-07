@@ -1,4 +1,3 @@
-import { fetchTokenAPI } from './authApi';
 import {
 	createAppAPI,
 	getAllAppsAPI,
@@ -38,7 +37,6 @@ import {
 } from './viewApi';
 
 export {
-	fetchTokenAPI,
 	createAppAPI,
 	getAllAppsAPI,
 	getAppByIdAPI,

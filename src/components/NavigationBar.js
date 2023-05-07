@@ -71,7 +71,6 @@ export default function NavigationBar({
 		);
 	};
 
-	// REVIEW should be the same or at least have all discard use case from Discard in Sidebar
 	const handleDiscardToHome = () => {
 		setAppData(null);
 		setSelectedApp(null);

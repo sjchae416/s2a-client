@@ -8,7 +8,6 @@ const DetailView = ({
   views,
   rowPosition,
   onSelectedRowChange,
-  updateRecord,
   editPosition,
   deleteRowPosition,
   tableData,
@@ -38,10 +37,8 @@ const DetailView = ({
     setRole(view.roles);
     setEditFilter(view.editFilter || "");
     setEditableCols(view.editableCols || []);
-    // console.log(view);
   };
 
-  console.log('row', row);
 
   const disableEditButton = editFilter && !row[editFilter];
   const [isEditing, setIsEditing] = useState(false);
@@ -115,7 +112,7 @@ const DetailView = ({
 
     console.log('sheetData', sheetData);
 
-    // await updateSheetAPI(sheetData);
+    await updateSheetAPI(sheetData);
 
     const appObj = appLog.find(obj => obj.app_id === appId);
 		// If the object exists, append the new log entry to its log array
@@ -128,14 +125,17 @@ const DetailView = ({
 			});
 		}
 
+    console.log('🚀 ~ handleSaveClick ~ tableViewObjArr:', tableViewObjArr)
     const updatedTableViewObjArr = tableViewObjArr;
     updatedTableViewObjArr[rowPosition] = updatedRow;
+    console.log('🚀 ~ handleSaveClick ~ rowPosition:', rowPosition)
+    console.log('🚀 ~ handleSaveClick ~ updatedRow:', updatedRow)
+    console.log('🚀 ~ handleSaveClick ~ updatedTableViewObjArr:', updatedTableViewObjArr)
     settableViewObjArr(updatedTableViewObjArr);
 
     setEditingRow(updatedRow);
     onSelectedRowChange(updatedRow);
     setIsEditing(false);
-    updateRecord(updatedRow);
   };
 
   // Event handler for cancel button click
@@ -180,7 +180,6 @@ const DetailView = ({
     });
     sheetTableData.splice(index + 1, 1);
 
-    console.log(row);
     let sheetIdx =
       tableData.sheetIndex +
       "!A2:" +
