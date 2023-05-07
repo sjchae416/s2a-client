@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { DashboardApp, NavigationBar } from '../components';
 import UserContext from '../UserContext';
 import { Margin } from '@mui/icons-material';
+import { MDBBtn } from 'mdb-react-ui-kit';
 
 export default function DashboardPage({
 	isDeveloper,
@@ -90,7 +91,7 @@ export default function DashboardPage({
 						</div>
 
 						<div className="box_two">
-							<h2>Runnable Apps</h2>
+							<h2 className="my-5 display-3 fw-bold ls-tight px-3">Runnable Apps</h2>
 							<div className="row">
 								{runnableApps ? (
 									runnableApps?.map((runnableApp) => (
@@ -100,7 +101,7 @@ export default function DashboardPage({
 										/>
 									))
 								) : (
-									<h1>Loading Runnable Apps...</h1>
+									<h3>Loading Runnable Apps...</h3>
 								)}
 							</div>
 						</div>

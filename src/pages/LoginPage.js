@@ -1,36 +1,47 @@
 import React from 'react';
+import {
+	MDBBtn,
+	MDBContainer,
+	MDBRow,
+	MDBCol,
+	MDBCard,
+	MDBCardBody
+  }
+  from 'mdb-react-ui-kit';
 
 export default function LoginPage() {
 	return (
-	  <div>
-		<br />
-		<br />
-		<div className="container">
-		  <div className="card">
-			<h1 className="text-center">S2A</h1>
-			<div className="card">
-			  <h1 className="text-center">Log In</h1>
-			  <div className="card login-card mx-auto" style={{padding: "20px"}}>
-				<div
-				  style={{
-					display: "flex",
-					alignItems: 'center',
-					justifyContent: 'center',
-				  }}
-				  className="row"
-				>
-				  <div className="col-6 text-center">
-					<button id="login-btn">
-					  <a href="http://localhost:3333/auth/google">
-						Log in with Google
-					  </a>
-					</button>
-				  </div>
-				</div>
-			  </div>
-			</div>
-		  </div>
-		</div>
-	  </div>
+		<MDBContainer fluid className='p-4 background-radial-gradient overflow-hidden'>
+
+		<MDBRow>
+  
+		  <MDBCol md='6' className='text-center text-md-start d-flex flex-column justify-content-center'>
+  
+			<h1 className="my-5 display-3 fw-bold ls-tight px-3" style={{color: 'hsl(218, 81%, 95%)'}}>
+			  S2A<br />
+			  <span style={{color: 'hsl(218, 81%, 75%)'}}>Login to your account</span>
+			</h1>
+  
+			<p className='px-3' style={{color: 'hsl(218, 81%, 85%)'}}>
+			 A framework for developing spreadsheet-based apps that pull information from one or more spreadsheets.
+			</p>
+  
+		  </MDBCol>
+  
+		  <MDBCol md='6' className='position-relative'>
+  
+			<MDBCard className='my-5 bg-glass'>
+			  <MDBCardBody className='p-5'>
+  
+				<MDBBtn href="http://localhost:3333/auth/google" className='w-100 mb-4' size='md'>Sign in with Google</MDBBtn>
+  
+			  </MDBCardBody>
+			</MDBCard>
+  
+		  </MDBCol>
+  
+		</MDBRow>
+  
+	  </MDBContainer>
 	);
   }
