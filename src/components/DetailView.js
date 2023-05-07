@@ -56,6 +56,7 @@ const DetailView = ({
     setEditingFields({});
   };
 
+  const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
 
   function isUrl(input) {
     const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -81,7 +82,7 @@ const DetailView = ({
           else if (tableConfig[k].type === "bool" && !['true', 'false'].includes(editingFields[editingFieldsArray[i]].toLowerCase())) {
             return window.alert(`${editingFieldsArray[i]} input must be a boolean value!`); 
           }
-          else if (tableConfig[k].type === "url" && !isUrl(editingFields[editingFieldsArray[i]])) {
+          else if (tableConfig[k].type === "url" && !urlRegex.test(editingFields[editingFieldsArray[i]])) {
             return window.alert(`${editingFieldsArray[i]} input must be a url value!`); 
           }
           else if (typeof editingFields[editingFieldsArray[i]] !== 'string'){
@@ -112,7 +113,9 @@ const DetailView = ({
       values: [newValues],
     };
 
-    await updateSheetAPI(sheetData);
+    console.log('sheetData', sheetData);
+
+    // await updateSheetAPI(sheetData);
 
     const appObj = appLog.find(obj => obj.app_id === appId);
 		// If the object exists, append the new log entry to its log array

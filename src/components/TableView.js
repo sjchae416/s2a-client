@@ -13,7 +13,7 @@ export default function TableView({
   userTables,
   user,
   userRoles,
-  appLog, 
+  appLog,
   appId,
 }) {
   const [tableData, setTableData] = useState([]);
@@ -41,11 +41,17 @@ export default function TableView({
 
   const [filteredtableViewObjArr, setFilteredtableViewObjArr] = useState(null);
 
-  const originalDetailApps = listViews.filter((view) => view.viewType === "Detail")
+  const originalDetailApps = listViews.filter(
+    (view) => view.viewType === "Detail"
+  );
+
+  const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+
 
   const [detailApps, setDetailApps] = useState(originalDetailApps);
 
-  const [referenceTableViewObjArr, setReferenceTableViewObjArr] = useState(null);
+  const [referenceTableViewObjArr, setReferenceTableViewObjArr] =
+    useState(null);
 
   let referenceTable = null;
 
@@ -74,9 +80,21 @@ export default function TableView({
 
   useEffect(() => {}, [cacheData]);
 
-  useEffect(() => {
-    console.log("tableViewObjArr in useEffect", tableViewObjArr);
-  }, [tableViewObjArr]);
+  useEffect(
+    () => {
+      console.log("tableViewObjArr in useEffect", tableViewObjArr);
+      console.log("tableData in useEffect", tableData);
+    },
+    [tableViewObjArr],
+    [tableData]
+  );
+
+  const addProtocolIfNeeded = (url) => {
+    if (!/^https?:\/\//i.test(url)) {
+      return 'http://' + url;
+    }
+    return url;
+  };
 
   const getDetailView = async (tableId, userRoles) => {
     try {
@@ -103,6 +121,7 @@ export default function TableView({
       console.error("Error fetching detail view:", error);
     }
   };
+
 
   const findLabelValues = (referenceSheetTableData, input) => {
     let keyColumn, labelColumn;
@@ -141,7 +160,7 @@ export default function TableView({
       if (obj.length != 0) return obj;
       else return null;
     });
-  }
+  };
 
   const getTableData = async () => {
     let referenceColumn = { name: "", reference: "false" };
@@ -161,7 +180,6 @@ export default function TableView({
     }
     if (referenceColumn.reference !== "false") {
       referenceTable = await readTableAPI(referenceColumn.reference);
-      
     }
 
     const sheetData = {
@@ -195,7 +213,7 @@ export default function TableView({
     }
 
     let result = array2dToObjArr(sheetTableData);
-  
+
     console.log("result", result);
     if (result) settableViewObjArr(result);
     else settableViewObjArr(null);
@@ -271,7 +289,7 @@ export default function TableView({
       }
     }
 
-    console.log(newRow);
+    // console.log(newRow);
 
     //check if the fields are empty
     if (!checkKeyIntegrity()) {
@@ -302,7 +320,7 @@ export default function TableView({
             );
           } else if (
             tableConfig[k].type === "url" &&
-            !isUrl(newRowData[addRowCol[i]])
+            !urlRegex.test(newRowData[addRowCol[i]])
           ) {
             return window.alert(`${addRowCol[i]} input must be a url value!`);
           } else if (typeof newRowData[addRowCol[i]] !== "string") {
@@ -343,17 +361,17 @@ export default function TableView({
     await updateSheetAPI(sheetData);
 
     //UPDATE LOG
-		const appObj = appLog.find(obj => obj.app_id === appId);
-		// If the object exists, append the new log entry to its log array
-		if (appObj) {
-			appObj.log.push({
-				view_name: name,
-				function: "add",
-				row_index: sheetIdx,
-				change: newRow
-			});
-		}
-		console.log(appLog);
+    const appObj = appLog.find((obj) => obj.app_id === appId);
+    // If the object exists, append the new log entry to its log array
+    if (appObj) {
+      appObj.log.push({
+        view_name: name,
+        function: "add",
+        row_index: sheetIdx,
+        change: newRow,
+      });
+    }
+    console.log(appLog);
 
     await getTableData();
     handleClose();
@@ -387,8 +405,7 @@ export default function TableView({
     });
     sheetTableData.splice(index + 1, 1);
 
-
-		//TODO FIX SHEET IDX
+    //TODO FIX SHEET IDX
     let sheetIdx =
       tableData.sheetIndex +
       "!A2:" +
@@ -419,17 +436,17 @@ export default function TableView({
 
     await updateSheetAPI(sheetData);
 
-    const appObj = appLog.find(obj => obj.app_id === appId);
-		// If the object exists, append the new log entry to its log array
-		if (appObj) {
-			appObj.log.push({
-				view_name: name,
-				function: "delete",
-				row_index: sheetIdx,
-				change: deletedRow
-			});
-		}
-		console.log(appLog);
+    const appObj = appLog.find((obj) => obj.app_id === appId);
+    // If the object exists, append the new log entry to its log array
+    if (appObj) {
+      appObj.log.push({
+        view_name: name,
+        function: "delete",
+        row_index: sheetIdx,
+        change: deletedRow,
+      });
+    }
+    console.log(appLog);
 
     handleClose();
   };
@@ -450,11 +467,13 @@ export default function TableView({
         referenceColumn.reference,
         userRoles
       );
-      
+
       // setSelectedRow();
-      if(referenceTableViewObjArr){
+      if (referenceTableViewObjArr) {
         const labelValue = row[columnName];
-        const index = referenceTableViewObjArr.findIndex((obj) => Object.values(obj).includes(labelValue));
+        const index = referenceTableViewObjArr.findIndex((obj) =>
+          Object.values(obj).includes(labelValue)
+        );
         setSelectedRow(referenceTableViewObjArr[index]);
       }
       setDetailApps([detailView]);
@@ -510,7 +529,17 @@ export default function TableView({
             <tr key={row.Name}>
               {col.map((column) => (
                 <td key={column} onClick={() => handleRowClick(row, column)}>
-                  {row[column]}
+                  {urlRegex.test(row[column]) ? (
+                    <a
+                      href={addProtocolIfNeeded(row[column])}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {row[column]}
+                    </a>
+                  ) : (
+                    row[column]
+                  )}
                 </td>
               ))}
               {showMinusButtons && (
@@ -543,12 +572,11 @@ export default function TableView({
             tableViewObjArr={tableViewObjArr}
             settableViewObjArr={settableViewObjArr}
             setFilteredtableViewObjArr={setFilteredtableViewObjArr}
-            appLog = {appLog}
-						appId = {appId}
+            appLog={appLog}
+            appId={appId}
           />
         </Modal>
       )}
-      {console.log('detailApps', detailApps)}
       <Modal open={open} onClose={handleClose}>
         <div
           className="modal-content"
