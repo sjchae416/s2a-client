@@ -63,7 +63,8 @@ export default function DashboardPage({
 												<div>Loading Tables...</div>
 											)}
 
-											{runnableApps ? (
+                      {/* REVIEW just added '?.length !== 0' for the demo */}
+											{runnableApps?.length !== 0 ? (
 												<div>
 													<Link to="/manage-app">
 														<button

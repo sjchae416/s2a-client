@@ -78,7 +78,7 @@ export default function TableView({
 	useEffect(() => {
 		console.log('getTableData called here');
 		getTableData();
-	}, []);
+	}, [view]);
 
 	useEffect(() => {}, [cacheData]);
 
@@ -214,14 +214,16 @@ export default function TableView({
 		if (result) settableViewObjArr(result);
 		else settableViewObjArr(null);
 
-		let filteredResult = {};
-		if (viewFilter == '' && userFilter == '') {
+		let filteredResult = result;
+		if (viewFilter === '' && userFilter === '') {
 			filteredResult = result;
-		} else {
-			filteredResult = result.filter((row) => row[viewFilter] === 'TRUE');
+    } else {
+      if (viewFilter) {
+        filteredResult = result.filter((row) => row[viewFilter] === 'TRUE');
+      }
 			if (userFilter)
 				filteredResult = filteredResult.filter(
-					(row) => row[userFilter] == user.email
+					(row) => row[userFilter] === user.email
 				);
 		}
 		setReferenceColumnObj(referenceColumn);
@@ -270,7 +272,7 @@ export default function TableView({
 	const handleAddRow = async () => {
 		const newRow = {};
 		for (let i = 0; i < tableConfig.length; i++) {
-			if (col.includes(tableConfig[i].name)) {
+			if (addRowCol.includes(tableConfig[i].name)) {
 				newRow[tableConfig[i].name] = newRowData[tableConfig[i].name];
 			} else {
 				if (tableConfig[i].initialValue) {
